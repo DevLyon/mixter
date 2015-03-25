@@ -37,6 +37,11 @@ namespace Mixter.Tests.Domain.Messages
             {
                 _messages.Add(message);
             }
+
+            public IEnumerable<TimelineMessage> GetMessagesOfUser(UserId userId)
+            {
+                throw new System.NotImplementedException();
+            }
         }
     }
 }

@@ -60,6 +60,7 @@
     <Compile Include="Domain\Subscriptions\SubscriptionTest.cs" />
     <Compile Include="Domain\UserIdTest.cs" />
     <Compile Include="Infrastructure\EventPublisherTest.cs" />
+    <Compile Include="Infrastructure\TimelineMessagesRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
