@@ -53,8 +53,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Infrastructure\EventA.cs" />
-    <Compile Include="Infrastructure\EventAHandler.cs" />
     <Compile Include="Infrastructure\EventPublisherFake.cs" />
     <Compile Include="Domain\Messages\MessageIdTest.cs" />
     <Compile Include="Domain\Messages\MessageTest.cs" />

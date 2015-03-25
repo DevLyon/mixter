@@ -14,7 +14,10 @@ namespace Mixter.Infrastructure
 
         public void Publish<TEvent>(TEvent evt) where TEvent : IDomainEvent
         {
-            ((IEventHandler<TEvent>)_handlers.First()).Handle(evt);
+            foreach (var handler in _handlers.OfType<IEventHandler<TEvent>>())
+            {
+                handler.Handle(evt);
+            }
         }
     }
 }
