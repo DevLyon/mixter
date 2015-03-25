@@ -50,7 +50,7 @@ namespace Mixter.Domain
 
         public void Delete(IEventPublisher eventPublisher, UserId deleter)
         {
-            if (_projection.Publishers.Contains(deleter))
+            if (_projection.Creator.Equals(deleter))
             {
                 PublishEvent(eventPublisher, new MessageDeleted(_projection.Id));
             }
@@ -73,6 +73,8 @@ namespace Mixter.Domain
                 get { return _publishers; }
             }
 
+            public UserId Creator { get; private set; }
+
             public DecisionProjection()
             {
                 AddHandler<MessagePublished>(When);
@@ -89,6 +91,7 @@ namespace Mixter.Domain
             {
                 Id = evt.Id;
                 _publishers.Add(evt.Creator);
+                Creator = evt.Creator;
             }
 
             private void When(MessageRepublished evt)
