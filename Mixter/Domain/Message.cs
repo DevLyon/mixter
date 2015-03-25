@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Mixter.Domain
@@ -30,7 +31,7 @@ namespace Mixter.Domain
         private void PublishEvent(IEventPublisher eventPublisher, IDomainEvent evt)
         {
             eventPublisher.Publish(evt);
-            _projection.Apply((dynamic)evt);
+            _projection.Apply(evt);
         }
 
         public MessageId GetId()
@@ -41,6 +42,7 @@ namespace Mixter.Domain
         private class DecisionProjection
         {
             private readonly IList<UserId> _publishers = new List<UserId>();
+            private readonly Dictionary<Type, Action<IDomainEvent>> _handlersByType = new Dictionary<Type, Action<IDomainEvent>>(); 
 
             public MessageId Id { get; private set; }
 
@@ -49,15 +51,36 @@ namespace Mixter.Domain
                 get { return _publishers; }
             }
 
-            public void Apply(MessagePublished evt)
+            public DecisionProjection()
+            {
+                AddHandler<MessagePublished>(When);
+                AddHandler<MessageRepublished>(When);
+            }
+
+            private void AddHandler<T>(Action<T> apply)
+                where T : IDomainEvent
+            {
+                _handlersByType.Add(typeof(T), o => apply((T)o));
+            }
+
+            private void When(MessagePublished evt)
             {
                 Id = evt.Id;
                 _publishers.Add(evt.Creator);
             }
 
-            public void Apply(MessageRepublished evt)
+            private void When(MessageRepublished evt)
             {
                 _publishers.Add(evt.Republisher);
+            }
+
+            public void Apply(IDomainEvent evt)
+            {
+                Action<IDomainEvent> apply;
+                if (_handlersByType.TryGetValue(evt.GetType(), out apply))
+                {
+                    apply(evt);
+                }
             }
         }
     }
