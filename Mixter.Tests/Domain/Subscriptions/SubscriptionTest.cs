@@ -1,11 +1,11 @@
-﻿using System.Collections;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mixter.Domain;
 using Mixter.Domain.Messages;
 using Mixter.Domain.Subscriptions;
+using Mixter.Tests.Infrastructure;
 using NFluent;
 
-namespace Mixter.Tests.Domain
+namespace Mixter.Tests.Domain.Subscriptions
 {
     [TestClass]
     public class SubscriptionTest

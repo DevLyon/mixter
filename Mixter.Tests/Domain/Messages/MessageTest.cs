@@ -1,11 +1,11 @@
-using System.Collections;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mixter.Domain;
 using Mixter.Domain.Messages;
+using Mixter.Tests.Infrastructure;
 using NFluent;
 
-namespace Mixter.Tests.Domain
+namespace Mixter.Tests.Domain.Messages
 {
     [TestClass]
     public class MessageTest

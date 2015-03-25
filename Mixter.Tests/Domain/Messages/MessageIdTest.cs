@@ -1,9 +1,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Mixter.Domain;
 using Mixter.Domain.Messages;
 using NFluent;
 
-namespace Mixter.Tests.Domain
+namespace Mixter.Tests.Domain.Messages
 {
     [TestClass]
     public class MessageIdTest
