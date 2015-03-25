@@ -8,15 +8,17 @@ namespace Mixter.Tests.Domain
     [TestClass]
     public class MessageTest
     {
+        private const string MessageContent = "Hello";
+
         [TestMethod]
         public void WhenPublishMessageThenRaiseUserMessagePublished()
         {
             var eventPublisher = new EventPublisherFake();
 
-            Message.PublishMessage(eventPublisher, "Hello");
+            Message.PublishMessage(eventPublisher, MessageContent);
 
             var evt = (MessagePublished)eventPublisher.Events.First();
-            Check.That(evt.Message).IsEqualTo("Hello");
+            Check.That(evt.Message).IsEqualTo(MessageContent);
         }
     }
 }
