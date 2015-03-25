@@ -1,11 +1,33 @@
 package mixter;
 
+import java.util.List;
 import java.util.UUID;
 
 class Message{
+    private final DecisionProjection projection;
+
+    public Message(List<Event> eventHistory) {
+        projection=new DecisionProjection((MessagePublished)eventHistory.get(0));
+    }
+
     public static void publish(PublishMessage publishMessage, EventPublisher eventPublisher) {
         MessageId messageId = new MessageId();
         eventPublisher.publish(new MessagePublished(messageId, publishMessage.getMessage()));
+    }
+
+    public void republish(EventPublisher eventPublisher) {
+        eventPublisher.publish(new MessageRepublished(projection.getId()));
+    }
+
+    private class DecisionProjection{
+        private MessageId id;
+        public DecisionProjection(MessagePublished event) {
+            id = event.getMessageId();
+        }
+
+        public MessageId getId() {
+            return id;
+        }
     }
 
     public static class MessageId {
