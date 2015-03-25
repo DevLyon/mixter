@@ -1,6 +1,7 @@
 ﻿using System;
 using Mixter.Domain;
 using Mixter.Domain.Messages;
+using Mixter.Domain.Subscriptions;
 using Mixter.Infrastructure;
 
 namespace Mixter
@@ -8,45 +9,63 @@ namespace Mixter
     public class Program
     {
         private static readonly IEventPublisher EventPublisher;
-        private static readonly TimelineMessagesRepository _timelineMessagesRepository;
+        private static readonly TimelineMessagesRepository TimelineMessagesRepository;
 
         static Program()
         {
-            _timelineMessagesRepository = new TimelineMessagesRepository();
+            TimelineMessagesRepository = new TimelineMessagesRepository();
             EventPublisher = new EventPublisher(
                 new MessagePublishedHandler(), 
-                new TimelineMessageHandler(_timelineMessagesRepository));
+                new TimelineMessageHandler(TimelineMessagesRepository));
         }
 
         public static void Main(string[] args)
         {
-            Console.WriteLine("Connexion...");
+            while (true)
+            {
+                Console.WriteLine("Connexion...");
 
-            var email = AskEmail();
+                var email = AskEmail();
 
-            StartMixter(new UserId(email));
+                StartMixter(new UserId(email));
+            }
         }
 
-        private static void StartMixter(UserId userId)
+        private static void StartMixter(UserId connectedUser)
         {
             do
             {
                 Console.WriteLine("Menu :");
                 Console.WriteLine("1 - Timeline");
                 Console.WriteLine("2 - Publish new message");
+                Console.WriteLine("3 - Follow user");
+                Console.WriteLine("4 - Disconnect");
 
                 var selectedMenu = Console.ReadKey().KeyChar;
                 Console.WriteLine();
                 switch (selectedMenu)
                 {
                     case '1':
-                        DisplayTimeline(userId);
+                        DisplayTimeline(connectedUser);
                         break;
                     case '2':
-                        PublishNewMessage(userId);
+                        PublishNewMessage(connectedUser);
                         break;
+                    case '3':
+                        FollowUser(connectedUser);
+                        break;
+                    case '4':
+                        return;
                 }
             } while (true);
+        }
+
+        private static void FollowUser(UserId connectedUser)
+        {
+            Console.WriteLine("User email :");
+            var email = Console.ReadLine();
+
+            Subscription.FollowUser(EventPublisher, connectedUser, new UserId(email));
         }
 
         private static void PublishNewMessage(UserId author)
@@ -57,10 +76,10 @@ namespace Mixter
             Message.PublishMessage(EventPublisher, author, content);
         }
 
-        private static void DisplayTimeline(UserId userId)
+        private static void DisplayTimeline(UserId connectedUser)
         {
             Console.WriteLine();
-            foreach (var message in _timelineMessagesRepository.GetMessagesOfUser(userId))
+            foreach (var message in TimelineMessagesRepository.GetMessagesOfUser(connectedUser))
             {
                 Console.WriteLine(message.AuthorId + " :");
                 Console.WriteLine(message.Content);
@@ -74,10 +93,10 @@ namespace Mixter
                 switch (selectedMenu)
                 {
                     case '1':
-                        Republish(userId, message.MessageId);
+                        Republish(connectedUser, message.MessageId);
                         break;
                     case '2':
-                        Reply(userId, message.MessageId);
+                        Reply(connectedUser, message.MessageId);
                         break;
                 }
 
@@ -85,16 +104,14 @@ namespace Mixter
                 Console.WriteLine("--------------------------------------");
                 Console.WriteLine();
             }
-
-
         }
 
-        private static void Reply(UserId userId, MessageId messageId)
+        private static void Reply(UserId connectedUser, MessageId messageId)
         {
             throw new NotImplementedException();
         }
 
-        private static void Republish(UserId userId, MessageId messageId)
+        private static void Republish(UserId connectedUser, MessageId messageId)
         {
             throw new NotImplementedException();
         }
