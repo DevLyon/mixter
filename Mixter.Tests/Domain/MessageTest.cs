@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mixter.Domain;
@@ -9,13 +10,15 @@ namespace Mixter.Tests.Domain
     public class MessageTest
     {
         private const string MessageContent = "Hello";
+        private const string ReplyContent = "ReplyContent";
 
         private EventPublisherFake _eventPublisher;
 
         private readonly UserId _creator = new UserId("pierre@mixit.fr");
-        
-        private readonly UserId _republisher = new UserId("jean@mixit.fr");
+
+        private readonly UserId _republisher = new UserId("alfred@mixit.fr");
         private static readonly MessageId MessageId = MessageId.Generate();
+        private static readonly UserId Replier = new UserId("jean@mixit.fr");
 
         [TestInitialize]
         public void Initialize()
@@ -69,6 +72,21 @@ namespace Mixter.Tests.Domain
             message.RepublishMessage(_eventPublisher, _republisher);
 
             Check.That(_eventPublisher.Events).IsEmpty();
+        }
+
+        [TestMethod]
+        public void WhenReplyThenRaiseReplyMessagePublished()
+        {
+            var message = CreateMessage(
+                new MessagePublished(MessageId, _creator, MessageContent));
+
+            message.Reply(_eventPublisher, Replier, ReplyContent);
+
+            var evt = _eventPublisher.Events.OfType<ReplyMessagePublished>().First();
+            Check.That(evt.ParentId).IsEqualTo(MessageId);
+            Check.That(evt.ReplyContent).IsEqualTo(ReplyContent);
+            Check.That(evt.Replier).IsEqualTo(Replier);
+            Check.That(evt.ReplyId).IsNotEqualTo(MessageId);
         }
     }
 }

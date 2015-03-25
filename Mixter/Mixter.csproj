@@ -47,6 +47,7 @@
     <Compile Include="Domain\MessageId.cs" />
     <Compile Include="Domain\MessagePublished.cs" />
     <Compile Include="Domain\MessageRepublished.cs" />
+    <Compile Include="Domain\ReplyMessagePublished.cs" />
     <Compile Include="Domain\UserId.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

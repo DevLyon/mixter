@@ -42,6 +42,12 @@ namespace Mixter.Domain
             _projection.Apply(evt);
         }
 
+        public void Reply(IEventPublisher eventPublisher, UserId replier, string replyContent)
+        {
+            var evt = new ReplyMessagePublished(MessageId.Generate(), replier, replyContent, _projection.Id);
+            eventPublisher.Publish(evt);
+        }
+
         public MessageId GetId()
         {
             return _projection.Id;
