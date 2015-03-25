@@ -5,19 +5,17 @@ namespace Mixter.Domain
 {
     public class Message
     {
-        private readonly DecisionProjection _projection;
+        private readonly DecisionProjection _projection = new DecisionProjection();
 
-        private Message(MessagePublished evt)
+        private Message(IEventPublisher eventPublisher, MessagePublished evt)
         {
-            _projection = new DecisionProjection(evt);
+            PublishEvent(eventPublisher, evt);
         }
 
         public static Message PublishMessage(IEventPublisher eventPublisher, UserId creator, string content)
         {
             var messagePublished = new MessagePublished(MessageId.Generate(), creator, content);
-            eventPublisher.Publish(messagePublished);
-
-            return new Message(messagePublished);
+            return new Message(eventPublisher, messagePublished);
         }
 
         public void RepublishMessage(IEventPublisher eventPublisher, UserId republisher)
@@ -25,9 +23,14 @@ namespace Mixter.Domain
             if (!_projection.Publishers.Contains(republisher))
             {
                 var evt = new MessageRepublished(GetId(), republisher);
-                eventPublisher.Publish(evt);
-                _projection.Apply(evt);
+                PublishEvent(eventPublisher, evt);
             }
+        }
+
+        private void PublishEvent(IEventPublisher eventPublisher, IDomainEvent evt)
+        {
+            eventPublisher.Publish(evt);
+            _projection.Apply((dynamic)evt);
         }
 
         public MessageId GetId()
@@ -38,11 +41,6 @@ namespace Mixter.Domain
         private class DecisionProjection
         {
             private readonly IList<UserId> _publishers = new List<UserId>();
-
-            public DecisionProjection(MessagePublished evt)
-            {
-                Apply(evt);
-            }
 
             public MessageId Id { get; private set; }
 
