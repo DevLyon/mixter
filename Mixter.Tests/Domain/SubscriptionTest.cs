@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mixter.Domain;
+using Mixter.Domain.Messages;
 using Mixter.Domain.Subscriptions;
 using NFluent;
 
@@ -37,6 +38,17 @@ namespace Mixter.Tests.Domain
             subscription.Unfollow(_eventPublisher);
 
             Check.That(_eventPublisher.Events).Contains(new UserUnfollowed(SubscriptionId));
+        }
+
+        [TestMethod]
+        public void WhenNotifyFollowerThenFollowerMessagePublishedIsRaised()
+        {
+            var subscription = Create(new UserFollowed(SubscriptionId));
+
+            var messageId = MessageId.Generate();
+            subscription.NotifyFollower(_eventPublisher, messageId);
+
+            Check.That(_eventPublisher.Events).Contains(new FollowerMessagePublished(SubscriptionId, messageId));
         }
 
         private Subscription Create(UserFollowed evt)

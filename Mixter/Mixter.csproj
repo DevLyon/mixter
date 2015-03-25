@@ -49,6 +49,7 @@
     <Compile Include="Domain\Messages\MessagePublished.cs" />
     <Compile Include="Domain\Messages\MessageRepublished.cs" />
     <Compile Include="Domain\Messages\ReplyMessagePublished.cs" />
+    <Compile Include="Domain\Subscriptions\FollowerMessagePublished.cs" />
     <Compile Include="Domain\Subscriptions\Subscription.cs" />
     <Compile Include="Domain\Subscriptions\SubscriptionId.cs" />
     <Compile Include="Domain\Subscriptions\UserFollowed.cs" />

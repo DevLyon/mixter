@@ -1,4 +1,6 @@
-﻿namespace Mixter.Domain.Subscriptions
+﻿using Mixter.Domain.Messages;
+
+namespace Mixter.Domain.Subscriptions
 {
     public class Subscription
     {
@@ -12,12 +14,18 @@
 
         public static void FollowUser(IEventPublisher eventPublisher, UserId follower, UserId followee)
         {
-            eventPublisher.Publish(new UserFollowed(new SubscriptionId(follower, followee)));
+            var userFollowed = new UserFollowed(new SubscriptionId(follower, followee));
+            eventPublisher.Publish(userFollowed);
         }
 
         public void Unfollow(IEventPublisher eventPublisher)
         {
             eventPublisher.Publish(new UserUnfollowed(_projection.Id));
+        }
+
+        public void NotifyFollower(IEventPublisher eventPublisher, MessageId messageId)
+        {
+            eventPublisher.Publish(new FollowerMessagePublished(_projection.Id, messageId));
         }
 
         private class DecisionProjection
