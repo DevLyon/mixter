@@ -7,11 +7,13 @@ namespace Mixter.Tests.Domain
     [TestClass]
     public class UserIdTest
     {
+        private const string UserEmail = "test@mixit.fr";
+
         [TestMethod]
         public void WhenCreate2IdWithSameEmailsThenAreEquals()
         {
-            var userId1 = new UserId("test@mixit.fr");
-            var userId2 = new UserId("test@mixit.fr");
+            var userId1 = new UserId(UserEmail);
+            var userId2 = new UserId(UserEmail);
 
             Check.That(userId1).IsEqualTo(userId2);
         }
@@ -19,9 +21,9 @@ namespace Mixter.Tests.Domain
         [TestMethod]
         public void WhenToStringIdThenEmail()
         {
-            var userId1 = new UserId("test@mixit.fr");
+            var userId1 = new UserId(UserEmail);
 
-            Check.That(userId1.ToString()).IsEqualTo("test@mixit.fr");
+            Check.That(userId1.ToString()).IsEqualTo(UserEmail);
         }
     }
 }

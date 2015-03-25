@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mixter.Domain;
@@ -13,6 +12,10 @@ namespace Mixter.Tests.Domain
 
         private EventPublisherFake _eventPublisher;
 
+        private readonly UserId _creator = new UserId("pierre@mixit.fr");
+        
+        private readonly UserId _republisher = new UserId("jean@mixit.fr");
+
         [TestInitialize]
         public void Initialize()
         {
@@ -22,7 +25,7 @@ namespace Mixter.Tests.Domain
         [TestMethod]
         public void WhenPublishMessageThenRaiseUserMessagePublished()
         {
-            Message.PublishMessage(_eventPublisher, MessageContent);
+            Message.PublishMessage(_eventPublisher, _creator, MessageContent);
 
             var evt = (MessagePublished)_eventPublisher.Events.First();
             Check.That(evt.Message).IsEqualTo(MessageContent);
@@ -31,22 +34,21 @@ namespace Mixter.Tests.Domain
         [TestMethod]
         public void WhenRepublishMessageThenRaiseMessageRepublished()
         {
-            var message = Message.PublishMessage(_eventPublisher, MessageContent);
+            var message = Message.PublishMessage(_eventPublisher, _creator, MessageContent);
 
-            message.RepublishMessage(_eventPublisher);
+            message.RepublishMessage(_eventPublisher, _republisher);
 
-            Check.That(_eventPublisher.Events).Contains(new MessageRepublished(message.GetId()));
+            Check.That(_eventPublisher.Events).Contains(new MessageRepublished(message.GetId(), _creator));
         }
 
         [TestMethod]
         public void WhenRepublishMyOwnMessageThenDoNotRaiseMessageRepublished()
         {
-            Assert.Inconclusive();
-            //var message = Message.PublishMessage(_eventPublisher, MessageContent, UserId("pierre@mixit.fr"));
+            var message = Message.PublishMessage(_eventPublisher, _creator, MessageContent);
 
-            //message.RepublishMessage(_eventPublisher, UserId("pierre@mixit.fr"));
+            message.RepublishMessage(_eventPublisher, _creator);
 
-            //Check.That(_eventPublisher.Events).Not.Contains(new MessageRepublished(message.GetId()));
+            Check.That(_eventPublisher.Events).Not.Contains(new MessageRepublished(message.GetId(), _creator));
         }
     }
 }
