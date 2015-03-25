@@ -2,6 +2,6 @@ namespace Mixter.Domain
 {
     public interface IEventPublisher
     {
-        void Publish(IDomainEvent evt);
+        void Publish<TEvent>(TEvent evt) where TEvent : IDomainEvent;
     }
 }

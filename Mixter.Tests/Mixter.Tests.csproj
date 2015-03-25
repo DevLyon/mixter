@@ -53,11 +53,14 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Infrastructure\EventA.cs" />
+    <Compile Include="Infrastructure\EventAHandler.cs" />
     <Compile Include="Infrastructure\EventPublisherFake.cs" />
     <Compile Include="Domain\Messages\MessageIdTest.cs" />
     <Compile Include="Domain\Messages\MessageTest.cs" />
     <Compile Include="Domain\Subscriptions\SubscriptionTest.cs" />
     <Compile Include="Domain\UserIdTest.cs" />
+    <Compile Include="Infrastructure\EventPublisherTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -9,7 +9,7 @@ namespace Mixter.Tests.Infrastructure
 
         public IEnumerable<IDomainEvent> Events { get { return _events; } }
 
-        public void Publish(IDomainEvent evt)
+        public void Publish<TEvent>(TEvent evt) where TEvent : IDomainEvent
         {
             _events.Add(evt);
         }
