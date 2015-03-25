@@ -1,4 +1,5 @@
-﻿using Mixter.Domain.Messages;
+﻿using System.Collections.Generic;
+using Mixter.Domain.Messages;
 
 namespace Mixter.Domain.Subscriptions
 {
@@ -6,10 +7,14 @@ namespace Mixter.Domain.Subscriptions
     {
         private readonly DecisionProjection _projection;
 
-        public Subscription(UserFollowed evt)
+        public Subscription(IEnumerable<IDomainEvent> events)
         {
             _projection = new DecisionProjection();
-            _projection.Apply(evt);
+
+            foreach (var evt in events)
+            {
+                _projection.Apply(evt);
+            }
         }
 
         public static void FollowUser(IEventPublisher eventPublisher, UserId follower, UserId followee)
@@ -25,6 +30,11 @@ namespace Mixter.Domain.Subscriptions
 
         public void NotifyFollower(IEventPublisher eventPublisher, MessageId messageId)
         {
+            if (_projection.IsUnfollow)
+            {
+                return;
+            }
+
             eventPublisher.Publish(new FollowerMessagePublished(_projection.Id, messageId));
         }
 
@@ -32,9 +42,29 @@ namespace Mixter.Domain.Subscriptions
         {
             public SubscriptionId Id { get; private set; }
 
+            public bool IsUnfollow { get; private set; }
+
             public void Apply(UserFollowed evt)
             {
                 Id = evt.SubscriptionId;
+            }
+
+            public void Apply(UserUnfollowed evt)
+            {
+                IsUnfollow = true;
+            }
+
+            public void Apply(IDomainEvent evt)
+            {
+                if (evt is UserFollowed)
+                {
+                    Apply((UserFollowed) evt);
+                }
+
+                if (evt is UserUnfollowed)
+                {
+                    Apply((UserUnfollowed)evt);
+                }
             }
         }
     }

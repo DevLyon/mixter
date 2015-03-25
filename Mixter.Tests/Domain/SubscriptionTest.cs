@@ -51,9 +51,22 @@ namespace Mixter.Tests.Domain
             Check.That(_eventPublisher.Events).Contains(new FollowerMessagePublished(SubscriptionId, messageId));
         }
 
-        private Subscription Create(UserFollowed evt)
+        [TestMethod]
+        public void GivenUnfollowWhenNotifyFollowerThenDoNotRaisedFollowerMessagePublished()
         {
-            return new Subscription(evt);
+            var subscription = Create(
+                new UserFollowed(SubscriptionId),
+                new UserUnfollowed(SubscriptionId));
+
+            var messageId = MessageId.Generate();
+            subscription.NotifyFollower(_eventPublisher, messageId);
+
+            Check.That(_eventPublisher.Events).IsEmpty();
+        }
+
+        private Subscription Create(params IDomainEvent[] events)
+        {
+            return new Subscription(events);
         }
     }
 }
