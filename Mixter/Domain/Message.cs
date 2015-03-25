@@ -13,6 +13,14 @@ namespace Mixter.Domain
             PublishEvent(eventPublisher, evt);
         }
 
+        public Message(IEnumerable<IDomainEvent> events)
+        {
+            foreach (var @event in events)
+            {
+                _projection.Apply(@event);
+            }
+        }
+
         public static Message PublishMessage(IEventPublisher eventPublisher, UserId creator, string content)
         {
             var messagePublished = new MessagePublished(MessageId.Generate(), creator, content);

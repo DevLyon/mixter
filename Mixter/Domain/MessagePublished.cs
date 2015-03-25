@@ -6,12 +6,12 @@ namespace Mixter.Domain
         
         public UserId Creator { get; private set; }
 
-        public string Message { get; private set; }
+        public string Content { get; private set; }
 
-        public MessagePublished(MessageId id, UserId creator, string message)
+        public MessagePublished(MessageId id, UserId creator, string content)
             : this()
         {
-            Message = message;
+            Content = content;
             Id = id;
             Creator = creator;
         }

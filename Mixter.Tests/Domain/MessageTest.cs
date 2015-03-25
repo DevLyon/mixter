@@ -15,6 +15,7 @@ namespace Mixter.Tests.Domain
         private readonly UserId _creator = new UserId("pierre@mixit.fr");
         
         private readonly UserId _republisher = new UserId("jean@mixit.fr");
+        private static readonly MessageId MessageId = MessageId.Generate();
 
         [TestInitialize]
         public void Initialize()
@@ -28,13 +29,19 @@ namespace Mixter.Tests.Domain
             Message.PublishMessage(_eventPublisher, _creator, MessageContent);
 
             var evt = (MessagePublished)_eventPublisher.Events.First();
-            Check.That(evt.Message).IsEqualTo(MessageContent);
+            Check.That(evt.Content).IsEqualTo(MessageContent);
+        }
+
+        private Message CreateMessage(params IDomainEvent[] events)
+        {
+            return new Message(events);
         }
 
         [TestMethod]
         public void WhenRepublishMessageThenRaiseMessageRepublished()
         {
-            var message = Message.PublishMessage(_eventPublisher, _creator, MessageContent);
+            var message = CreateMessage(
+                new MessagePublished(MessageId, _creator, MessageContent));
 
             message.RepublishMessage(_eventPublisher, _republisher);
 
@@ -44,22 +51,24 @@ namespace Mixter.Tests.Domain
         [TestMethod]
         public void WhenRepublishMyOwnMessageThenDoNotRaiseMessageRepublished()
         {
-            var message = Message.PublishMessage(_eventPublisher, _creator, MessageContent);
+            var message = CreateMessage(
+                new MessagePublished(MessageId, _creator, MessageContent));
 
             message.RepublishMessage(_eventPublisher, _creator);
 
-            Check.That(_eventPublisher.Events).Not.Contains(new MessageRepublished(message.GetId(), _creator));
+            Check.That(_eventPublisher.Events).IsEmpty();
         }
 
         [TestMethod]
         public void WhenRepublishTwoTimesSameMessageThenDoNotRaiseMessageRepublished()
         {
-            var message = Message.PublishMessage(_eventPublisher, _creator, MessageContent);
+            var message = CreateMessage(
+                new MessagePublished(MessageId, _creator, MessageContent), 
+                new MessageRepublished(MessageId, _republisher));
 
             message.RepublishMessage(_eventPublisher, _republisher);
-            message.RepublishMessage(_eventPublisher, _republisher);
 
-            Check.That(_eventPublisher.Events.OfType<MessageRepublished>()).ContainsExactly(new MessageRepublished(message.GetId(), _republisher));
+            Check.That(_eventPublisher.Events).IsEmpty();
         }
     }
 }
