@@ -36,6 +36,7 @@ namespace Mixter
                 Console.WriteLine("2 - Publish new message");
 
                 var selectedMenu = Console.ReadKey().KeyChar;
+                Console.WriteLine();
                 switch (selectedMenu)
                 {
                     case '1':
@@ -69,6 +70,7 @@ namespace Mixter
                 Console.WriteLine("2 - Reply");
                 Console.WriteLine("other - Next");
                 var selectedMenu = Console.ReadKey().KeyChar;
+                Console.WriteLine();
                 switch (selectedMenu)
                 {
                     case '1':
