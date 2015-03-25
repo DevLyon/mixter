@@ -1,6 +1,8 @@
+using Mixter.Infrastructure;
+
 namespace Mixter.Domain.Messages
 {
-    public class TimelineMessageHandler
+    public class TimelineMessageHandler : IEventHandler<MessagePublished>
     {
         private readonly ITimelineMessagesRepository _repository;
 

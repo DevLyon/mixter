@@ -7,7 +7,16 @@ namespace Mixter
 {
     public class Program
     {
-        private static readonly IEventPublisher EventPublisher = new EventPublisher(new MessagePublishedHandler());
+        private static readonly IEventPublisher EventPublisher;
+        private static readonly TimelineMessagesRepository _timelineMessagesRepository;
+
+        static Program()
+        {
+            _timelineMessagesRepository = new TimelineMessagesRepository();
+            EventPublisher = new EventPublisher(
+                new MessagePublishedHandler(), 
+                new TimelineMessageHandler(_timelineMessagesRepository));
+        }
 
         public static void Main(string[] args)
         {
@@ -55,7 +64,15 @@ namespace Mixter
 
         private static void DisplayTimeline(UserId userId)
         {
-            throw new NotImplementedException();
+            Console.WriteLine();
+            foreach (var message in _timelineMessagesRepository.GetMessagesOfUser(userId))
+            {
+                Console.WriteLine(message.AuthorId + " (" + message.MessageId + ") :");
+                Console.WriteLine(message.Content);
+                Console.WriteLine();
+                Console.WriteLine("--------------------------------------");
+                Console.WriteLine();
+            }
         }
 
         private static string AskEmail()
