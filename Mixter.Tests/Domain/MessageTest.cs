@@ -122,5 +122,15 @@ namespace Mixter.Tests.Domain
 
             Check.That(_eventPublisher.Events).IsEmpty();
         }
+
+        [TestMethod]
+        public void GivenReplyMessageWhenGetIdHasReplayMessageId()
+        {
+            var replyMessageId = MessageId.Generate();
+            var message = CreateMessage(
+                new ReplyMessagePublished(replyMessageId, Replier, ReplyContent, MessageId));
+
+            Check.That(message.GetId()).IsEqualTo(replyMessageId);
+        }
     }
 }

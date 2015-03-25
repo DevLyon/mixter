@@ -79,12 +79,12 @@ namespace Mixter.Domain
             {
                 AddHandler<MessagePublished>(When);
                 AddHandler<MessageRepublished>(When);
+                AddHandler<ReplyMessagePublished>(When);
             }
 
-            private void AddHandler<T>(Action<T> apply)
-                where T : IDomainEvent
+            private void When(ReplyMessagePublished evt)
             {
-                _handlersByType.Add(typeof(T), o => apply((T)o));
+                Id = evt.ReplyId;
             }
 
             private void When(MessagePublished evt)
@@ -106,6 +106,12 @@ namespace Mixter.Domain
                 {
                     apply(evt);
                 }
+            }
+
+            private void AddHandler<T>(Action<T> apply)
+                where T : IDomainEvent
+            {
+                _handlersByType.Add(typeof(T), o => apply((T)o));
             }
         }
     }
