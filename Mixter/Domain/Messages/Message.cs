@@ -36,7 +36,7 @@ namespace Mixter.Domain.Messages
             }
         }
 
-        private void PublishEvent(IEventPublisher eventPublisher, IDomainEvent evt)
+        private void PublishEvent<TEvent>(IEventPublisher eventPublisher, TEvent evt) where TEvent : IDomainEvent
         {
             eventPublisher.Publish(evt);
             _projection.Apply(evt);

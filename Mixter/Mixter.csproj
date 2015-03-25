@@ -44,12 +44,15 @@
     <Compile Include="Domain\IDomainEvent.cs" />
     <Compile Include="Domain\IEventPublisher.cs" />
     <Compile Include="Domain\DecisionProjectionBase.cs" />
+    <Compile Include="Domain\Messages\ITimelineMessagesRepository.cs" />
     <Compile Include="Domain\Messages\Message.cs" />
     <Compile Include="Domain\Messages\MessageDeleted.cs" />
     <Compile Include="Domain\Messages\MessageId.cs" />
     <Compile Include="Domain\Messages\MessagePublished.cs" />
     <Compile Include="Domain\Messages\MessageRepublished.cs" />
     <Compile Include="Domain\Messages\ReplyMessagePublished.cs" />
+    <Compile Include="Domain\Messages\TimelineMessage.cs" />
+    <Compile Include="Domain\Messages\TimelineMessageHandler.cs" />
     <Compile Include="Domain\Subscriptions\FollowerMessagePublished.cs" />
     <Compile Include="Domain\Subscriptions\Subscription.cs" />
     <Compile Include="Domain\Subscriptions\SubscriptionId.cs" />
