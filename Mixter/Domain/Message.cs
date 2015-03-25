@@ -48,9 +48,12 @@ namespace Mixter.Domain
             eventPublisher.Publish(evt);
         }
 
-        public void Delete(IEventPublisher eventPublisher)
+        public void Delete(IEventPublisher eventPublisher, UserId deleter)
         {
-            eventPublisher.Publish(new MessageDeleted(_projection.Id));
+            if (_projection.Publishers.Contains(deleter))
+            {
+                PublishEvent(eventPublisher, new MessageDeleted(_projection.Id));
+            }
         }
 
         public MessageId GetId()

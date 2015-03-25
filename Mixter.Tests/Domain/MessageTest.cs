@@ -95,9 +95,20 @@ namespace Mixter.Tests.Domain
             var message = CreateMessage(
                 new MessagePublished(MessageId, _creator, MessageContent));
 
-            message.Delete(_eventPublisher);
+            message.Delete(_eventPublisher, _creator);
 
             Check.That(_eventPublisher.Events).ContainsExactly(new MessageDeleted(MessageId));
+        }
+
+        [TestMethod]
+        public void WhenDeleteBySomeoneElseThanCreatorThenDoNotRaiseMessageDeleted()
+        {
+            var message = CreateMessage(
+                new MessagePublished(MessageId, _creator, MessageContent));
+
+            message.Delete(_eventPublisher, new UserId("clement@mix-it.fr"));
+
+            Check.That(_eventPublisher.Events).IsEmpty();
         }
     }
 }
