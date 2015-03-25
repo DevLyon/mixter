@@ -11,26 +11,31 @@ namespace Mixter.Tests.Domain
     {
         private const string MessageContent = "Hello";
 
+        private EventPublisherFake _eventPublisher;
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            _eventPublisher = new EventPublisherFake();
+        }
+
         [TestMethod]
         public void WhenPublishMessageThenRaiseUserMessagePublished()
         {
-            var eventPublisher = new EventPublisherFake();
+            Message.PublishMessage(_eventPublisher, MessageContent);
 
-            Message.PublishMessage(eventPublisher, MessageContent);
-
-            var evt = (MessagePublished)eventPublisher.Events.First();
+            var evt = (MessagePublished)_eventPublisher.Events.First();
             Check.That(evt.Message).IsEqualTo(MessageContent);
         }
 
         [TestMethod]
         public void WhenRepublishMessageThenRaiseMessageRepublished()
         {
-            var eventPublisher = new EventPublisherFake();
-            var message = Message.PublishMessage(eventPublisher, MessageContent);
+            var message = Message.PublishMessage(_eventPublisher, MessageContent);
 
-            message.RepublishMessage(eventPublisher);
+            message.RepublishMessage(_eventPublisher);
 
-            Check.That(eventPublisher.Events).Contains(new MessageRepublished(message.GetId()));
+            Check.That(_eventPublisher.Events).Contains(new MessageRepublished(message.GetId()));
         }
     }
 }
