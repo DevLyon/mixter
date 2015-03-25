@@ -35,19 +35,13 @@ namespace Mixter
                 Console.WriteLine("1 - Timeline");
                 Console.WriteLine("2 - Publish new message");
 
-                var selectedMenuFormatted = Console.ReadLine();
-                int selectedMenu;
-                if (!int.TryParse(selectedMenuFormatted, out selectedMenu))
-                {
-                    continue;
-                }
-
+                var selectedMenu = Console.ReadKey().KeyChar;
                 switch (selectedMenu)
                 {
-                    case 1:
+                    case '1':
                         DisplayTimeline(userId);
                         break;
-                    case 2:
+                    case '2':
                         PublishNewMessage(userId);
                         break;
                 }
@@ -67,12 +61,40 @@ namespace Mixter
             Console.WriteLine();
             foreach (var message in _timelineMessagesRepository.GetMessagesOfUser(userId))
             {
-                Console.WriteLine(message.AuthorId + " (" + message.MessageId + ") :");
+                Console.WriteLine(message.AuthorId + " :");
                 Console.WriteLine(message.Content);
+                Console.WriteLine();
+
+                Console.WriteLine("1 - Republish");
+                Console.WriteLine("2 - Reply");
+                Console.WriteLine("other - Next");
+                var selectedMenu = Console.ReadKey().KeyChar;
+                switch (selectedMenu)
+                {
+                    case '1':
+                        Republish(userId, message.MessageId);
+                        break;
+                    case '2':
+                        Reply(userId, message.MessageId);
+                        break;
+                }
+
                 Console.WriteLine();
                 Console.WriteLine("--------------------------------------");
                 Console.WriteLine();
             }
+
+
+        }
+
+        private static void Reply(UserId userId, MessageId messageId)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void Republish(UserId userId, MessageId messageId)
+        {
+            throw new NotImplementedException();
         }
 
         private static string AskEmail()
