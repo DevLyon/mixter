@@ -44,6 +44,7 @@
     <Compile Include="Domain\IDomainEvent.cs" />
     <Compile Include="Domain\IEventPublisher.cs" />
     <Compile Include="Domain\DecisionProjectionBase.cs" />
+    <Compile Include="Domain\Subscriptions\ISubscriptionRepository.cs" />
     <Compile Include="Domain\Messages\ITimelineMessagesRepository.cs" />
     <Compile Include="Domain\Messages\Message.cs" />
     <Compile Include="Domain\Messages\MessageDeleted.cs" />

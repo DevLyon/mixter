@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Mixter.Domain;
 using Mixter.Domain.Messages;
 using Mixter.Domain.Subscriptions;
@@ -16,7 +17,7 @@ namespace Mixter
             TimelineMessagesRepository = new TimelineMessagesRepository();
             EventPublisher = new EventPublisher(
                 new MessagePublishedHandler(), 
-                new TimelineMessageHandler(TimelineMessagesRepository));
+                new TimelineMessageHandler(TimelineMessagesRepository, new SubscriptionRepository()));
         }
 
         public static void Main(string[] args)
@@ -129,6 +130,14 @@ namespace Mixter
                 }
                 Console.WriteLine("On a dit un email! Reessaye encore une fois...");
             } while (true);
+        }
+    }
+
+    public class SubscriptionRepository : ISubscriptionRepository
+    {
+        public IEnumerable<UserId> GetFollowers(UserId userId)
+        {
+            throw new NotImplementedException();
         }
     }
 
