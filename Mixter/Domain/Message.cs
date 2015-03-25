@@ -1,4 +1,7 @@
-﻿namespace Mixter.Domain
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace Mixter.Domain
 {
     public class Message
     {
@@ -19,9 +22,11 @@
 
         public void RepublishMessage(IEventPublisher eventPublisher, UserId republisher)
         {
-            if (!_projection.Creator.Equals(republisher))
+            if (!_projection.Publishers.Contains(republisher))
             {
-                eventPublisher.Publish(new MessageRepublished(GetId(), republisher));
+                var evt = new MessageRepublished(GetId(), republisher);
+                eventPublisher.Publish(evt);
+                _projection.Apply(evt);
             }
         }
 
@@ -32,6 +37,8 @@
 
         private class DecisionProjection
         {
+            private readonly IList<UserId> _publishers = new List<UserId>();
+
             public DecisionProjection(MessagePublished evt)
             {
                 Apply(evt);
@@ -39,12 +46,20 @@
 
             public MessageId Id { get; private set; }
 
-            public UserId Creator { get; private set; }
+            public IEnumerable<UserId> Publishers
+            {
+                get { return _publishers; }
+            }
 
-            private void Apply(MessagePublished evt)
+            public void Apply(MessagePublished evt)
             {
                 Id = evt.Id;
-                Creator = evt.UserId;
+                _publishers.Add(evt.Creator);
+            }
+
+            public void Apply(MessageRepublished evt)
+            {
+                _publishers.Add(evt.Republisher);
             }
         }
     }

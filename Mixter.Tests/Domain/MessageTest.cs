@@ -38,7 +38,7 @@ namespace Mixter.Tests.Domain
 
             message.RepublishMessage(_eventPublisher, _republisher);
 
-            Check.That(_eventPublisher.Events).Contains(new MessageRepublished(message.GetId(), _creator));
+            Check.That(_eventPublisher.Events).Contains(new MessageRepublished(message.GetId(), _republisher));
         }
 
         [TestMethod]
@@ -49,6 +49,17 @@ namespace Mixter.Tests.Domain
             message.RepublishMessage(_eventPublisher, _creator);
 
             Check.That(_eventPublisher.Events).Not.Contains(new MessageRepublished(message.GetId(), _creator));
+        }
+
+        [TestMethod]
+        public void WhenRepublishTwoTimesSameMessageThenDoNotRaiseMessageRepublished()
+        {
+            var message = Message.PublishMessage(_eventPublisher, _creator, MessageContent);
+
+            message.RepublishMessage(_eventPublisher, _republisher);
+            message.RepublishMessage(_eventPublisher, _republisher);
+
+            Check.That(_eventPublisher.Events.OfType<MessageRepublished>()).ContainsExactly(new MessageRepublished(message.GetId(), _republisher));
         }
     }
 }
