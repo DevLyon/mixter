@@ -7,7 +7,7 @@ namespace Mixter
 {
     public class Program
     {
-        private static readonly IEventPublisher EventPublisher = new EventPublisher();
+        private static readonly IEventPublisher EventPublisher = new EventPublisher(new MessagePublishedHandler());
 
         public static void Main(string[] args)
         {
@@ -51,8 +51,6 @@ namespace Mixter
             var content = Console.ReadLine();
 
             Message.PublishMessage(EventPublisher, author, content);
-
-            Console.WriteLine("Message published !");
         }
 
         private static void DisplayTimeline(UserId userId)
@@ -73,6 +71,14 @@ namespace Mixter
                 }
                 Console.WriteLine("On a dit un email! Reessaye encore une fois...");
             } while (true);
+        }
+    }
+
+    internal class MessagePublishedHandler : IEventHandler<MessagePublished>
+    {
+        public void Handle(MessagePublished evt)
+        {
+            Console.WriteLine("\nMessage published !\n");
         }
     }
 }
