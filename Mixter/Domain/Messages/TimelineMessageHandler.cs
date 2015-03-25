@@ -16,15 +16,19 @@ namespace Mixter.Domain.Messages
 
         public void Handle(MessagePublished evt)
         {
-            var authorMessage = new TimelineMessage(evt.Author, evt.Author, evt.Content, evt.Id);
-            _timelineMessagesRepository.Save(authorMessage);                
+            AddMessageInTimeline(evt.Author, evt.Author, evt.Content, evt.Id);
 
             var followers = _subscriptionRepository.GetFollowers(evt.Author);
             foreach (var follower in followers)
             {
-                var message = new TimelineMessage(follower, evt.Author, evt.Content, evt.Id);
-                _timelineMessagesRepository.Save(message);                
+                AddMessageInTimeline(follower, evt.Author, evt.Content, evt.Id);
             }
+        }
+
+        private void AddMessageInTimeline(UserId owner, UserId author, string content, MessageId messageId)
+        {
+            var authorMessage = new TimelineMessage(owner, author, content, messageId);
+            _timelineMessagesRepository.Save(authorMessage);
         }
     }
 }
