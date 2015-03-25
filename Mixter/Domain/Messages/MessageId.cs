@@ -1,6 +1,6 @@
 using System;
 
-namespace Mixter.Domain
+namespace Mixter.Domain.Messages
 {
     public struct MessageId
     {

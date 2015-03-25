@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Mixter.Domain
+namespace Mixter.Domain.Messages
 {
     public class Message
     {

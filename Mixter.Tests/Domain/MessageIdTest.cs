@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mixter.Domain;
+using Mixter.Domain.Messages;
 using NFluent;
 
 namespace Mixter.Tests.Domain

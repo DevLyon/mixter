@@ -1,4 +1,4 @@
-﻿namespace Mixter.Domain
+﻿namespace Mixter.Domain.Messages
 {
     public struct MessageRepublished : IDomainEvent
     {

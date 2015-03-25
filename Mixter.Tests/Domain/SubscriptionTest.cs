@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mixter.Domain;
+using Mixter.Domain.Subscriptions;
 using NFluent;
 
 namespace Mixter.Tests.Domain
