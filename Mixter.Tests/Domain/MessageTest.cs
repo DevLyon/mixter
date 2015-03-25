@@ -37,5 +37,16 @@ namespace Mixter.Tests.Domain
 
             Check.That(_eventPublisher.Events).Contains(new MessageRepublished(message.GetId()));
         }
+
+        [TestMethod]
+        public void WhenRepublishMyOwnMessageThenDoNotRaiseMessageRepublished()
+        {
+            Assert.Inconclusive();
+            //var message = Message.PublishMessage(_eventPublisher, MessageContent, UserId("pierre@mixit.fr"));
+
+            //message.RepublishMessage(_eventPublisher, UserId("pierre@mixit.fr"));
+
+            //Check.That(_eventPublisher.Events).Not.Contains(new MessageRepublished(message.GetId()));
+        }
     }
 }

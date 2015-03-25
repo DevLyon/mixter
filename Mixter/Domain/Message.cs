@@ -2,11 +2,11 @@
 {
     public class Message
     {
-        private readonly MessageDecisionProjection _projection;
+        private readonly DecisionProjection _projection;
 
         private Message(MessagePublished evt)
         {
-            _projection = new MessageDecisionProjection(evt);
+            _projection = new DecisionProjection(evt);
         }
 
         public static Message PublishMessage(IEventPublisher eventPublisher, string content)
@@ -25,6 +25,21 @@
         public MessageId GetId()
         {
             return _projection.Id;
+        }
+
+        private class DecisionProjection
+        {
+            public DecisionProjection(MessagePublished evt)
+            {
+                Apply(evt);
+            }
+
+            public MessageId Id { get; private set; }
+
+            private void Apply(MessagePublished evt)
+            {
+                Id = evt.Id;
+            }
         }
     }
 }
