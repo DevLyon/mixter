@@ -132,5 +132,17 @@ namespace Mixter.Tests.Domain
 
             Check.That(message.GetId()).IsEqualTo(replyMessageId);
         }
+
+        [TestMethod]
+        public void GivenADeletedMessageWhenReplyThenDoNotRaiseMessageDeleted()
+        {
+            var message = CreateMessage(
+                new MessagePublished(MessageId, _author, MessageContent),
+                new MessageDeleted(MessageId));
+
+            message.Reply(_eventPublisher, Replier, ReplyContent);
+
+            Check.That(_eventPublisher.Events).IsEmpty();
+        }
     }
 }

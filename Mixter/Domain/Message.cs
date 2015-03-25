@@ -44,8 +44,11 @@ namespace Mixter.Domain
 
         public void Reply(IEventPublisher eventPublisher, UserId replier, string replyContent)
         {
-            var evt = new ReplyMessagePublished(MessageId.Generate(), replier, replyContent, _projection.Id);
-            eventPublisher.Publish(evt);
+            if (!_projection.IsDeleted)
+            {
+                var evt = new ReplyMessagePublished(MessageId.Generate(), replier, replyContent, _projection.Id);
+                eventPublisher.Publish(evt);    
+            }
         }
 
         public void Delete(IEventPublisher eventPublisher, UserId deleter)
@@ -75,11 +78,19 @@ namespace Mixter.Domain
 
             public UserId Author { get; private set; }
 
+            public bool IsDeleted { get; private set; }
+
             public DecisionProjection()
             {
                 AddHandler<MessagePublished>(When);
                 AddHandler<MessageRepublished>(When);
                 AddHandler<ReplyMessagePublished>(When);
+                AddHandler<MessageDeleted>(When);
+            }
+
+            private void When(MessageDeleted evt)
+            {
+                IsDeleted = true;
             }
 
             private void When(ReplyMessagePublished evt)
