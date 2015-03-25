@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Mixter.Domain;
 using Mixter.Domain.Messages;
 using Mixter.Domain.Subscriptions;
@@ -130,14 +129,6 @@ namespace Mixter
                 }
                 Console.WriteLine("On a dit un email! Reessaye encore une fois...");
             } while (true);
-        }
-    }
-
-    public class SubscriptionRepository : ISubscriptionRepository
-    {
-        public IEnumerable<UserId> GetFollowers(UserId userId)
-        {
-            throw new NotImplementedException();
         }
     }
 
