@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mixter.Domain;
@@ -19,6 +20,17 @@ namespace Mixter.Tests.Domain
 
             var evt = (MessagePublished)eventPublisher.Events.First();
             Check.That(evt.Message).IsEqualTo(MessageContent);
+        }
+
+        [TestMethod]
+        public void WhenRepublishMessageThenRaiseMessageRepublished()
+        {
+            var eventPublisher = new EventPublisherFake();
+            var message = Message.PublishMessage(eventPublisher, MessageContent);
+
+            message.RepublishMessage(eventPublisher);
+
+            Check.That(eventPublisher.Events).Contains(new MessageRepublished(message.GetId()));
         }
     }
 }
