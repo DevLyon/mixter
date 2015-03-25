@@ -64,10 +64,9 @@ namespace Mixter.Domain.Messages
             return _projection.Id;
         }
 
-        private class DecisionProjection
+        private class DecisionProjection : DecisionProjectionBase
         {
             private readonly IList<UserId> _publishers = new List<UserId>();
-            private readonly Dictionary<Type, Action<IDomainEvent>> _handlersByType = new Dictionary<Type, Action<IDomainEvent>>(); 
 
             public MessageId Id { get; private set; }
 
@@ -108,21 +107,6 @@ namespace Mixter.Domain.Messages
             private void When(MessageRepublished evt)
             {
                 _publishers.Add(evt.Republisher);
-            }
-
-            public void Apply(IDomainEvent evt)
-            {
-                Action<IDomainEvent> apply;
-                if (_handlersByType.TryGetValue(evt.GetType(), out apply))
-                {
-                    apply(evt);
-                }
-            }
-
-            private void AddHandler<T>(Action<T> apply)
-                where T : IDomainEvent
-            {
-                _handlersByType.Add(typeof(T), o => apply((T)o));
             }
         }
     }

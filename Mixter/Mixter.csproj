@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Domain\IDomainEvent.cs" />
     <Compile Include="Domain\IEventPublisher.cs" />
+    <Compile Include="Domain\DecisionProjectionBase.cs" />
     <Compile Include="Domain\Messages\Message.cs" />
     <Compile Include="Domain\Messages\MessageDeleted.cs" />
     <Compile Include="Domain\Messages\MessageId.cs" />

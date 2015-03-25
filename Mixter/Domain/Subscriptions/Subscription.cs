@@ -38,33 +38,26 @@ namespace Mixter.Domain.Subscriptions
             eventPublisher.Publish(new FollowerMessagePublished(_projection.Id, messageId));
         }
 
-        private class DecisionProjection
+        private class DecisionProjection : DecisionProjectionBase
         {
+            public DecisionProjection()
+            {
+                AddHandler<UserUnfollowed>(When);
+                AddHandler<UserFollowed>(When);
+            }
+
             public SubscriptionId Id { get; private set; }
 
             public bool IsUnfollow { get; private set; }
 
-            public void Apply(UserFollowed evt)
+            private void When(UserFollowed evt)
             {
                 Id = evt.SubscriptionId;
             }
 
-            public void Apply(UserUnfollowed evt)
+            private void When(UserUnfollowed evt)
             {
                 IsUnfollow = true;
-            }
-
-            public void Apply(IDomainEvent evt)
-            {
-                if (evt is UserFollowed)
-                {
-                    Apply((UserFollowed) evt);
-                }
-
-                if (evt is UserUnfollowed)
-                {
-                    Apply((UserUnfollowed)evt);
-                }
             }
         }
     }
