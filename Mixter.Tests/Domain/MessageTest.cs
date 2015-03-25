@@ -14,7 +14,7 @@ namespace Mixter.Tests.Domain
 
         private EventPublisherFake _eventPublisher;
 
-        private readonly UserId _creator = new UserId("pierre@mixit.fr");
+        private readonly UserId _author = new UserId("pierre@mixit.fr");
 
         private readonly UserId _republisher = new UserId("alfred@mixit.fr");
         private static readonly MessageId MessageId = MessageId.Generate();
@@ -29,7 +29,7 @@ namespace Mixter.Tests.Domain
         [TestMethod]
         public void WhenPublishMessageThenRaiseUserMessagePublished()
         {
-            Message.PublishMessage(_eventPublisher, _creator, MessageContent);
+            Message.PublishMessage(_eventPublisher, _author, MessageContent);
 
             var evt = (MessagePublished)_eventPublisher.Events.First();
             Check.That(evt.Content).IsEqualTo(MessageContent);
@@ -44,7 +44,7 @@ namespace Mixter.Tests.Domain
         public void WhenRepublishMessageThenRaiseMessageRepublished()
         {
             var message = CreateMessage(
-                new MessagePublished(MessageId, _creator, MessageContent));
+                new MessagePublished(MessageId, _author, MessageContent));
 
             message.RepublishMessage(_eventPublisher, _republisher);
 
@@ -55,9 +55,9 @@ namespace Mixter.Tests.Domain
         public void WhenRepublishMyOwnMessageThenDoNotRaiseMessageRepublished()
         {
             var message = CreateMessage(
-                new MessagePublished(MessageId, _creator, MessageContent));
+                new MessagePublished(MessageId, _author, MessageContent));
 
-            message.RepublishMessage(_eventPublisher, _creator);
+            message.RepublishMessage(_eventPublisher, _author);
 
             Check.That(_eventPublisher.Events).IsEmpty();
         }
@@ -66,7 +66,7 @@ namespace Mixter.Tests.Domain
         public void WhenRepublishTwoTimesSameMessageThenDoNotRaiseMessageRepublished()
         {
             var message = CreateMessage(
-                new MessagePublished(MessageId, _creator, MessageContent), 
+                new MessagePublished(MessageId, _author, MessageContent), 
                 new MessageRepublished(MessageId, _republisher));
 
             message.RepublishMessage(_eventPublisher, _republisher);
@@ -78,7 +78,7 @@ namespace Mixter.Tests.Domain
         public void WhenReplyThenRaiseReplyMessagePublished()
         {
             var message = CreateMessage(
-                new MessagePublished(MessageId, _creator, MessageContent));
+                new MessagePublished(MessageId, _author, MessageContent));
 
             message.Reply(_eventPublisher, Replier, ReplyContent);
 
@@ -93,18 +93,18 @@ namespace Mixter.Tests.Domain
         public void WhenDeleteThenRaiseMessageDeleted()
         {
             var message = CreateMessage(
-                new MessagePublished(MessageId, _creator, MessageContent));
+                new MessagePublished(MessageId, _author, MessageContent));
 
-            message.Delete(_eventPublisher, _creator);
+            message.Delete(_eventPublisher, _author);
 
             Check.That(_eventPublisher.Events).ContainsExactly(new MessageDeleted(MessageId));
         }
 
         [TestMethod]
-        public void WhenDeleteBySomeoneElseThanCreatorThenDoNotRaiseMessageDeleted()
+        public void WhenDeleteBySomeoneElseThanAuthorThenDoNotRaiseMessageDeleted()
         {
             var message = CreateMessage(
-                new MessagePublished(MessageId, _creator, MessageContent));
+                new MessagePublished(MessageId, _author, MessageContent));
 
             message.Delete(_eventPublisher, new UserId("clement@mix-it.fr"));
 
@@ -115,7 +115,7 @@ namespace Mixter.Tests.Domain
         public void GivenIsRepublishedWhenDeleteByRepublisherThenDoNotRaiseMessageDeleted()
         {
             var message = CreateMessage(
-                new MessagePublished(MessageId, _creator, MessageContent),
+                new MessagePublished(MessageId, _author, MessageContent),
                 new MessageRepublished(MessageId, _republisher));
 
             message.Delete(_eventPublisher, _republisher);

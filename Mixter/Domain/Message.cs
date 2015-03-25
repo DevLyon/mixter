@@ -21,9 +21,9 @@ namespace Mixter.Domain
             }
         }
 
-        public static Message PublishMessage(IEventPublisher eventPublisher, UserId creator, string content)
+        public static Message PublishMessage(IEventPublisher eventPublisher, UserId author, string content)
         {
-            var messagePublished = new MessagePublished(MessageId.Generate(), creator, content);
+            var messagePublished = new MessagePublished(MessageId.Generate(), author, content);
             return new Message(eventPublisher, messagePublished);
         }
 
@@ -50,7 +50,7 @@ namespace Mixter.Domain
 
         public void Delete(IEventPublisher eventPublisher, UserId deleter)
         {
-            if (_projection.Creator.Equals(deleter))
+            if (_projection.Author.Equals(deleter))
             {
                 PublishEvent(eventPublisher, new MessageDeleted(_projection.Id));
             }
@@ -73,7 +73,7 @@ namespace Mixter.Domain
                 get { return _publishers; }
             }
 
-            public UserId Creator { get; private set; }
+            public UserId Author { get; private set; }
 
             public DecisionProjection()
             {
@@ -90,8 +90,8 @@ namespace Mixter.Domain
             private void When(MessagePublished evt)
             {
                 Id = evt.Id;
-                _publishers.Add(evt.Creator);
-                Creator = evt.Creator;
+                _publishers.Add(evt.Author);
+                Author = evt.Author;
             }
 
             private void When(MessageRepublished evt)
