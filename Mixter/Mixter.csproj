@@ -44,6 +44,7 @@
     <Compile Include="Domain\IDomainEvent.cs" />
     <Compile Include="Domain\IEventPublisher.cs" />
     <Compile Include="Domain\Message.cs" />
+    <Compile Include="Domain\MessageDeleted.cs" />
     <Compile Include="Domain\MessageId.cs" />
     <Compile Include="Domain\MessagePublished.cs" />
     <Compile Include="Domain\MessageRepublished.cs" />

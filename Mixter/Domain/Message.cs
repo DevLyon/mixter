@@ -48,6 +48,11 @@ namespace Mixter.Domain
             eventPublisher.Publish(evt);
         }
 
+        public void Delete(IEventPublisher eventPublisher)
+        {
+            eventPublisher.Publish(new MessageDeleted(_projection.Id));
+        }
+
         public MessageId GetId()
         {
             return _projection.Id;

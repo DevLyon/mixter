@@ -88,5 +88,16 @@ namespace Mixter.Tests.Domain
             Check.That(evt.Replier).IsEqualTo(Replier);
             Check.That(evt.ReplyId).IsNotEqualTo(MessageId);
         }
+
+        [TestMethod]
+        public void WhenDeleteThenRaiseMessageDeleted()
+        {
+            var message = CreateMessage(
+                new MessagePublished(MessageId, _creator, MessageContent));
+
+            message.Delete(_eventPublisher);
+
+            Check.That(_eventPublisher.Events).ContainsExactly(new MessageDeleted(MessageId));
+        }
     }
 }
