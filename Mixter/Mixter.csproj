@@ -52,6 +52,7 @@
     <Compile Include="Domain\Subscriptions\Subscription.cs" />
     <Compile Include="Domain\Subscriptions\SubscriptionId.cs" />
     <Compile Include="Domain\Subscriptions\UserFollowed.cs" />
+    <Compile Include="Domain\Subscriptions\UserUnfollowed.cs" />
     <Compile Include="Domain\UserId.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

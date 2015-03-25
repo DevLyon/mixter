@@ -9,6 +9,10 @@ namespace Mixter.Tests.Domain
     [TestClass]
     public class SubscriptionTest
     {
+        private static readonly UserId Follower = new UserId("emilien@mixit.fr");
+        private static readonly UserId Followee = new UserId("florent@mixit.fr");
+        private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Follower, Followee);
+
         private EventPublisherFake _eventPublisher;
 
         [TestInitialize]
@@ -20,11 +24,24 @@ namespace Mixter.Tests.Domain
         [TestMethod]
         public void WhenFollowThenUserFollowedIsRaised()
         {
-            var follower = new UserId("emilien@mixit.fr");
-            var followee = new UserId("florent@mixit.fr");
-            Subscription.FollowUser(_eventPublisher, follower, followee);
+            Subscription.FollowUser(_eventPublisher, Follower, Followee);
 
-            Check.That(_eventPublisher.Events).Contains(new UserFollowed(new SubscriptionId(follower, followee)));
+            Check.That(_eventPublisher.Events).Contains(new UserFollowed(SubscriptionId));
+        }
+
+        [TestMethod]
+        public void WhenUnfollowThenUserUnfollowedIsRaised()
+        {
+            var subscription = Create(new UserFollowed(SubscriptionId));
+
+            subscription.Unfollow(_eventPublisher);
+
+            Check.That(_eventPublisher.Events).Contains(new UserUnfollowed(SubscriptionId));
+        }
+
+        private Subscription Create(UserFollowed evt)
+        {
+            return new Subscription(evt);
         }
     }
 }
