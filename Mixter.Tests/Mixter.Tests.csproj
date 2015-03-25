@@ -56,6 +56,7 @@
     <Compile Include="Domain\EventPublisherFake.cs" />
     <Compile Include="Domain\MessageIdTest.cs" />
     <Compile Include="Domain\MessageTest.cs" />
+    <Compile Include="Domain\SubscriptionTest.cs" />
     <Compile Include="Domain\UserIdTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
