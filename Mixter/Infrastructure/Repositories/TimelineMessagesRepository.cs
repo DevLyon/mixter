@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Mixter.Domain;
-using Mixter.Domain.Messages;
+using Mixter.Domain.Core;
+using Mixter.Domain.Core.Messages;
 
 namespace Mixter.Infrastructure.Repositories
 {

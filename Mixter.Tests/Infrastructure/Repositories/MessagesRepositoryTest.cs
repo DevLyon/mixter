@@ -1,7 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mixter.Domain;
-using Mixter.Domain.Messages;
-using Mixter.Domain.Messages.Events;
+using Mixter.Domain.Core;
+using Mixter.Domain.Core.Messages;
+using Mixter.Domain.Core.Messages.Events;
 using Mixter.Infrastructure;
 using Mixter.Infrastructure.Repositories;
 using NFluent;

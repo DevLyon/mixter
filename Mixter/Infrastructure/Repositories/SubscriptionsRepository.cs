@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Mixter.Domain;
-using Mixter.Domain.Subscriptions;
-using Mixter.Domain.Subscriptions.Events;
+using Mixter.Domain.Core;
+using Mixter.Domain.Core.Subscriptions;
+using Mixter.Domain.Core.Subscriptions.Events;
 
 namespace Mixter.Infrastructure.Repositories
 {

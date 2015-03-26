@@ -1,4 +1,4 @@
-﻿using Mixter.Domain.Messages;
+﻿using Mixter.Domain.Core.Messages;
 
 namespace Mixter.Infrastructure.Repositories
 {

@@ -53,15 +53,15 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Domain\Messages\NotifyFollowerOfFolloweeMessageTest.cs" />
-    <Compile Include="Domain\Messages\AddMessageOnAuthorTimelineTest.cs" />
-    <Compile Include="Domain\Subscriptions\AddMessageOnFollowerTimelineTest.cs" />
+    <Compile Include="Domain\Core\Messages\NotifyFollowerOfFolloweeMessageTest.cs" />
+    <Compile Include="Domain\Core\Messages\AddMessageOnAuthorTimelineTest.cs" />
+    <Compile Include="Domain\Core\Subscriptions\AddMessageOnFollowerTimelineTest.cs" />
     <Compile Include="Infrastructure\EventHandlersGeneratorTest.cs" />
     <Compile Include="Infrastructure\EventPublisherFake.cs" />
-    <Compile Include="Domain\Messages\MessageIdTest.cs" />
-    <Compile Include="Domain\Messages\MessageTest.cs" />
-    <Compile Include="Domain\Subscriptions\SubscriptionTest.cs" />
-    <Compile Include="Domain\UserIdTest.cs" />
+    <Compile Include="Domain\Core\Messages\MessageIdTest.cs" />
+    <Compile Include="Domain\Core\Messages\MessageTest.cs" />
+    <Compile Include="Domain\Core\Subscriptions\SubscriptionTest.cs" />
+    <Compile Include="Domain\Core\UserIdTest.cs" />
     <Compile Include="Infrastructure\EventPublisherTest.cs" />
     <Compile Include="Infrastructure\EventPublisherWithStorageTest.cs" />
     <Compile Include="Infrastructure\EventsDatabaseTest.cs" />

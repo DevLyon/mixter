@@ -1,8 +1,9 @@
 ﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mixter.Domain;
-using Mixter.Domain.Subscriptions;
-using Mixter.Domain.Subscriptions.Events;
+using Mixter.Domain.Core;
+using Mixter.Domain.Core.Subscriptions;
+using Mixter.Domain.Core.Subscriptions.Events;
 using Mixter.Infrastructure;
 using Mixter.Infrastructure.Repositories;
 using NFluent;

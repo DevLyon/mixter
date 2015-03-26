@@ -1,8 +1,9 @@
 ﻿using System;
 using Mixter.Domain;
-using Mixter.Domain.Messages;
-using Mixter.Domain.Messages.Events;
-using Mixter.Domain.Subscriptions;
+using Mixter.Domain.Core;
+using Mixter.Domain.Core.Messages;
+using Mixter.Domain.Core.Messages.Events;
+using Mixter.Domain.Core.Subscriptions;
 using Mixter.Infrastructure;
 using Mixter.Infrastructure.Repositories;
 

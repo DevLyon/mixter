@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Mixter.Domain;
-using Mixter.Domain.Messages;
-using Mixter.Domain.Messages.Handlers;
-using Mixter.Domain.Subscriptions.Handlers;
+using Mixter.Domain.Core.Messages;
+using Mixter.Domain.Core.Messages.Handlers;
+using Mixter.Domain.Core.Subscriptions.Handlers;
 using Mixter.Infrastructure.Repositories;
 
 namespace Mixter.Infrastructure
