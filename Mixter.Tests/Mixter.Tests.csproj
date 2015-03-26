@@ -63,6 +63,7 @@
     <Compile Include="Domain\Subscriptions\SubscriptionTest.cs" />
     <Compile Include="Domain\UserIdTest.cs" />
     <Compile Include="Infrastructure\EventPublisherTest.cs" />
+    <Compile Include="Infrastructure\EventPublisherWithStorageTest.cs" />
     <Compile Include="Infrastructure\EventsDatabaseTest.cs" />
     <Compile Include="Infrastructure\SubscriptionRepositoryTest.cs" />
     <Compile Include="Infrastructure\TimelineMessagesRepositoryTest.cs" />
