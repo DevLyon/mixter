@@ -4,7 +4,9 @@ using Mixter.Infrastructure;
 
 namespace Mixter.Domain.Messages.Handlers
 {
-    public class NotifyFollowerOfFolloweeMessage : IEventHandler<MessagePublished>
+    public class NotifyFollowerOfFolloweeMessage : 
+        IEventHandler<MessagePublished>,
+        IEventHandler<ReplyMessagePublished>
     {
         private readonly ISubscriptionRepository _subscriptionRepository;
         private readonly IEventPublisher _eventPublisher;
@@ -17,10 +19,20 @@ namespace Mixter.Domain.Messages.Handlers
 
         public void Handle(MessagePublished evt)
         {
-            var followers = _subscriptionRepository.GetFollowers(evt.Author);
+            NotifyAllFollowers(evt.Author, evt.Id);
+        }
+
+        public void Handle(ReplyMessagePublished evt)
+        {
+            NotifyAllFollowers(evt.Replier, evt.ReplyId);
+        }
+
+        private void NotifyAllFollowers(UserId author, MessageId messageId)
+        {
+            var followers = _subscriptionRepository.GetFollowers(author);
             foreach (var follower in followers)
             {
-                follower.NotifyFollower(_eventPublisher, evt.Id);
+                follower.NotifyFollower(_eventPublisher, messageId);
             }
         }
     }
