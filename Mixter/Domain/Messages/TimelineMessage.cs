@@ -25,5 +25,10 @@ namespace Mixter.Domain.Messages
             : this(ownerId, evt.Author, evt.Content, evt.Id)
         {
         }
+
+        public TimelineMessage(UserId ownerId, ReplyMessagePublished evt)
+            : this(ownerId, evt.Replier, evt.ReplyContent, evt.ReplyId)
+        {
+        }
     }
 }

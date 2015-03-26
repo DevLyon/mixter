@@ -3,7 +3,9 @@ using Mixter.Infrastructure;
 
 namespace Mixter.Domain.Messages.Handlers
 {
-    public class AddMessageOnAuthorTimeline : IEventHandler<MessagePublished>
+    public class AddMessageOnAuthorTimeline : 
+        IEventHandler<MessagePublished>,
+        IEventHandler<ReplyMessagePublished>
     {
         private readonly ITimelineMessagesRepository _timelineMessagesRepository;
 
@@ -15,6 +17,12 @@ namespace Mixter.Domain.Messages.Handlers
         public void Handle(MessagePublished evt)
         {
             var authorMessage = new TimelineMessage(evt.Author, evt);
+            _timelineMessagesRepository.Save(authorMessage);
+        }
+
+        public void Handle(ReplyMessagePublished evt)
+        {
+            var authorMessage = new TimelineMessage(evt.Replier, evt);
             _timelineMessagesRepository.Save(authorMessage);
         }
     }

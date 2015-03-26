@@ -32,6 +32,15 @@ namespace Mixter.Tests.Domain.Messages
             Check.That(_timelineMessagesRepositoryFake.Messages.Single()).IsEqualTo(new TimelineMessage(new UserId("author"), messagePublished));
         }
 
+        [TestMethod]
+        public void WhenHandleReplyMessagePublishedThenReplyMessageIsSaved()
+        {
+            var replyMessagePublished = new ReplyMessagePublished(MessageId.Generate(), new UserId("author"), "content", MessageId.Generate());
+            _handler.Handle(replyMessagePublished);
+
+            Check.That(_timelineMessagesRepositoryFake.Messages.Single()).IsEqualTo(new TimelineMessage(new UserId("author"), replyMessagePublished));
+        }
+
         private class TimelineMessagesRepositoryFake : ITimelineMessagesRepository
         {
             private readonly IList<TimelineMessage> _messages = new List<TimelineMessage>();
