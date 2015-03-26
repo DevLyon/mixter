@@ -12,11 +12,14 @@ namespace Mixter
     {
         private static readonly IEventPublisher EventPublisher;
         private static readonly ITimelineMessagesRepository TimelineMessagesRepository;
+        private static readonly IMessagesRepository MessagesRepository;
 
         static Program()
         {
-            TimelineMessagesRepository = new TimelineMessagesRepository();
             var eventsDatabase = new EventsDatabase();
+
+            TimelineMessagesRepository = new TimelineMessagesRepository();
+            MessagesRepository = new MessagesRepository(eventsDatabase);
             var handlersGenerator = new EventHandlersGenerator(eventsDatabase, TimelineMessagesRepository);
             EventPublisher = new EventPublisherWithStorage(eventsDatabase, new EventPublisher(handlersGenerator.Generate));
         }
@@ -110,7 +113,11 @@ namespace Mixter
 
         private static void Reply(UserId connectedUser, MessageId messageId)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Response :");
+            var responseContent = Console.ReadLine();
+
+            var message = MessagesRepository.Get(messageId);
+            message.Reply(EventPublisher, connectedUser, responseContent);
         }
 
         private static void Republish(UserId connectedUser, MessageId messageId)
