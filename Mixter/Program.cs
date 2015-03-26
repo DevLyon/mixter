@@ -11,7 +11,7 @@ namespace Mixter
     public class Program
     {
         private static readonly IEventPublisher EventPublisher;
-        private static readonly TimelineMessagesRepository TimelineMessagesRepository;
+        private static readonly ITimelineMessagesRepository TimelineMessagesRepository;
 
         static Program()
         {

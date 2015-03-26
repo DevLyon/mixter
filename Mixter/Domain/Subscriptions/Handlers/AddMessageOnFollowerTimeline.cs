@@ -3,16 +3,15 @@ using Mixter.Domain.Messages;
 using Mixter.Domain.Messages.Events;
 using Mixter.Domain.Subscriptions.Events;
 using Mixter.Infrastructure;
-using Mixter.Infrastructure.Repositories;
 
 namespace Mixter.Domain.Subscriptions.Handlers
 {
     public class AddMessageOnFollowerTimeline : IEventHandler<FollowerMessagePublished>
     {
         private readonly EventsDatabase _database;
-        private readonly TimelineMessagesRepository _timelineMessageRepository;
+        private readonly ITimelineMessagesRepository _timelineMessageRepository;
 
-        public AddMessageOnFollowerTimeline(EventsDatabase database, TimelineMessagesRepository timelineMessageRepository)
+        public AddMessageOnFollowerTimeline(EventsDatabase database, ITimelineMessagesRepository timelineMessageRepository)
         {
             _database = database;
             _timelineMessageRepository = timelineMessageRepository;

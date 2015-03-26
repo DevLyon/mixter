@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Mixter.Domain;
+using Mixter.Domain.Messages;
 using Mixter.Domain.Messages.Handlers;
 using Mixter.Domain.Subscriptions.Handlers;
 using Mixter.Infrastructure.Repositories;
@@ -9,9 +10,9 @@ namespace Mixter.Infrastructure
     public class EventHandlersGenerator
     {
         private readonly EventsDatabase _eventsDatabase;
-        private readonly TimelineMessagesRepository _timelineMessagesRepository;
+        private readonly ITimelineMessagesRepository _timelineMessagesRepository;
 
-        public EventHandlersGenerator(EventsDatabase eventsDatabase, TimelineMessagesRepository timelineMessagesRepository)
+        public EventHandlersGenerator(EventsDatabase eventsDatabase, ITimelineMessagesRepository timelineMessagesRepository)
         {
             _eventsDatabase = eventsDatabase;
             _timelineMessagesRepository = timelineMessagesRepository;
