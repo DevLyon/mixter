@@ -7,7 +7,7 @@ namespace Mixter.Infrastructure
 {
     public class SubscriptionRepository : ISubscriptionRepository
     {
-        public IEnumerable<UserId> GetFollowers(UserId userId)
+        public IEnumerable<Subscription> GetFollowers(UserId userId)
         {
             throw new NotImplementedException();
         }

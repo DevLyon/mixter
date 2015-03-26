@@ -1,12 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TimelineMessageHandlerTest.cs" company="">
-//   
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -21,16 +13,20 @@ namespace Mixter.Tests.Domain.Messages
     [TestClass]
     public class TimelineMessageHandlerTest
     {
+        private static readonly UserId Followee = new UserId("followee@mixit.fr");
+
         private TimelineMessagesRepositoryFake _timelineMessagesRepositoryFake;
         private SubscriptionRepositoryFake _subscriptionRepositoryFake;
         private TimelineMessageHandler _handler;
+        private EventPublisherFake _eventPublisher;
 
         [TestInitialize]
         public void Initialize()
         {
             _timelineMessagesRepositoryFake = new TimelineMessagesRepositoryFake();
-            _subscriptionRepositoryFake = new SubscriptionRepositoryFake();
-            _handler = new TimelineMessageHandler(_timelineMessagesRepositoryFake, _subscriptionRepositoryFake);
+            _subscriptionRepositoryFake = new SubscriptionRepositoryFake(Followee);
+            _eventPublisher = new EventPublisherFake();
+            _handler = new TimelineMessageHandler(_timelineMessagesRepositoryFake, _subscriptionRepositoryFake, _eventPublisher);
         }
 
         [TestMethod]
@@ -45,17 +41,16 @@ namespace Mixter.Tests.Domain.Messages
         }
 
         [TestMethod]
-        public void WhenMessagePublishedByFolloweeThenAddMessageInFollowerTimeline()
+        public void WhenMessagePublishedByFolloweeThenRaiseFollowerMessagePublished()
         {
             var follower = new UserId("follower@mixit.fr");
-            var followee = new UserId("followee@mixit.fr");
             _subscriptionRepositoryFake.AddFollower(follower);
 
             var messageId = MessageId.Generate();
             const string content = "content";
-            _handler.Handle(new MessagePublished(messageId, followee, content));
+            _handler.Handle(new MessagePublished(messageId, Followee, content));
 
-            Check.That(_timelineMessagesRepositoryFake.Messages).Contains(new TimelineMessage(follower, followee, content, messageId));
+            Check.That(_eventPublisher.Events).Contains(new FollowerMessagePublished(new SubscriptionId(follower, Followee), messageId));
         }
 
         private class TimelineMessagesRepositoryFake : ITimelineMessagesRepository
@@ -77,20 +72,26 @@ namespace Mixter.Tests.Domain.Messages
                 throw new NotImplementedException();
             }
         }
-    }
 
-    public class SubscriptionRepositoryFake : ISubscriptionRepository
-    {
-        private readonly IList<UserId> _followers = new List<UserId>();
-
-        public void AddFollower(UserId follower)
+        private class SubscriptionRepositoryFake : ISubscriptionRepository
         {
-            _followers.Add(follower);
-        }
+            private readonly UserId _followee;
+            private readonly IList<Subscription> _followers = new List<Subscription>();
 
-        public IEnumerable<UserId> GetFollowers(UserId userId)
-        {
-            return _followers;
+            public SubscriptionRepositoryFake(UserId followee)
+            {
+                _followee = followee;
+            }
+
+            public void AddFollower(UserId follower)
+            {
+                _followers.Add(new Subscription(new IDomainEvent[] { new UserFollowed(new SubscriptionId(follower, _followee)) }));
+            }
+
+            public IEnumerable<Subscription> GetFollowers(UserId userId)
+            {
+                return _followers;
+            }
         }
     }
 }

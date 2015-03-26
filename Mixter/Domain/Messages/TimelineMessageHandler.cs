@@ -7,11 +7,13 @@ namespace Mixter.Domain.Messages
     {
         private readonly ITimelineMessagesRepository _timelineMessagesRepository;
         private readonly ISubscriptionRepository _subscriptionRepository;
+        private readonly IEventPublisher _eventPublisher;
 
-        public TimelineMessageHandler(ITimelineMessagesRepository timelineMessagesRepository, ISubscriptionRepository subscriptionRepository)
+        public TimelineMessageHandler(ITimelineMessagesRepository timelineMessagesRepository, ISubscriptionRepository subscriptionRepository, IEventPublisher eventPublisher)
         {
             _timelineMessagesRepository = timelineMessagesRepository;
             _subscriptionRepository = subscriptionRepository;
+            _eventPublisher = eventPublisher;
         }
 
         public void Handle(MessagePublished evt)
@@ -21,7 +23,7 @@ namespace Mixter.Domain.Messages
             var followers = _subscriptionRepository.GetFollowers(evt.Author);
             foreach (var follower in followers)
             {
-                AddMessageInTimeline(follower, evt.Author, evt.Content, evt.Id);
+                follower.NotifyFollower(_eventPublisher, evt.Id);
             }
         }
 

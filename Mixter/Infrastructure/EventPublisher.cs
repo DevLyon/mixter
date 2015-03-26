@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Mixter.Domain;
 
 namespace Mixter.Infrastructure
@@ -10,6 +12,11 @@ namespace Mixter.Infrastructure
         public EventPublisher(params IEventHandler[] handlers)
         {
             _handlers = handlers;
+        }
+
+        public EventPublisher(Func<IEventPublisher, IEnumerable<IEventHandler>> generateHandlers)
+        {
+            _handlers = generateHandlers(this).ToArray();
         }
 
         public void Publish<TEvent>(TEvent evt) where TEvent : IDomainEvent

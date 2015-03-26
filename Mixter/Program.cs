@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Mixter.Domain;
 using Mixter.Domain.Messages;
 using Mixter.Domain.Subscriptions;
@@ -14,9 +15,13 @@ namespace Mixter
         static Program()
         {
             TimelineMessagesRepository = new TimelineMessagesRepository();
-            EventPublisher = new EventPublisher(
-                new MessagePublishedHandler(), 
-                new TimelineMessageHandler(TimelineMessagesRepository, new SubscriptionRepository()));
+            EventPublisher = new EventPublisher(GenerateEventHandlers);
+        }
+
+        private static IEnumerable<IEventHandler> GenerateEventHandlers(IEventPublisher eventPublisher)
+        {
+            yield return new MessagePublishedHandler();
+            yield return new TimelineMessageHandler(TimelineMessagesRepository, new SubscriptionRepository(), eventPublisher);
         }
 
         public static void Main(string[] args)
