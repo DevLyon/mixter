@@ -8,5 +8,10 @@ namespace Mixter.Domain.Messages
         {
             MessageId = messageId;
         }
+
+        public object GetAggregateId()
+        {
+            return MessageId;
+        }
     }
 }

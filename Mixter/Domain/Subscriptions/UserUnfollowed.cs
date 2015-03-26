@@ -8,5 +8,10 @@
         {
             SubscriptionId = subscriptionId;
         }
+
+        public object GetAggregateId()
+        {
+            return SubscriptionId;
+        }
     }
 }

@@ -22,5 +22,10 @@ namespace Mixter.Domain.Messages
             ReplyContent = replyContent;
             ParentId = parentId;
         }
+
+        public object GetAggregateId()
+        {
+            return ReplyId;
+        }
     }
 }

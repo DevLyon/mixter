@@ -15,5 +15,10 @@ namespace Mixter.Domain.Messages
             Id = id;
             Author = author;
         }
+
+        public object GetAggregateId()
+        {
+            return Id;
+        }
     }
 }

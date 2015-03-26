@@ -13,5 +13,10 @@ namespace Mixter.Domain.Subscriptions
             SubscriptionId = subscriptionId;
             MessageId = messageId;
         }
+
+        public object GetAggregateId()
+        {
+            return SubscriptionId;
+        }
     }
 }

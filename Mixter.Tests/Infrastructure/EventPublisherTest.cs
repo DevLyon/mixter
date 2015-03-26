@@ -44,10 +44,18 @@ namespace Mixter.Tests.Infrastructure
 
         private class EventA : IDomainEvent
         {
+            public object GetAggregateId()
+            {
+                return "A";
+            }
         }
 
         private class EventB : IDomainEvent
         {
+            public object GetAggregateId()
+            {
+                return "B";
+            }
         }
     }
 }
