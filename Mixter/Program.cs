@@ -21,7 +21,8 @@ namespace Mixter
         private static IEnumerable<IEventHandler> GenerateEventHandlers(IEventPublisher eventPublisher)
         {
             yield return new MessagePublishedHandler();
-            yield return new TimelineMessageHandler(TimelineMessagesRepository, new SubscriptionRepository(new EventsDatabase()), eventPublisher);
+            yield return new AddMessageOnAuthorTimeline(TimelineMessagesRepository);
+            yield return new NotifyFollowerOfFolloweeMessage(new SubscriptionRepository(new EventsDatabase()), eventPublisher);
         }
 
         public static void Main(string[] args)
