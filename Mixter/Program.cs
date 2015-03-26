@@ -122,7 +122,8 @@ namespace Mixter
 
         private static void Republish(UserId connectedUser, MessageId messageId)
         {
-            throw new NotImplementedException();
+            var message = MessagesRepository.Get(messageId);
+            message.RepublishMessage(EventPublisher, connectedUser);
         }
 
         private static string AskEmail()
