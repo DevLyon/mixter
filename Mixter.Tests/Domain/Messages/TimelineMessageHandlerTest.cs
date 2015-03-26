@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mixter.Domain;
 using Mixter.Domain.Messages;
 using Mixter.Domain.Subscriptions;
+using Mixter.Infrastructure;
 using Mixter.Tests.Infrastructure;
 using NFluent;
 
@@ -16,17 +17,19 @@ namespace Mixter.Tests.Domain.Messages
         private static readonly UserId Followee = new UserId("followee@mixit.fr");
 
         private TimelineMessagesRepositoryFake _timelineMessagesRepositoryFake;
-        private SubscriptionRepositoryFake _subscriptionRepositoryFake;
+        private ISubscriptionRepository _subscriptionRepository;
         private TimelineMessageHandler _handler;
         private EventPublisherFake _eventPublisher;
+        private EventsDatabase _database;
 
         [TestInitialize]
         public void Initialize()
         {
+            _database = new EventsDatabase();
             _timelineMessagesRepositoryFake = new TimelineMessagesRepositoryFake();
-            _subscriptionRepositoryFake = new SubscriptionRepositoryFake(Followee);
+            _subscriptionRepository = new SubscriptionRepository(_database);
             _eventPublisher = new EventPublisherFake();
-            _handler = new TimelineMessageHandler(_timelineMessagesRepositoryFake, _subscriptionRepositoryFake, _eventPublisher);
+            _handler = new TimelineMessageHandler(_timelineMessagesRepositoryFake, _subscriptionRepository, _eventPublisher);
         }
 
         [TestMethod]
@@ -44,13 +47,18 @@ namespace Mixter.Tests.Domain.Messages
         public void WhenMessagePublishedByFolloweeThenRaiseFollowerMessagePublished()
         {
             var follower = new UserId("follower@mixit.fr");
-            _subscriptionRepositoryFake.AddFollower(follower);
+            AddFollower(follower);
 
             var messageId = MessageId.Generate();
             const string content = "content";
             _handler.Handle(new MessagePublished(messageId, Followee, content));
 
             Check.That(_eventPublisher.Events).Contains(new FollowerMessagePublished(new SubscriptionId(follower, Followee), messageId));
+        }
+
+        private void AddFollower(UserId follower)
+        {
+            _database.Store(new UserFollowed(new SubscriptionId(follower, Followee)));
         }
 
         private class TimelineMessagesRepositoryFake : ITimelineMessagesRepository
@@ -70,27 +78,6 @@ namespace Mixter.Tests.Domain.Messages
             public IEnumerable<TimelineMessage> GetMessagesOfUser(UserId userId)
             {
                 throw new NotImplementedException();
-            }
-        }
-
-        private class SubscriptionRepositoryFake : ISubscriptionRepository
-        {
-            private readonly UserId _followee;
-            private readonly IList<Subscription> _followers = new List<Subscription>();
-
-            public SubscriptionRepositoryFake(UserId followee)
-            {
-                _followee = followee;
-            }
-
-            public void AddFollower(UserId follower)
-            {
-                _followers.Add(new Subscription(new IDomainEvent[] { new UserFollowed(new SubscriptionId(follower, _followee)) }));
-            }
-
-            public IEnumerable<Subscription> GetFollowers(UserId userId)
-            {
-                return _followers;
             }
         }
     }
