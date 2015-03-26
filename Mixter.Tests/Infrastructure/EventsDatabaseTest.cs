@@ -11,6 +11,7 @@ namespace Mixter.Tests.Infrastructure
     {
         private static readonly AgregateAId AgregateId1 = new AgregateAId("A");
         private static readonly AgregateAId AgregateId2 = new AgregateAId("B");
+
         private EventsDatabase _database;
 
         [TestInitialize]
@@ -50,6 +51,17 @@ namespace Mixter.Tests.Infrastructure
             var eventsOfAggregateA = _database.GetEventsOfAggregate(AgregateId1).ToArray();
 
             Check.That(eventsOfAggregateA.Cast<EventA>().Select(o => o.Value)).ContainsExactly(1, 2, 3);
+        }
+
+        [TestMethod]
+        public void WhenGetEventsThenReturnAllEvents()
+        {
+            _database.Store(new EventA(AgregateId1));
+            _database.Store(new EventA(AgregateId2));
+
+            var events = _database.GetEvents();
+
+            Check.That(events).HasSize(2);
         }
 
         private struct EventA : IDomainEvent

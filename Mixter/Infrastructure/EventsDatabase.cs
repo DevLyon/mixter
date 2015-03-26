@@ -8,14 +8,19 @@ namespace Mixter.Infrastructure
     {
         private readonly IList<IDomainEvent> _events = new List<IDomainEvent>();
 
-        public IEnumerable<IDomainEvent> GetEventsOfAggregate<TAggregate>(TAggregate id)
+        public void Store(IDomainEvent evt)
+        {
+            _events.Add(evt);
+        }
+
+        public IEnumerable<IDomainEvent> GetEventsOfAggregate<TAggregateId>(TAggregateId id)
         {
             return _events.Where(o => o.GetAggregateId().Equals(id));
         }
 
-        public void Store(IDomainEvent evt)
+        public IEnumerable<IDomainEvent> GetEvents()
         {
-            _events.Add(evt);
+            return _events;
         }
     }
 }
