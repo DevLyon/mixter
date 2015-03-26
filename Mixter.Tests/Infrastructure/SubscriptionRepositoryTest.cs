@@ -29,11 +29,11 @@ namespace Mixter.Tests.Infrastructure
         [TestMethod]
         public void GivenSubscriptionEventsWhenGetFollowersThenReturnSubscription()
         {
-            var followee = new UserId("followee@mixit.fr");
-            _database.Store(new UserFollowed(new SubscriptionId(Follower1, followee)));
-            _database.Store(new UserFollowed(new SubscriptionId(Follower2, followee)));
+            For(Followee1)
+                .Add(Follower1)
+                .Add(Follower2);
 
-            var subscriptions = _repository.GetFollowers(followee);
+            var subscriptions = _repository.GetFollowers(Followee1);
 
             Check.That(subscriptions).HasSize(2);
         }
@@ -41,12 +41,36 @@ namespace Mixter.Tests.Infrastructure
         [TestMethod]
         public void WhenGetFollowersOfUserThenReturnSubscriptionOfOnlyThisUser()
         {
-            _database.Store(new UserFollowed(new SubscriptionId(Follower1, Followee1)));
-            _database.Store(new UserFollowed(new SubscriptionId(Follower2, Followee2)));
+            For(Followee1).Add(Follower1);
+            For(Followee2).Add(Follower2);
 
             var subscriptions = _repository.GetFollowers(Followee1);
 
             Check.That(subscriptions.Select(o => o.GetId().Follower)).HasSize(1).And.Contains(Follower1);
+        }
+
+        private FolloweeFor For(UserId followee)
+        {
+            return new FolloweeFor(_database, followee);
+        }
+
+        private class FolloweeFor
+        {
+            private readonly EventsDatabase _database;
+            private readonly UserId _followee;
+
+            public FolloweeFor(EventsDatabase database, UserId followee)
+            {
+                _database = database;
+                _followee = followee;
+            }
+
+            public FolloweeFor Add(UserId follower)
+            {
+                _database.Store(new UserFollowed(new SubscriptionId(follower, _followee)));
+
+                return this;
+            }
         }
     }
 }
