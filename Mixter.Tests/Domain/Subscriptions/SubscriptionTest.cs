@@ -31,6 +31,16 @@ namespace Mixter.Tests.Domain.Subscriptions
         }
 
         [TestMethod]
+        public void GivenUserFollowedWhenGteIdThenReturnGoodSubcriptionId()
+        {
+            var subscription = Create(new UserFollowed(SubscriptionId));
+
+            subscription.Unfollow(_eventPublisher);
+
+            Check.That(subscription.GetId()).IsEqualTo(SubscriptionId);
+        }
+
+        [TestMethod]
         public void WhenUnfollowThenUserUnfollowedIsRaised()
         {
             var subscription = Create(new UserFollowed(SubscriptionId));

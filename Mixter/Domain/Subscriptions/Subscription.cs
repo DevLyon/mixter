@@ -17,6 +17,11 @@ namespace Mixter.Domain.Subscriptions
             }
         }
 
+        public SubscriptionId GetId()
+        {
+            return _projection.Id;
+        }
+
         public static void FollowUser(IEventPublisher eventPublisher, UserId follower, UserId followee)
         {
             var userFollowed = new UserFollowed(new SubscriptionId(follower, followee));
