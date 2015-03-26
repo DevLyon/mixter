@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using Mixter.Domain;
 using Mixter.Domain.Messages;
+using Mixter.Domain.Messages.Events;
+using Mixter.Domain.Messages.Handlers;
 using Mixter.Domain.Subscriptions;
 using Mixter.Infrastructure;
 

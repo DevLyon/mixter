@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Mixter.Domain.Messages.Events;
 
 namespace Mixter.Domain.Messages
 {

@@ -1,6 +1,7 @@
+using Mixter.Domain.Messages.Events;
 using Mixter.Infrastructure;
 
-namespace Mixter.Domain.Messages
+namespace Mixter.Domain.Messages.Handlers
 {
     public class AddMessageOnAuthorTimeline : IEventHandler<MessagePublished>
     {

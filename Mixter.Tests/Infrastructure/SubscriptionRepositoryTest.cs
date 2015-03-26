@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mixter.Domain;
 using Mixter.Domain.Subscriptions;
+using Mixter.Domain.Subscriptions.Events;
 using Mixter.Infrastructure;
 using NFluent;
 

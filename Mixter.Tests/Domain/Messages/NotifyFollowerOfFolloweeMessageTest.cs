@@ -1,7 +1,10 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mixter.Domain;
 using Mixter.Domain.Messages;
+using Mixter.Domain.Messages.Events;
+using Mixter.Domain.Messages.Handlers;
 using Mixter.Domain.Subscriptions;
+using Mixter.Domain.Subscriptions.Events;
 using Mixter.Infrastructure;
 using Mixter.Tests.Infrastructure;
 using NFluent;

@@ -2,6 +2,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mixter.Domain;
 using Mixter.Domain.Messages;
+using Mixter.Domain.Messages.Events;
 using Mixter.Tests.Infrastructure;
 using NFluent;
 

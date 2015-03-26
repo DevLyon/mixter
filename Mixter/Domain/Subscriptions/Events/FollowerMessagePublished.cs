@@ -1,6 +1,6 @@
 using Mixter.Domain.Messages;
 
-namespace Mixter.Domain.Subscriptions
+namespace Mixter.Domain.Subscriptions.Events
 {
     public struct FollowerMessagePublished : IDomainEvent
     {

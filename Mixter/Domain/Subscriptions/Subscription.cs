@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Mixter.Domain.Messages;
+using Mixter.Domain.Subscriptions.Events;
 
 namespace Mixter.Domain.Subscriptions
 {

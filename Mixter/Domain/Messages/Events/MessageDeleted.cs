@@ -1,4 +1,4 @@
-namespace Mixter.Domain.Messages
+namespace Mixter.Domain.Messages.Events
 {
     public struct MessageDeleted : IDomainEvent
     {

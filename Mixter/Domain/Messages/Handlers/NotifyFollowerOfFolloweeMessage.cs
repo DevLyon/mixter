@@ -1,7 +1,8 @@
+using Mixter.Domain.Messages.Events;
 using Mixter.Domain.Subscriptions;
 using Mixter.Infrastructure;
 
-namespace Mixter.Domain.Messages
+namespace Mixter.Domain.Messages.Handlers
 {
     public class NotifyFollowerOfFolloweeMessage : IEventHandler<MessagePublished>
     {

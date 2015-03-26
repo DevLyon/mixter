@@ -2,6 +2,7 @@
 using Mixter.Domain;
 using Mixter.Domain.Messages;
 using Mixter.Domain.Subscriptions;
+using Mixter.Domain.Subscriptions.Events;
 using Mixter.Tests.Infrastructure;
 using NFluent;
 

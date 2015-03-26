@@ -1,10 +1,11 @@
-﻿namespace Mixter.Domain.Subscriptions
+﻿namespace Mixter.Domain.Subscriptions.Events
 {
-    public struct UserUnfollowed : IDomainEvent
+    public struct UserFollowed : IDomainEvent
     {
         public SubscriptionId SubscriptionId { get; private set; }
 
-        public UserUnfollowed(SubscriptionId subscriptionId) : this()
+        public UserFollowed(SubscriptionId subscriptionId)
+            : this()
         {
             SubscriptionId = subscriptionId;
         }
