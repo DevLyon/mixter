@@ -10,7 +10,7 @@ using NFluent;
 namespace Mixter.Tests.Infrastructure.Repositories
 {
     [TestClass]
-    public class SubscriptionRepositoryTest
+    public class SubscriptionsRepositoryTest
     {
         private static readonly UserId Followee1 = new UserId("followee1@mixit.fr");
         private static readonly UserId Followee2 = new UserId("followee2@mixit.fr");
@@ -19,13 +19,13 @@ namespace Mixter.Tests.Infrastructure.Repositories
         private static readonly UserId Follower2 = new UserId("follower2@mixit.fr");
 
         private EventsDatabase _database;
-        private SubscriptionRepository _repository;
+        private SubscriptionsRepository _repository;
 
         [TestInitialize]
         public void Initialize()
         {
             _database = new EventsDatabase();
-            _repository = new SubscriptionRepository(_database);
+            _repository = new SubscriptionsRepository(_database);
         }
 
         [TestMethod]

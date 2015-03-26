@@ -72,7 +72,7 @@
     <Compile Include="Infrastructure\Repositories\TimelineMessagesRepository.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Infrastructure\Repositories\SubscriptionRepository.cs" />
+    <Compile Include="Infrastructure\Repositories\SubscriptionsRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

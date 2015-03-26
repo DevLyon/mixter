@@ -26,7 +26,7 @@ namespace Mixter.Tests.Domain.Messages
         public void Initialize()
         {
             _database = new EventsDatabase();
-            _subscriptionRepository = new SubscriptionRepository(_database);
+            _subscriptionRepository = new SubscriptionsRepository(_database);
             _eventPublisher = new EventPublisherFake();
             _handler = new NotifyFollowerOfFolloweeMessage(_subscriptionRepository, _eventPublisher);
         }

@@ -6,11 +6,11 @@ using Mixter.Domain.Subscriptions.Events;
 
 namespace Mixter.Infrastructure.Repositories
 {
-    public class SubscriptionRepository : ISubscriptionRepository
+    public class SubscriptionsRepository : ISubscriptionRepository
     {
         private readonly EventsDatabase _database;
 
-        public SubscriptionRepository(EventsDatabase database)
+        public SubscriptionsRepository(EventsDatabase database)
         {
             _database = database;
         }

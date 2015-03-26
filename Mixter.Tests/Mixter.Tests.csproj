@@ -66,7 +66,7 @@
     <Compile Include="Infrastructure\EventPublisherWithStorageTest.cs" />
     <Compile Include="Infrastructure\EventsDatabaseTest.cs" />
     <Compile Include="Infrastructure\Repositories\MessagesRepositoryTest.cs" />
-    <Compile Include="Infrastructure\Repositories\SubscriptionRepositoryTest.cs" />
+    <Compile Include="Infrastructure\Repositories\SubscriptionsRepositoryTest.cs" />
     <Compile Include="Infrastructure\Repositories\TimelineMessagesRepositoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
