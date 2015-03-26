@@ -30,7 +30,7 @@ namespace Mixter.Tests.Domain.Messages
         [TestMethod]
         public void WhenPublishMessageThenRaiseUserMessagePublished()
         {
-            Message.PublishMessage(_eventPublisher, Author, MessageContent);
+            Message.Publish(_eventPublisher, Author, MessageContent);
 
             var evt = (MessagePublished)_eventPublisher.Events.First();
             Check.That(evt.Content).IsEqualTo(MessageContent);
@@ -42,7 +42,7 @@ namespace Mixter.Tests.Domain.Messages
             var message = CreateMessage(
                 new MessagePublished(MessageId, Author, MessageContent));
 
-            message.RepublishMessage(_eventPublisher, Republisher);
+            message.Republish(_eventPublisher, Republisher);
 
             Check.That(_eventPublisher.Events).Contains(new MessageRepublished(message.GetId(), Republisher));
         }
@@ -53,7 +53,7 @@ namespace Mixter.Tests.Domain.Messages
             var message = CreateMessage(
                 new MessagePublished(MessageId, Author, MessageContent));
 
-            message.RepublishMessage(_eventPublisher, Author);
+            message.Republish(_eventPublisher, Author);
 
             Check.That(_eventPublisher.Events).IsEmpty();
         }
@@ -65,7 +65,7 @@ namespace Mixter.Tests.Domain.Messages
                 new MessagePublished(MessageId, Author, MessageContent), 
                 new MessageRepublished(MessageId, Republisher));
 
-            message.RepublishMessage(_eventPublisher, Republisher);
+            message.Republish(_eventPublisher, Republisher);
 
             Check.That(_eventPublisher.Events).IsEmpty();
         }

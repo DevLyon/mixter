@@ -78,7 +78,7 @@ namespace Mixter
             Console.WriteLine("Content :");
             var content = Console.ReadLine();
 
-            Message.PublishMessage(EventPublisher, author, content);
+            Message.Publish(EventPublisher, author, content);
         }
 
         private static void DisplayTimeline(UserId connectedUser)
@@ -123,7 +123,7 @@ namespace Mixter
         private static void Republish(UserId connectedUser, MessageId messageId)
         {
             var message = MessagesRepository.Get(messageId);
-            message.RepublishMessage(EventPublisher, connectedUser);
+            message.Republish(EventPublisher, connectedUser);
         }
 
         private static string AskEmail()

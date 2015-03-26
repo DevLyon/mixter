@@ -22,13 +22,13 @@ namespace Mixter.Domain.Messages
             }
         }
 
-        public static Message PublishMessage(IEventPublisher eventPublisher, UserId author, string content)
+        public static Message Publish(IEventPublisher eventPublisher, UserId author, string content)
         {
             var messagePublished = new MessagePublished(MessageId.Generate(), author, content);
             return new Message(eventPublisher, messagePublished);
         }
 
-        public void RepublishMessage(IEventPublisher eventPublisher, UserId republisher)
+        public void Republish(IEventPublisher eventPublisher, UserId republisher)
         {
             if (!_projection.Publishers.Contains(republisher))
             {
