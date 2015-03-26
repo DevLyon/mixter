@@ -26,12 +26,10 @@ namespace Mixter.Tests.Domain.Messages
         [TestMethod]
         public void WhenHandleMessagePublishedThenMessageIsSaved()
         {
-            var author = new UserId("author");
-            var messageId = MessageId.Generate();
-            const string content = "content";
-            _handler.Handle(new MessagePublished(messageId, author, content));
+            var messagePublished = new MessagePublished(MessageId.Generate(), new UserId("author"), "content");
+            _handler.Handle(messagePublished);
 
-            Check.That(_timelineMessagesRepositoryFake.Messages.Single()).IsEqualTo(new TimelineMessage(author, author, content, messageId));
+            Check.That(_timelineMessagesRepositoryFake.Messages.Single()).IsEqualTo(new TimelineMessage(new UserId("author"), messagePublished));
         }
 
         private class TimelineMessagesRepositoryFake : ITimelineMessagesRepository

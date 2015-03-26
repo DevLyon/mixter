@@ -14,7 +14,7 @@ namespace Mixter.Domain.Messages.Handlers
 
         public void Handle(MessagePublished evt)
         {
-            var authorMessage = new TimelineMessage(evt.Author, evt.Author, evt.Content, evt.Id);
+            var authorMessage = new TimelineMessage(evt.Author, evt);
             _timelineMessagesRepository.Save(authorMessage);
         }
     }
