@@ -62,6 +62,7 @@
     <Compile Include="Domain\Subscriptions\Events\UserFollowed.cs" />
     <Compile Include="Domain\Subscriptions\Events\UserUnfollowed.cs" />
     <Compile Include="Domain\UserId.cs" />
+    <Compile Include="Infrastructure\EventHandlersGenerator.cs" />
     <Compile Include="Infrastructure\EventPublisher.cs" />
     <Compile Include="Infrastructure\EventsDatabase.cs" />
     <Compile Include="Infrastructure\IEventHandler.cs" />

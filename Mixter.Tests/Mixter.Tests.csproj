@@ -56,6 +56,7 @@
     <Compile Include="Domain\Messages\NotifyFollowerOfFolloweeMessageTest.cs" />
     <Compile Include="Domain\Messages\AddMessageOnAuthorTimelineTest.cs" />
     <Compile Include="Domain\Subscriptions\AddMessageOnFollowerTimelineTest.cs" />
+    <Compile Include="Infrastructure\EventHandlersGeneratorTest.cs" />
     <Compile Include="Infrastructure\EventPublisherFake.cs" />
     <Compile Include="Domain\Messages\MessageIdTest.cs" />
     <Compile Include="Domain\Messages\MessageTest.cs" />

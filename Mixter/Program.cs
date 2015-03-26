@@ -5,6 +5,7 @@ using Mixter.Domain.Messages;
 using Mixter.Domain.Messages.Events;
 using Mixter.Domain.Messages.Handlers;
 using Mixter.Domain.Subscriptions;
+using Mixter.Domain.Subscriptions.Handlers;
 using Mixter.Infrastructure;
 
 namespace Mixter
@@ -22,9 +23,12 @@ namespace Mixter
 
         private static IEnumerable<IEventHandler> GenerateEventHandlers(IEventPublisher eventPublisher)
         {
+            var eventsDatabase = new EventsDatabase();
+
             yield return new MessagePublishedHandler();
             yield return new AddMessageOnAuthorTimeline(TimelineMessagesRepository);
-            yield return new NotifyFollowerOfFolloweeMessage(new SubscriptionRepository(new EventsDatabase()), eventPublisher);
+            yield return new NotifyFollowerOfFolloweeMessage(new SubscriptionRepository(eventsDatabase), eventPublisher);
+            yield return new AddMessageOnFollowerTimeline(eventsDatabase, TimelineMessagesRepository);
         }
 
         public static void Main(string[] args)
@@ -140,7 +144,7 @@ namespace Mixter
         }
     }
 
-    internal class MessagePublishedHandler : IEventHandler<MessagePublished>
+    public class MessagePublishedHandler : IEventHandler<MessagePublished>
     {
         public void Handle(MessagePublished evt)
         {
