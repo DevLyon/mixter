@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Mixter.Domain;
 using Mixter.Domain.Messages.Handlers;
 using Mixter.Domain.Subscriptions.Handlers;
 
@@ -15,7 +16,7 @@ namespace Mixter.Infrastructure
             _timelineMessagesRepository = timelineMessagesRepository;
         }
 
-        public IEnumerable<IEventHandler> Generate(EventPublisher eventPublisher)
+        public IEnumerable<IEventHandler> Generate(IEventPublisher eventPublisher)
         {
             yield return new MessagePublishedHandler();
             yield return new AddMessageOnAuthorTimeline(_timelineMessagesRepository);
