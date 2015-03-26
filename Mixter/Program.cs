@@ -17,7 +17,7 @@ namespace Mixter
             TimelineMessagesRepository = new TimelineMessagesRepository();
             var eventsDatabase = new EventsDatabase();
             var handlersGenerator = new EventHandlersGenerator(eventsDatabase, TimelineMessagesRepository);
-            EventPublisher = new EventPublisher(handlersGenerator.Generate);
+            EventPublisher = new EventPublisherWithStorage(eventsDatabase, new EventPublisher(handlersGenerator.Generate));
         }
 
         public static void Main(string[] args)
