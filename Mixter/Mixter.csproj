@@ -46,6 +46,7 @@
     <Compile Include="Domain\DecisionProjectionBase.cs" />
     <Compile Include="Domain\Messages\Handlers\AddMessageOnAuthorTimeline.cs" />
     <Compile Include="Domain\Messages\Handlers\NotifyFollowerOfFolloweeMessage.cs" />
+    <Compile Include="Domain\Subscriptions\Handlers\AddMessageOnFollowerTimeline.cs" />
     <Compile Include="Domain\Subscriptions\ISubscriptionRepository.cs" />
     <Compile Include="Domain\Messages\ITimelineMessagesRepository.cs" />
     <Compile Include="Domain\Messages\Message.cs" />

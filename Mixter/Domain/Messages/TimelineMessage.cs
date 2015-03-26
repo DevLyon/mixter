@@ -1,3 +1,5 @@
+using Mixter.Domain.Messages.Events;
+
 namespace Mixter.Domain.Messages
 {
     public struct TimelineMessage
@@ -17,6 +19,11 @@ namespace Mixter.Domain.Messages
             AuthorId = authorId;
             Content = content;
             MessageId = messageId;
+        }
+
+        public TimelineMessage(UserId ownerId, MessagePublished evt)
+            : this(ownerId, evt.Author, evt.Content, evt.Id)
+        {
         }
     }
 }
