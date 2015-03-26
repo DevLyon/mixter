@@ -4,7 +4,7 @@ using Mixter.Domain;
 using Mixter.Domain.Subscriptions;
 using Mixter.Domain.Subscriptions.Events;
 
-namespace Mixter.Infrastructure
+namespace Mixter.Infrastructure.Repositories
 {
     public class SubscriptionRepository : ISubscriptionRepository
     {

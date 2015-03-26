@@ -3,6 +3,7 @@ using Mixter.Domain.Messages;
 using Mixter.Domain.Messages.Events;
 using Mixter.Domain.Subscriptions.Events;
 using Mixter.Infrastructure;
+using Mixter.Infrastructure.Repositories;
 
 namespace Mixter.Domain.Subscriptions.Handlers
 {

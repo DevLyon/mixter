@@ -4,6 +4,7 @@ using Mixter.Domain.Messages;
 using Mixter.Domain.Messages.Events;
 using Mixter.Domain.Subscriptions;
 using Mixter.Infrastructure;
+using Mixter.Infrastructure.Repositories;
 
 namespace Mixter
 {

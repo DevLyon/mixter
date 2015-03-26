@@ -3,7 +3,7 @@ using System.Linq;
 using Mixter.Domain;
 using Mixter.Domain.Messages;
 
-namespace Mixter.Infrastructure
+namespace Mixter.Infrastructure.Repositories
 {
     public class TimelineMessagesRepository : ITimelineMessagesRepository
     {

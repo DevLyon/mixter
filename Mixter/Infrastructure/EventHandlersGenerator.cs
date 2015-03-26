@@ -2,6 +2,7 @@
 using Mixter.Domain;
 using Mixter.Domain.Messages.Handlers;
 using Mixter.Domain.Subscriptions.Handlers;
+using Mixter.Infrastructure.Repositories;
 
 namespace Mixter.Infrastructure
 {

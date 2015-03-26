@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mixter.Infrastructure;
+using Mixter.Infrastructure.Repositories;
 using NFluent;
 
 namespace Mixter.Tests.Infrastructure

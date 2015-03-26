@@ -4,9 +4,10 @@ using Mixter.Domain;
 using Mixter.Domain.Subscriptions;
 using Mixter.Domain.Subscriptions.Events;
 using Mixter.Infrastructure;
+using Mixter.Infrastructure.Repositories;
 using NFluent;
 
-namespace Mixter.Tests.Infrastructure
+namespace Mixter.Tests.Infrastructure.Repositories
 {
     [TestClass]
     public class SubscriptionRepositoryTest

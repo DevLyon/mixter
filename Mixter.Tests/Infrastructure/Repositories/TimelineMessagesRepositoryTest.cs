@@ -2,10 +2,10 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mixter.Domain;
 using Mixter.Domain.Messages;
-using Mixter.Infrastructure;
+using Mixter.Infrastructure.Repositories;
 using NFluent;
 
-namespace Mixter.Tests.Infrastructure
+namespace Mixter.Tests.Infrastructure.Repositories
 {
     [TestClass]
     public class TimelineMessagesRepositoryTest

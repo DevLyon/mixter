@@ -6,6 +6,7 @@ using Mixter.Domain.Subscriptions;
 using Mixter.Domain.Subscriptions.Events;
 using Mixter.Domain.Subscriptions.Handlers;
 using Mixter.Infrastructure;
+using Mixter.Infrastructure.Repositories;
 using NFluent;
 
 namespace Mixter.Tests.Domain.Subscriptions
