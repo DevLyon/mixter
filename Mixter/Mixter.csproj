@@ -46,6 +46,7 @@
     <Compile Include="Domain\DecisionProjectionBase.cs" />
     <Compile Include="Domain\Messages\Handlers\AddMessageOnAuthorTimeline.cs" />
     <Compile Include="Domain\Messages\Handlers\NotifyFollowerOfFolloweeMessage.cs" />
+    <Compile Include="Domain\Messages\IMessagesRepository.cs" />
     <Compile Include="Domain\Subscriptions\Handlers\AddMessageOnFollowerTimeline.cs" />
     <Compile Include="Domain\Subscriptions\ISubscriptionRepository.cs" />
     <Compile Include="Domain\Messages\ITimelineMessagesRepository.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Infrastructure\EventPublisherWithStorage.cs" />
     <Compile Include="Infrastructure\EventsDatabase.cs" />
     <Compile Include="Infrastructure\IEventHandler.cs" />
+    <Compile Include="Infrastructure\Repositories\MessagesRepository.cs" />
     <Compile Include="Infrastructure\Repositories\TimelineMessagesRepository.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
