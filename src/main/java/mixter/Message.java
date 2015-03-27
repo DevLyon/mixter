@@ -10,18 +10,16 @@ class Message {
 
     public Message(List<Event> eventHistory) {
         projection = new DecisionProjection();
-        for (Event event : eventHistory) {
-            projection.apply(event);
-        }
+        eventHistory.forEach(projection::apply);
     }
 
     public static void publish(PublishMessage publishMessage, EventPublisher eventPublisher) {
         MessageId messageId = new MessageId();
-        eventPublisher.publish(new MessagePublished(messageId, publishMessage.getMessage()));
+        eventPublisher.publish(new MessagePublished(messageId, publishMessage.getMessage(), publishMessage.getAuthorId()));
     }
 
     public void republish(UserId userId, EventPublisher eventPublisher) {
-        if (projection.republishers.contains(userId)) {
+        if (projection.publishers.contains(userId)) {
             return;
         }
         MessageRepublished event = new MessageRepublished(projection.getId(), userId);
@@ -32,7 +30,7 @@ class Message {
     private class DecisionProjection {
         private MessageId id;
 
-        public Set<UserId> republishers = new HashSet<>();
+        public Set<UserId> publishers = new HashSet<>();
 
 
         public DecisionProjection() {
@@ -52,10 +50,11 @@ class Message {
 
         private void apply(MessagePublished event) {
             id = event.getMessageId();
+            publishers.add(event.getAuthorId());
         }
 
         private void apply(MessageRepublished event) {
-            republishers.add(event.getUserId());
+            publishers.add(event.getUserId());
         }
 
     }

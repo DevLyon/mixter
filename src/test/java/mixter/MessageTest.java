@@ -13,7 +13,8 @@ public class MessageTest {
     public void whenAMessageIsCreatedByAPublishMessageCommandThenItSendsAMessagePublishedEvent() {
         // Given
         String message = "message";
-        PublishMessage publishMessage = new PublishMessage(message);
+        UserId authorId=new UserId();
+        PublishMessage publishMessage = new PublishMessage(message, authorId);
 
         SpyEventPublisher eventPublisher = new SpyEventPublisher();
 
@@ -21,7 +22,7 @@ public class MessageTest {
         Message.publish(publishMessage, eventPublisher);
 
         // Then
-        MessagePublished expectedEvent = new MessagePublished(new Message.MessageId(), message);
+        MessagePublished expectedEvent = new MessagePublished(new Message.MessageId(), message, authorId);
         assertThat(eventPublisher.publishedEvents).extracting("message").containsExactly(expectedEvent.getMessage());
     }
 
@@ -29,7 +30,8 @@ public class MessageTest {
     public void whenAMessageIsRepublishedThenItSendsAMessageRepublishedEvent() {
         // Given
         Message.MessageId messageId = new Message.MessageId();
-        List<Event> eventHistory = history(new MessagePublished(messageId, "hello"));
+        UserId authorId=new UserId();
+        List<Event> eventHistory = history(new MessagePublished(messageId, "hello",authorId));
         Message message = new Message(eventHistory);
         UserId userId = new UserId();
 
@@ -45,12 +47,32 @@ public class MessageTest {
     }
 
     @Test
-    public void whenAMessageIsRepublishedTwiceByTheSameUserThenItShouldSendOnlyOneMessageRepublishedEvent() {
+    public void whenAMessageIsRepublishedByItsAuthorThenItShouldNotSendRepublishedEvent() {
+        // Given
+        Message.MessageId messageId = new Message.MessageId();
+        UserId authorId=new UserId();
+        List<Event> eventHistory = history(
+                new MessagePublished(messageId, "hello", authorId)
+        );
+
+        Message message = new Message(eventHistory);
+        SpyEventPublisher eventPublisher = new SpyEventPublisher();
+
+        // When
+        message.republish(authorId, eventPublisher);
+
+        // Then
+        assertThat(eventPublisher.publishedEvents).isEmpty();
+    }
+
+    @Test
+    public void whenAMessageIsRepublishedTwiceByTheSameUserThenItShouldNotSendMessageRepublishedEvent() {
         // Given
         Message.MessageId messageId = new Message.MessageId();
         UserId userId = new UserId();
+        UserId authorId=new UserId();
         List<Event> eventHistory = history(
-                new MessagePublished(messageId, "hello"),
+                new MessagePublished(messageId, "hello",authorId),
                 new MessageRepublished(messageId, userId)
         );
 
