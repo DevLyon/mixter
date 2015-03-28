@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Collections;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mixter.Domain.Core;
 using Mixter.Domain.Seo.UserProfiles;
 using Mixter.Tests.Infrastructure;
@@ -13,6 +14,7 @@ namespace Mixter.Tests.Domain.Seo
         private const string LastName = "Indien";
 
         private static readonly UserId UserId = new UserId("joe.indien@mixit.fr");
+        private static readonly UserProfileId UserProfileId = new UserProfileId(UserId);
 
         private EventPublisherFake _eventPublisher;
 
@@ -28,7 +30,18 @@ namespace Mixter.Tests.Domain.Seo
             UserProfile.Create(_eventPublisher, UserId, FirstName, LastName);
 
             Check.That(_eventPublisher.Events)
-                 .Contains(new UserProfileCreated(new UserProfileId(UserId), UserId, FirstName, LastName));
+                 .Contains(new UserProfileCreated(UserProfileId, UserId, FirstName, LastName));
+        }
+
+        [TestMethod]
+        public void WhenUpdateDescriptionThenRaiseUserProfileUpdated()
+        {
+            var userProfile = new UserProfile(new UserProfileCreated(UserProfileId, UserId, FirstName, LastName));
+
+            userProfile.UpdateDescription(_eventPublisher, "EventSourcing", "CQRS");
+
+            Check.That(_eventPublisher.Events)
+                 .Contains(new UserDescriptionUpdated(UserProfileId, "EventSourcing", "CQRS"));
         }
     }
 }
