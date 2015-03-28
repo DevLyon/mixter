@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\Identity\Session.cs" />
+    <Compile Include="Domain\Identity\SessionId.cs" />
     <Compile Include="Domain\Identity\UserEmailCannotBeEmpty.cs" />
     <Compile Include="Domain\Identity\Events\UserConnected.cs" />
     <Compile Include="Domain\Identity\Events\UserRegistered.cs" />
