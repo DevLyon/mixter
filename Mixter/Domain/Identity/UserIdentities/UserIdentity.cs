@@ -1,8 +1,8 @@
 ﻿using System;
 using Mixter.Domain.Core;
-using Mixter.Domain.Identity.UserIdentity.Events;
+using Mixter.Domain.Identity.UserIdentities.Events;
 
-namespace Mixter.Domain.Identity.UserIdentity
+namespace Mixter.Domain.Identity.UserIdentities
 {
     public class UserIdentity
     {

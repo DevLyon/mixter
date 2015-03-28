@@ -1,6 +1,6 @@
 ﻿using Mixter.Domain.Core;
 
-namespace Mixter.Domain.Identity.UserIdentity.Events
+namespace Mixter.Domain.Identity.UserIdentities.Events
 {
     public struct UserRegistered : IDomainEvent
     {

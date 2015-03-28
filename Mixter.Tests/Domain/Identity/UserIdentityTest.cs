@@ -3,8 +3,8 @@ using System.Collections;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mixter.Domain.Core;
-using Mixter.Domain.Identity.UserIdentity;
-using Mixter.Domain.Identity.UserIdentity.Events;
+using Mixter.Domain.Identity.UserIdentities;
+using Mixter.Domain.Identity.UserIdentities.Events;
 using Mixter.Tests.Infrastructure;
 using NFluent;
 
