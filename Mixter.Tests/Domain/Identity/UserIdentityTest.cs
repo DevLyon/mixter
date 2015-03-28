@@ -1,4 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using System.Collections;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mixter.Domain.Core;
 using Mixter.Domain.Identity.UserIdentity;
 using Mixter.Domain.Identity.UserIdentity.Events;
@@ -10,14 +13,34 @@ namespace Mixter.Tests.Domain.Identity
     [TestClass]
     public class UserIdentityTest
     {
+        private static readonly UserId UserId = new UserId("user@mixit.fr");
+
+        private EventPublisherFake _eventPublisher;
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            _eventPublisher = new EventPublisherFake();
+        }
+
         [TestMethod]
         public void WhenRegisterThenRaiseUserRegisteredEvent()
         {
-            var eventPublisher = new EventPublisherFake();
+            UserIdentity.Register(_eventPublisher, UserId);
 
-            UserIdentity.Register(eventPublisher, new UserId("user@mixit.fr"));
+            Check.That(_eventPublisher.Events).Contains(new UserRegistered(UserId));
+        }
 
-            Check.That(eventPublisher.Events).Contains(new UserRegistered(new UserId("user@mixit.fr")));
+        [TestMethod]
+        public void GivenUserRegisteredWhenLogThenRaiseUserConnectedEvent()
+        {
+            var userIdentity = new UserIdentity(new UserRegistered(UserId));
+
+            userIdentity.Log(_eventPublisher);
+
+            var evt = _eventPublisher.Events.OfType<UserConnected>().First();
+            Check.That(evt.UserId).IsEqualTo(UserId);
+            Check.That(evt.ConnectedAt).IsBeforeOrEqualTo(DateTime.Now).And.IsAfterOrEqualTo(DateTime.Now.AddSeconds(-1));
         }
     }
 }

@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\Identity\UserIdentity\Events\UserConnected.cs" />
     <Compile Include="Domain\Identity\UserIdentity\Events\UserRegistered.cs" />
     <Compile Include="Domain\Identity\UserIdentity\UserIdentity.cs" />
     <Compile Include="Domain\IDomainEvent.cs" />
