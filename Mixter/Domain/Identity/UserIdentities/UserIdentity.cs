@@ -1,6 +1,4 @@
-﻿using System;
-using Mixter.Domain.Core;
-using Mixter.Domain.Identity.UserIdentities.Events;
+﻿using Mixter.Domain.Identity.UserIdentities.Events;
 
 namespace Mixter.Domain.Identity.UserIdentities
 {
@@ -23,7 +21,7 @@ namespace Mixter.Domain.Identity.UserIdentities
 
         public void Log(IEventPublisher eventPublisher)
         {
-            eventPublisher.Publish(new UserConnected(_projection.Id, DateTime.Now));
+            Session.LogUser(eventPublisher, _projection.Id);
         }
 
         private class DecisionProjection : DecisionProjectionBase

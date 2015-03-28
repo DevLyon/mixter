@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\Identity\UserIdentities\Session.cs" />
     <Compile Include="Domain\Identity\UserEmailCannotBeEmpty.cs" />
     <Compile Include="Domain\Identity\UserIdentities\Events\UserConnected.cs" />
     <Compile Include="Domain\Identity\UserIdentities\Events\UserRegistered.cs" />
