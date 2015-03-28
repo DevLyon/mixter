@@ -3,6 +3,7 @@ using Mixter.Domain;
 using Mixter.Domain.Core.Messages;
 using Mixter.Domain.Core.Messages.Handlers;
 using Mixter.Domain.Core.Subscriptions.Handlers;
+using Mixter.Domain.Identity;
 using Mixter.Infrastructure.Repositories;
 
 namespace Mixter.Infrastructure
@@ -24,6 +25,7 @@ namespace Mixter.Infrastructure
             yield return new AddMessageOnAuthorTimeline(_timelineMessagesRepository);
             yield return new NotifyFollowerOfFolloweeMessage(new SubscriptionsRepository(_eventsDatabase), eventPublisher);
             yield return new AddMessageOnFollowerTimeline(_eventsDatabase, _timelineMessagesRepository);
+            yield return new SessionHandler(new SessionsRepository());
         }
     }
 }

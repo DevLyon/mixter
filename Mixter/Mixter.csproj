@@ -42,8 +42,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\Identity\Events\UserDisconnected.cs" />
+    <Compile Include="Domain\Identity\ISessionsRepository.cs" />
     <Compile Include="Domain\Identity\Session.cs" />
+    <Compile Include="Domain\Identity\SessionHandler.cs" />
     <Compile Include="Domain\Identity\SessionId.cs" />
+    <Compile Include="Domain\Identity\SessionProjection.cs" />
     <Compile Include="Domain\Identity\UserEmailCannotBeEmpty.cs" />
     <Compile Include="Domain\Identity\Events\UserConnected.cs" />
     <Compile Include="Domain\Identity\Events\UserRegistered.cs" />
@@ -80,6 +83,7 @@
     <Compile Include="Infrastructure\EventsDatabase.cs" />
     <Compile Include="Infrastructure\IEventHandler.cs" />
     <Compile Include="Infrastructure\Repositories\MessagesRepository.cs" />
+    <Compile Include="Infrastructure\Repositories\SessionsRepository.cs" />
     <Compile Include="Infrastructure\Repositories\TimelineMessagesRepository.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
