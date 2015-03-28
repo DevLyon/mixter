@@ -7,6 +7,11 @@
         public UserId(string email) 
             :this()
         {
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                throw new UserEmailCannotBeEmpty();
+            }
+
             Email = email;
         }
 

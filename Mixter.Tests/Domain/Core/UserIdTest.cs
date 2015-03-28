@@ -25,5 +25,11 @@ namespace Mixter.Tests.Domain.Core
 
             Check.That(userId1.ToString()).IsEqualTo(UserEmail);
         }
+
+        [TestMethod]
+        public void WhenCreateUserIdWithEmptyEmailThenThrowUserEmailCannotBeEmpty()
+        {
+            Check.ThatCode(() => new UserId(string.Empty)).Throws<UserEmailCannotBeEmpty>();
+        }
     }
 }
