@@ -3,7 +3,9 @@ using Mixter.Infrastructure;
 
 namespace Mixter.Domain.Identity
 {
-    public class SessionHandler : IEventHandler<UserConnected>
+    public class SessionHandler : 
+        IEventHandler<UserConnected>,
+        IEventHandler<UserDisconnected>
     {
         private readonly ISessionsRepository _repository;
 
@@ -15,6 +17,11 @@ namespace Mixter.Domain.Identity
         public void Handle(UserConnected evt)
         {
             _repository.Save(new SessionProjection(evt));
+        }
+
+        public void Handle(UserDisconnected evt)
+        {
+            _repository.ReplaceBy(new SessionProjection(evt));
         }
     }
 }

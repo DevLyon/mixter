@@ -28,21 +28,38 @@ namespace Mixter.Tests.Domain.Identity
             _handler.Handle(userConnected);
 
             Check.That(_repository.Projections)
-                 .ContainsExactly(new SessionProjection(userConnected.SessionId, userConnected.UserId));
+                 .ContainsExactly(new SessionProjection(userConnected.SessionId, userConnected.UserId, SessionState.Enabled));
+        }
+
+        [TestMethod]
+        public void WhenUserDiconnectedThenUpdateSessionProjectionAndEnableDisconnectedFlag()
+        {
+            var userConnected = new UserConnected(SessionId.Generate(), new UserId("user@mixit.fr"), DateTime.Now);
+            _handler.Handle(userConnected);
+
+            _handler.Handle(new UserDisconnected(userConnected.SessionId, userConnected.UserId));
+
+            Check.That(_repository.Projections)
+                 .ContainsExactly(new SessionProjection(userConnected.SessionId, userConnected.UserId, SessionState.Disabled));
         }
 
         private class SessionsRepositoryFake : ISessionsRepository
         {
-            public SessionsRepositoryFake()
-            {
-                Projections = new List<SessionProjection>();
-            }
+            private readonly Dictionary<SessionId, SessionProjection> _projectionsById = new Dictionary<SessionId, SessionProjection>();
 
-            public IList<SessionProjection> Projections { get; private set; }
+            public IEnumerable<SessionProjection> Projections
+            {
+                get { return _projectionsById.Values; }
+            }
 
             public void Save(SessionProjection projection)
             {
-                Projections.Add(projection);
+                _projectionsById[projection.SessionId] = projection;
+            }
+
+            public void ReplaceBy(SessionProjection projection)
+            {
+                Save(projection);
             }
         }
     }

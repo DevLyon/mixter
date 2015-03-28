@@ -3,5 +3,7 @@
     public interface ISessionsRepository
     {
         void Save(SessionProjection projection);
+
+        void ReplaceBy(SessionProjection projection);
     }
 }

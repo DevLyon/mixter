@@ -8,5 +8,10 @@ namespace Mixter.Infrastructure.Repositories
         {
             throw new System.NotImplementedException();
         }
+
+        public void ReplaceBy(SessionProjection projection)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
