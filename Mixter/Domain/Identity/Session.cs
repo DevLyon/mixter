@@ -23,6 +23,11 @@ namespace Mixter.Domain.Identity
 
         public void Logout(IEventPublisher eventPublisher)
         {
+            if (_projection.IsDisconnected)
+            {
+                return;
+            }
+
             eventPublisher.Publish(new UserDisconnected(_projection.Id, _projection.UserId));
         }
 
@@ -32,9 +37,17 @@ namespace Mixter.Domain.Identity
 
             public UserId UserId { get; private set; }
 
+            public bool IsDisconnected { get; private set; }
+
             public DecisionProjection()
             {
                 AddHandler<UserConnected>(When);
+                AddHandler<UserDisconnected>(When);
+            }
+
+            private void When(UserDisconnected evt)
+            {
+                IsDisconnected = true;
             }
 
             private void When(UserConnected evt)

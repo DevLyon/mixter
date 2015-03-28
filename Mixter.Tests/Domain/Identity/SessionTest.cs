@@ -10,18 +10,38 @@ namespace Mixter.Tests.Domain.Identity
     [TestClass]
     public class SessionTest
     {
+        private static readonly SessionId SessionId = SessionId.Generate();
+        private static readonly UserId UserId = new UserId("user@mixit.fr");
+
+        private EventPublisherFake _eventPublisher;
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            _eventPublisher = new EventPublisherFake();
+        }
+
         [TestMethod]
         public void WhenUserLogoutThenRaiseUserDisconnected()
         {
-            var eventPublisher = new EventPublisherFake();
-            var sessionId = SessionId.Generate();
-            var userId = new UserId("user@mixit.fr");
-            var session = new Session(new UserConnected(sessionId, userId, DateTime.Now));
+            var session = new Session(new UserConnected(SessionId, UserId, DateTime.Now));
 
-            session.Logout(eventPublisher);
+            session.Logout(_eventPublisher);
 
-            Check.That(eventPublisher.Events)
-                 .Contains(new UserDisconnected(sessionId, userId));
+            Check.That(_eventPublisher.Events)
+                 .Contains(new UserDisconnected(SessionId, UserId));
+        }
+
+        [TestMethod]
+        public void GivenUserDisconnectedWhenUserLogoutThenNothing()
+        {
+            var session = new Session(
+                new UserConnected(SessionId, UserId, DateTime.Now),
+                new UserDisconnected(SessionId, UserId));
+
+            session.Logout(_eventPublisher);
+
+            Check.That(_eventPublisher.Events).IsEmpty();
         }
     }
 }
