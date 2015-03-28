@@ -10,6 +10,9 @@ namespace Mixter.Tests.Infrastructure.Repositories
     [TestClass]
     public class SessionsRepositoryTest
     {
+        private static readonly SessionId SessionId = SessionId.Generate();
+        private static readonly UserId UserId = new UserId("user1@mixit.fr");
+
         private SessionsRepository _repository;
 
         [TestInitialize]
@@ -27,24 +30,20 @@ namespace Mixter.Tests.Infrastructure.Repositories
         [TestMethod]
         public void GivenSeveralUserConnectedWhenGetUserIdOfASessionThenReturnUserIdOfThisSession()
         {
-            var sessionId1 = SessionId.Generate();
-            var userId1 = new UserId("user1@mixit.fr");
-            _repository.Save(new SessionProjection(new UserConnected(sessionId1, userId1, DateTime.Now)));
+            _repository.Save(new SessionProjection(new UserConnected(SessionId, UserId, DateTime.Now)));
             _repository.Save(new SessionProjection(new UserConnected(SessionId.Generate(), new UserId("user2@mixit.fr"), DateTime.Now)));
 
-            var userIdOfSession = _repository.GetUserIdOfSession(sessionId1);
+            var userIdOfSession = _repository.GetUserIdOfSession(SessionId);
 
-            Check.That(userIdOfSession).IsEqualTo(userId1);
+            Check.That(userIdOfSession).IsEqualTo(UserId);
         }
 
         [TestMethod]
         public void GivenUserDisconnectedWhenGetUserIdOfThisSessionThenReturnEmpty()
         {
-            var sessionId1 = SessionId.Generate();
-            var userId1 = new UserId("user1@mixit.fr");
-            _repository.Save(new SessionProjection(new UserDisconnected(sessionId1, userId1)));
+            _repository.Save(new SessionProjection(new UserDisconnected(SessionId, UserId)));
 
-            var userIdOfSession = _repository.GetUserIdOfSession(sessionId1);
+            var userIdOfSession = _repository.GetUserIdOfSession(SessionId);
 
             Check.That(userIdOfSession).IsNull();
         }
@@ -52,12 +51,10 @@ namespace Mixter.Tests.Infrastructure.Repositories
         [TestMethod]
         public void WhenReplaceProjectionThenUpdateProjection()
         {
-            var sessionId1 = SessionId.Generate();
-            var userId1 = new UserId("user1@mixit.fr");
-            _repository.Save(new SessionProjection(new UserConnected(sessionId1, userId1, DateTime.Now)));
-            _repository.ReplaceBy(new SessionProjection(new UserDisconnected(sessionId1, userId1)));
+            _repository.Save(new SessionProjection(new UserConnected(SessionId, UserId, DateTime.Now)));
+            _repository.ReplaceBy(new SessionProjection(new UserDisconnected(SessionId, UserId)));
 
-            var userIdOfSession = _repository.GetUserIdOfSession(sessionId1);
+            var userIdOfSession = _repository.GetUserIdOfSession(SessionId);
 
             Check.That(userIdOfSession).IsNull();
         }
