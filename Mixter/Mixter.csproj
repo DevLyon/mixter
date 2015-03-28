@@ -66,9 +66,9 @@
     <Compile Include="Domain\Core\Subscriptions\Events\UserFollowed.cs" />
     <Compile Include="Domain\Core\Subscriptions\Events\UserUnfollowed.cs" />
     <Compile Include="Domain\Core\UserId.cs" />
-    <Compile Include="Domain\Seo\UserProfiles\UserDescriptionUpdated.cs" />
+    <Compile Include="Domain\Seo\UserProfiles\Events\UserDescriptionUpdated.cs" />
     <Compile Include="Domain\Seo\UserProfiles\UserProfile.cs" />
-    <Compile Include="Domain\Seo\UserProfiles\UserProfileCreated.cs" />
+    <Compile Include="Domain\Seo\UserProfiles\Events\UserProfileCreated.cs" />
     <Compile Include="Domain\Seo\UserProfiles\UserProfileId.cs" />
     <Compile Include="Infrastructure\EventHandlersGenerator.cs" />
     <Compile Include="Infrastructure\EventPublisher.cs" />

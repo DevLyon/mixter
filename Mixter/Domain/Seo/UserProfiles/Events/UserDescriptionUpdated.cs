@@ -1,4 +1,4 @@
-﻿namespace Mixter.Domain.Seo.UserProfiles
+﻿namespace Mixter.Domain.Seo.UserProfiles.Events
 {
     public struct UserDescriptionUpdated : IDomainEvent
     {

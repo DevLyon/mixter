@@ -1,6 +1,6 @@
 using Mixter.Domain.Core;
 
-namespace Mixter.Domain.Seo.UserProfiles
+namespace Mixter.Domain.Seo.UserProfiles.Events
 {
     public struct UserProfileCreated : IDomainEvent
     {
