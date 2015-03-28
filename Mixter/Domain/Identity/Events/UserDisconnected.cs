@@ -1,21 +1,16 @@
-﻿using System;
-
-namespace Mixter.Domain.Identity.Events
+﻿namespace Mixter.Domain.Identity.Events
 {
-    public struct UserConnected : IDomainEvent
+    public struct UserDisconnected : IDomainEvent
     {
         public SessionId SessionId { get; private set; }
 
         public UserId UserId { get; private set; }
 
-        public DateTime ConnectedAt { get; private set; }
-
-        public UserConnected(SessionId sessionId, UserId userId, DateTime connectedAt)
+        public UserDisconnected(SessionId sessionId, UserId userId)
             : this()
         {
             SessionId = sessionId;
             UserId = userId;
-            ConnectedAt = connectedAt;
         }
 
         public object GetAggregateId()

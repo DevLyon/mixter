@@ -57,6 +57,7 @@
     <Compile Include="Domain\Core\Messages\AddMessageOnAuthorTimelineTest.cs" />
     <Compile Include="Domain\Core\Subscriptions\AddMessageOnFollowerTimelineTest.cs" />
     <Compile Include="Domain\Identity\SessionIdTest.cs" />
+    <Compile Include="Domain\Identity\SessionTest.cs" />
     <Compile Include="Domain\Identity\UserIdentityTest.cs" />
     <Compile Include="Domain\Seo\UserProfileTest.cs" />
     <Compile Include="Infrastructure\EventHandlersGeneratorTest.cs" />

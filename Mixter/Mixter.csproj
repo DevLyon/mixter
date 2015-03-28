@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\Identity\Events\UserDisconnected.cs" />
     <Compile Include="Domain\Identity\Session.cs" />
     <Compile Include="Domain\Identity\SessionId.cs" />
     <Compile Include="Domain\Identity\UserEmailCannotBeEmpty.cs" />
