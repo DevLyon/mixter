@@ -55,6 +55,18 @@ namespace Mixter.Tests.Domain.Core.Messages
             Check.That(_eventPublisher.Events).Contains(new FollowerMessagePublished(new SubscriptionId(follower, Followee), replyMessagePublished.ReplyId));
         }
 
+        [TestMethod]
+        public void WhenMessageRepublishedByFolloweeThenRaiseFollowerMessageRepublished()
+        {
+            var follower = new UserId("follower@mixit.fr");
+            AddFollower(follower);
+            var messageRepublished = new MessageRepublished(MessageId.Generate(), Followee);
+
+            _handler.Handle(messageRepublished);
+
+            Check.That(_eventPublisher.Events).Contains(new FollowerMessagePublished(new SubscriptionId(follower, Followee), messageRepublished.Id));
+        }
+
         private void AddFollower(UserId follower)
         {
             _database.Store(new UserFollowed(new SubscriptionId(follower, Followee)));
