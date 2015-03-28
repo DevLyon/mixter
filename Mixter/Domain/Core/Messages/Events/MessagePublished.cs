@@ -1,3 +1,5 @@
+using Mixter.Domain.Identity;
+
 namespace Mixter.Domain.Core.Messages.Events
 {
     public struct MessagePublished : IDomainEvent

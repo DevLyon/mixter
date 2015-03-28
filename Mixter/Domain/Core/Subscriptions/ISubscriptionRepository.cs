@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Mixter.Domain.Identity;
 
 namespace Mixter.Domain.Core.Subscriptions
 {

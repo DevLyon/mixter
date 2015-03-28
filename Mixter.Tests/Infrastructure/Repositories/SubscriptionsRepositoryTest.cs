@@ -4,6 +4,7 @@ using Mixter.Domain;
 using Mixter.Domain.Core;
 using Mixter.Domain.Core.Subscriptions;
 using Mixter.Domain.Core.Subscriptions.Events;
+using Mixter.Domain.Identity;
 using Mixter.Infrastructure;
 using Mixter.Infrastructure.Repositories;
 using NFluent;

@@ -41,7 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\Core\UserEmailCannotBeEmpty.cs" />
+    <Compile Include="Domain\Identity\UserEmailCannotBeEmpty.cs" />
     <Compile Include="Domain\Identity\UserIdentities\Events\UserConnected.cs" />
     <Compile Include="Domain\Identity\UserIdentities\Events\UserRegistered.cs" />
     <Compile Include="Domain\Identity\UserIdentities\UserIdentity.cs" />
@@ -66,7 +66,7 @@
     <Compile Include="Domain\Core\Subscriptions\SubscriptionId.cs" />
     <Compile Include="Domain\Core\Subscriptions\Events\UserFollowed.cs" />
     <Compile Include="Domain\Core\Subscriptions\Events\UserUnfollowed.cs" />
-    <Compile Include="Domain\Core\UserId.cs" />
+    <Compile Include="Domain\Identity\UserId.cs" />
     <Compile Include="Domain\Seo\UserProfiles\Events\UserDescriptionUpdated.cs" />
     <Compile Include="Domain\Seo\UserProfiles\UserProfile.cs" />
     <Compile Include="Domain\Seo\UserProfiles\Events\UserProfileCreated.cs" />

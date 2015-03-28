@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mixter.Domain;
 using Mixter.Domain.Core;
 using Mixter.Domain.Core.Messages;
+using Mixter.Domain.Identity;
 using Mixter.Infrastructure.Repositories;
 using NFluent;
 

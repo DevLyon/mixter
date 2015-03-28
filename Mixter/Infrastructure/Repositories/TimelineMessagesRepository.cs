@@ -3,6 +3,7 @@ using System.Linq;
 using Mixter.Domain;
 using Mixter.Domain.Core;
 using Mixter.Domain.Core.Messages;
+using Mixter.Domain.Identity;
 
 namespace Mixter.Infrastructure.Repositories
 {

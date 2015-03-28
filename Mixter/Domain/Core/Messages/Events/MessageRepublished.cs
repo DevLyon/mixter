@@ -1,4 +1,6 @@
-﻿namespace Mixter.Domain.Core.Messages.Events
+﻿using Mixter.Domain.Identity;
+
+namespace Mixter.Domain.Core.Messages.Events
 {
     public struct MessageRepublished : IDomainEvent
     {

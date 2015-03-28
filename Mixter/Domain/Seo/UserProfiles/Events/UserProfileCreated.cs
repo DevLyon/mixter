@@ -1,4 +1,5 @@
 using Mixter.Domain.Core;
+using Mixter.Domain.Identity;
 
 namespace Mixter.Domain.Seo.UserProfiles.Events
 {

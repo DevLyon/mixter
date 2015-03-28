@@ -1,4 +1,6 @@
-﻿namespace Mixter.Domain.Core.Subscriptions
+﻿using Mixter.Domain.Identity;
+
+namespace Mixter.Domain.Core.Subscriptions
 {
     public struct SubscriptionId
     {

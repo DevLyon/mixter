@@ -1,5 +1,6 @@
 using Mixter.Domain.Core.Messages.Events;
 using Mixter.Domain.Core.Subscriptions;
+using Mixter.Domain.Identity;
 using Mixter.Infrastructure;
 
 namespace Mixter.Domain.Core.Messages.Handlers

@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Mixter.Domain.Core;
+using Mixter.Domain.Identity;
 using NFluent;
 
-namespace Mixter.Tests.Domain.Core
+namespace Mixter.Tests.Domain.Identity
 {
     [TestClass]
     public class UserIdTest

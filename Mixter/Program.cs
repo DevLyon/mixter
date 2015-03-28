@@ -5,6 +5,7 @@ using Mixter.Domain.Core;
 using Mixter.Domain.Core.Messages;
 using Mixter.Domain.Core.Messages.Events;
 using Mixter.Domain.Core.Subscriptions;
+using Mixter.Domain.Identity;
 using Mixter.Infrastructure;
 using Mixter.Infrastructure.Repositories;
 

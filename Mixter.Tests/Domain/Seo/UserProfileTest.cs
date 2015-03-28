@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mixter.Domain.Core;
+using Mixter.Domain.Identity;
 using Mixter.Domain.Seo.UserProfiles;
 using Mixter.Domain.Seo.UserProfiles.Events;
 using Mixter.Tests.Infrastructure;

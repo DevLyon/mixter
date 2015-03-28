@@ -4,6 +4,7 @@ using Mixter.Domain.Core;
 using Mixter.Domain.Core.Messages;
 using Mixter.Domain.Core.Subscriptions;
 using Mixter.Domain.Core.Subscriptions.Events;
+using Mixter.Domain.Identity;
 using Mixter.Tests.Infrastructure;
 using NFluent;
 

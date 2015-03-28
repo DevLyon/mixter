@@ -63,7 +63,7 @@
     <Compile Include="Domain\Core\Messages\MessageIdTest.cs" />
     <Compile Include="Domain\Core\Messages\MessageTest.cs" />
     <Compile Include="Domain\Core\Subscriptions\SubscriptionTest.cs" />
-    <Compile Include="Domain\Core\UserIdTest.cs" />
+    <Compile Include="Domain\Identity\UserIdTest.cs" />
     <Compile Include="Infrastructure\EventPublisherTest.cs" />
     <Compile Include="Infrastructure\EventPublisherWithStorageTest.cs" />
     <Compile Include="Infrastructure\EventsDatabaseTest.cs" />

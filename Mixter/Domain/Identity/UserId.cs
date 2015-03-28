@@ -1,4 +1,4 @@
-﻿namespace Mixter.Domain.Core
+﻿namespace Mixter.Domain.Identity
 {
     public struct UserId
     {

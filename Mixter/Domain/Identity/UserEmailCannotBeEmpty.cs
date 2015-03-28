@@ -1,6 +1,6 @@
 using System;
 
-namespace Mixter.Domain.Core
+namespace Mixter.Domain.Identity
 {
     public class UserEmailCannotBeEmpty : Exception
     {
