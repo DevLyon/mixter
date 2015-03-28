@@ -43,5 +43,15 @@ namespace Mixter.Tests.Domain.Seo
             Check.That(_eventPublisher.Events)
                  .Contains(new UserDescriptionUpdated(UserProfileId, "EventSourcing", "CQRS"));
         }
+
+        [TestMethod]
+        public void WhenUpdateDescriptionWithSameDescriptionThenNothing()
+        {
+            var userProfile = new UserProfile(new UserProfileCreated(UserProfileId, UserId, FirstName, LastName));
+
+            userProfile.UpdateDescription(_eventPublisher, FirstName, LastName);
+
+            Check.That(_eventPublisher.Events).IsEmpty();
+        }
     }
 }

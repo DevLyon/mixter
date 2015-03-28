@@ -23,12 +23,21 @@ namespace Mixter.Domain.Seo.UserProfiles
 
         public void UpdateDescription(IEventPublisher eventPublisher, string newFirstName, string newLastName)
         {
+            if (_projection.FirstName == newFirstName && _projection.LastName == newLastName)
+            {
+                return;
+            }
+
             eventPublisher.Publish(new UserDescriptionUpdated(_projection.Id, newFirstName, newLastName));
         }
 
         private class DecisionProjection : DecisionProjectionBase
         {
             public UserProfileId Id { get; private set; }
+
+            public string FirstName { get; private set; }
+
+            public string LastName { get; private set; }
 
             public DecisionProjection()
             {
@@ -38,6 +47,8 @@ namespace Mixter.Domain.Seo.UserProfiles
             private void When(UserProfileCreated evt)
             {
                 Id = evt.Id;
+                FirstName = evt.FirstName;
+                LastName = evt.LastName;
             }
         }
     }
