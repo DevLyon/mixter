@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Mixter.Domain;
 using Mixter.Domain.Core;
 using Mixter.Domain.Core.Messages;
@@ -85,7 +86,7 @@ namespace Mixter
         private static void DisplayTimeline(UserId connectedUser)
         {
             Console.WriteLine();
-            foreach (var message in TimelineMessagesRepository.GetMessagesOfUser(connectedUser))
+            foreach (var message in TimelineMessagesRepository.GetMessagesOfUser(connectedUser).ToArray())
             {
                 Console.WriteLine(message.AuthorId + " :");
                 Console.WriteLine(message.Content);
