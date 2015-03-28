@@ -7,7 +7,8 @@ namespace Mixter.Domain.Identity
     {
         public static void LogUser(IEventPublisher eventPublisher, UserId userId)
         {
-            eventPublisher.Publish(new UserConnected(userId, DateTime.Now));
+            var id = SessionId.Generate();
+            eventPublisher.Publish(new UserConnected(id, userId, DateTime.Now));
         }
     }
 }

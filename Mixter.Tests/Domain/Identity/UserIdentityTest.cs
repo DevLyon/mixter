@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Mixter.Domain.Core;
 using Mixter.Domain.Identity;
 using Mixter.Domain.Identity.Events;
 using Mixter.Tests.Infrastructure;
