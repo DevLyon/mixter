@@ -4,8 +4,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mixter.Domain.Core;
 using Mixter.Domain.Identity;
-using Mixter.Domain.Identity.UserIdentities;
-using Mixter.Domain.Identity.UserIdentities.Events;
+using Mixter.Domain.Identity.Events;
 using Mixter.Tests.Infrastructure;
 using NFluent;
 

@@ -1,7 +1,6 @@
 ﻿using System;
-using Mixter.Domain.Core;
 
-namespace Mixter.Domain.Identity.UserIdentities.Events
+namespace Mixter.Domain.Identity.Events
 {
     public struct UserConnected : IDomainEvent
     {

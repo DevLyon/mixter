@@ -41,11 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\Identity\UserIdentities\Session.cs" />
+    <Compile Include="Domain\Identity\Session.cs" />
     <Compile Include="Domain\Identity\UserEmailCannotBeEmpty.cs" />
-    <Compile Include="Domain\Identity\UserIdentities\Events\UserConnected.cs" />
-    <Compile Include="Domain\Identity\UserIdentities\Events\UserRegistered.cs" />
-    <Compile Include="Domain\Identity\UserIdentities\UserIdentity.cs" />
+    <Compile Include="Domain\Identity\Events\UserConnected.cs" />
+    <Compile Include="Domain\Identity\Events\UserRegistered.cs" />
+    <Compile Include="Domain\Identity\UserIdentity.cs" />
     <Compile Include="Domain\IDomainEvent.cs" />
     <Compile Include="Domain\IEventPublisher.cs" />
     <Compile Include="Domain\DecisionProjectionBase.cs" />

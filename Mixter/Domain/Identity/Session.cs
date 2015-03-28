@@ -1,7 +1,7 @@
 ﻿using System;
-using Mixter.Domain.Identity.UserIdentities.Events;
+using Mixter.Domain.Identity.Events;
 
-namespace Mixter.Domain.Identity.UserIdentities
+namespace Mixter.Domain.Identity
 {
     public class Session
     {
