@@ -25,7 +25,7 @@ namespace Mixter.Tests.Infrastructure.Repositories
         [TestMethod]
         public void GivenAMessageSavedWhenGetMessagesOfUserThenMessageIsReturned()
         {
-            _repository.Save(new TimelineMessage(_ownerId, _authorId, "MessageA", MessageId.Generate()));
+            _repository.Save(new TimelineMessageProjection(_ownerId, _authorId, "MessageA", MessageId.Generate()));
 
             Check.That(_repository.GetMessagesOfUser(_ownerId)).HasSize(1);
         }
@@ -36,8 +36,8 @@ namespace Mixter.Tests.Infrastructure.Repositories
             const string messageA = "MessageA";
             const string messageB = "MessageB";
 
-            _repository.Save(new TimelineMessage(_ownerId, _authorId, messageA, MessageId.Generate()));
-            _repository.Save(new TimelineMessage(new UserId("florent@mixit.fr"), _authorId, messageB, MessageId.Generate()));
+            _repository.Save(new TimelineMessageProjection(_ownerId, _authorId, messageA, MessageId.Generate()));
+            _repository.Save(new TimelineMessageProjection(new UserId("florent@mixit.fr"), _authorId, messageB, MessageId.Generate()));
 
             var messagesOfUser = _repository.GetMessagesOfUser(_ownerId).ToList();
             Check.That(messagesOfUser).HasSize(1);
@@ -49,7 +49,7 @@ namespace Mixter.Tests.Infrastructure.Repositories
         {
             const string messageA = "MessageA";
 
-            var timelineMessage = new TimelineMessage(_ownerId, _authorId, messageA, MessageId.Generate());
+            var timelineMessage = new TimelineMessageProjection(_ownerId, _authorId, messageA, MessageId.Generate());
             _repository.Save(timelineMessage);
             _repository.Save(timelineMessage);
 

@@ -38,7 +38,7 @@ namespace Mixter.Tests.Domain.Core.Subscriptions
 
             var messages = _timelineMessageRepository.GetMessagesOfUser(follower);
             Check.That(messages).HasSize(1)
-                 .And.ContainsExactly(new TimelineMessage(follower, messagePublished));
+                 .And.ContainsExactly(new TimelineMessageProjection(follower, messagePublished));
         }
 
         private MessagePublished PublishMessage(UserId author, string content)

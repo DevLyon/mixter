@@ -5,8 +5,8 @@ namespace Mixter.Domain.Core.Messages
 {
     public interface ITimelineMessagesRepository
     {
-        void Save(TimelineMessage message);
+        void Save(TimelineMessageProjection messageProjection);
 
-        IEnumerable<TimelineMessage> GetMessagesOfUser(UserId userId);
+        IEnumerable<TimelineMessageProjection> GetMessagesOfUser(UserId userId);
     }
 }

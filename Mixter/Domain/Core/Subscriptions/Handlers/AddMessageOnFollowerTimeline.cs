@@ -22,7 +22,7 @@ namespace Mixter.Domain.Core.Subscriptions.Handlers
             var messagePublished = _database.GetEventsOfAggregate(evt.MessageId).OfType<MessagePublished>().First();
             var ownerId = evt.SubscriptionId.Follower;
 
-            _timelineMessageRepository.Save(new TimelineMessage(ownerId, messagePublished));
+            _timelineMessageRepository.Save(new TimelineMessageProjection(ownerId, messagePublished));
         }
     }
 }

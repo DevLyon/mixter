@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Mixter.Domain.Core;
 using Mixter.Domain.Core.Messages;
 using Mixter.Domain.Core.Messages.Events;
 using Mixter.Domain.Core.Messages.Handlers;
@@ -30,7 +29,7 @@ namespace Mixter.Tests.Domain.Core.Messages
             var messagePublished = new MessagePublished(MessageId.Generate(), new UserId("author"), "content");
             _handler.Handle(messagePublished);
 
-            Check.That(_timelineMessagesRepositoryFake.Messages.Single()).IsEqualTo(new TimelineMessage(new UserId("author"), messagePublished));
+            Check.That(_timelineMessagesRepositoryFake.Messages.Single()).IsEqualTo(new TimelineMessageProjection(new UserId("author"), messagePublished));
         }
 
         [TestMethod]
@@ -39,24 +38,24 @@ namespace Mixter.Tests.Domain.Core.Messages
             var replyMessagePublished = new ReplyMessagePublished(MessageId.Generate(), new UserId("author"), "content", MessageId.Generate());
             _handler.Handle(replyMessagePublished);
 
-            Check.That(_timelineMessagesRepositoryFake.Messages.Single()).IsEqualTo(new TimelineMessage(new UserId("author"), replyMessagePublished));
+            Check.That(_timelineMessagesRepositoryFake.Messages.Single()).IsEqualTo(new TimelineMessageProjection(new UserId("author"), replyMessagePublished));
         }
 
         private class TimelineMessagesRepositoryFake : ITimelineMessagesRepository
         {
-            private readonly IList<TimelineMessage> _messages = new List<TimelineMessage>();
+            private readonly IList<TimelineMessageProjection> _messages = new List<TimelineMessageProjection>();
 
-            public IEnumerable<TimelineMessage> Messages
+            public IEnumerable<TimelineMessageProjection> Messages
             {
                 get { return _messages; }
             }
 
-            public void Save(TimelineMessage message)
+            public void Save(TimelineMessageProjection messageProjection)
             {
-                _messages.Add(message);
+                _messages.Add(messageProjection);
             }
 
-            public IEnumerable<TimelineMessage> GetMessagesOfUser(UserId userId)
+            public IEnumerable<TimelineMessageProjection> GetMessagesOfUser(UserId userId)
             {
                 throw new NotImplementedException();
             }

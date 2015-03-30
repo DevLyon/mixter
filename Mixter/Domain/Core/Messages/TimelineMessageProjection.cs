@@ -3,7 +3,7 @@ using Mixter.Domain.Identity;
 
 namespace Mixter.Domain.Core.Messages
 {
-    public struct TimelineMessage
+    public struct TimelineMessageProjection
     {
         public UserId OwnerId { get; private set; }
         
@@ -13,7 +13,7 @@ namespace Mixter.Domain.Core.Messages
 
         public MessageId MessageId { get; private set; }
 
-        public TimelineMessage(UserId ownerId, UserId authorId, string content, MessageId messageId) 
+        public TimelineMessageProjection(UserId ownerId, UserId authorId, string content, MessageId messageId) 
             : this()
         {
             OwnerId = ownerId;
@@ -22,12 +22,12 @@ namespace Mixter.Domain.Core.Messages
             MessageId = messageId;
         }
 
-        public TimelineMessage(UserId ownerId, MessagePublished evt)
+        public TimelineMessageProjection(UserId ownerId, MessagePublished evt)
             : this(ownerId, evt.Author, evt.Content, evt.Id)
         {
         }
 
-        public TimelineMessage(UserId ownerId, ReplyMessagePublished evt)
+        public TimelineMessageProjection(UserId ownerId, ReplyMessagePublished evt)
             : this(ownerId, evt.Replier, evt.ReplyContent, evt.ReplyId)
         {
         }

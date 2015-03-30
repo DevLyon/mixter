@@ -67,7 +67,7 @@
     <Compile Include="Domain\Core\Messages\Events\MessagePublished.cs" />
     <Compile Include="Domain\Core\Messages\Events\MessageRepublished.cs" />
     <Compile Include="Domain\Core\Messages\Events\ReplyMessagePublished.cs" />
-    <Compile Include="Domain\Core\Messages\TimelineMessage.cs" />
+    <Compile Include="Domain\Core\Messages\TimelineMessageProjection.cs" />
     <Compile Include="Domain\Core\Subscriptions\Events\FollowerMessagePublished.cs" />
     <Compile Include="Domain\Core\Subscriptions\Subscription.cs" />
     <Compile Include="Domain\Core\Subscriptions\SubscriptionId.cs" />

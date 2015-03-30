@@ -7,14 +7,14 @@ namespace Mixter.Infrastructure.Repositories
 {
     public class TimelineMessagesRepository : ITimelineMessagesRepository
     {
-        private readonly HashSet<TimelineMessage> _messages = new HashSet<TimelineMessage>();
+        private readonly HashSet<TimelineMessageProjection> _messages = new HashSet<TimelineMessageProjection>();
 
-        public void Save(TimelineMessage message)
+        public void Save(TimelineMessageProjection messageProjection)
         {
-            _messages.Add(message);
+            _messages.Add(messageProjection);
         }
 
-        public IEnumerable<TimelineMessage> GetMessagesOfUser(UserId userId)
+        public IEnumerable<TimelineMessageProjection> GetMessagesOfUser(UserId userId)
         {
             return _messages.Where(o => o.OwnerId.Equals(userId));
         }

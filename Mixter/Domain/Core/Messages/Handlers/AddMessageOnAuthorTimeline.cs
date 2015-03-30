@@ -16,13 +16,13 @@ namespace Mixter.Domain.Core.Messages.Handlers
 
         public void Handle(MessagePublished evt)
         {
-            var authorMessage = new TimelineMessage(evt.Author, evt);
+            var authorMessage = new TimelineMessageProjection(evt.Author, evt);
             _timelineMessagesRepository.Save(authorMessage);
         }
 
         public void Handle(ReplyMessagePublished evt)
         {
-            var authorMessage = new TimelineMessage(evt.Replier, evt);
+            var authorMessage = new TimelineMessageProjection(evt.Replier, evt);
             _timelineMessagesRepository.Save(authorMessage);
         }
     }
