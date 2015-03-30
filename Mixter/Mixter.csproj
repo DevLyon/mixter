@@ -45,6 +45,9 @@
     <Compile Include="Domain\Core\Messages\TimelineMessage.cs" />
     <Compile Include="Domain\Core\Messages\TimelineMessageId.cs" />
     <Compile Include="Domain\Core\Messages\Events\TimelineMessagePublished.cs" />
+    <Compile Include="Domain\Core\Subscriptions\FollowerProjection.cs" />
+    <Compile Include="Infrastructure\Repositories\FollowersRepository.cs" />
+    <Compile Include="Domain\Core\Subscriptions\IFollowersRepository.cs" />
     <Compile Include="Domain\Identity\Events\UserDisconnected.cs" />
     <Compile Include="Domain\Identity\ISessionsRepository.cs" />
     <Compile Include="Domain\Identity\Session.cs" />
