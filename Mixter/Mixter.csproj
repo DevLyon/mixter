@@ -48,10 +48,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Domain\" />
-    <Folder Include="Infrastructure\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Mixter.Domain\Mixter.Domain.csproj">
       <Project>{AF57893A-FD8C-4F69-8D32-8FA47FF8860D}</Project>
