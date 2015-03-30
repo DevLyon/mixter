@@ -66,7 +66,6 @@
     <Compile Include="Domain\Core\Messages\Handlers\AddMessageOnAuthorTimeline.cs" />
     <Compile Include="Domain\Core\Messages\Handlers\NotifyFollowerOfFolloweeMessage.cs" />
     <Compile Include="Domain\Core\Messages\IMessagesRepository.cs" />
-    <Compile Include="Domain\Core\Subscriptions\Handlers\AddMessageOnFollowerTimeline.cs" />
     <Compile Include="Domain\Core\Subscriptions\ISubscriptionRepository.cs" />
     <Compile Include="Domain\Core\Messages\ITimelineMessagesRepository.cs" />
     <Compile Include="Domain\Core\Messages\Message.cs" />
@@ -76,7 +75,6 @@
     <Compile Include="Domain\Core\Messages\Events\MessageRepublished.cs" />
     <Compile Include="Domain\Core\Messages\Events\ReplyMessagePublished.cs" />
     <Compile Include="Domain\Core\Messages\TimelineMessageProjection.cs" />
-    <Compile Include="Domain\Core\Subscriptions\Events\FollowerMessagePublished.cs" />
     <Compile Include="Domain\Core\Subscriptions\Subscription.cs" />
     <Compile Include="Domain\Core\Subscriptions\SubscriptionId.cs" />
     <Compile Include="Domain\Core\Subscriptions\Events\UserFollowed.cs" />
