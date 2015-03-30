@@ -55,6 +55,8 @@
   <ItemGroup>
     <Compile Include="Domain\Core\Messages\NotifyFollowerOfFolloweeMessageTest.cs" />
     <Compile Include="Domain\Core\Messages\AddMessageOnAuthorTimelineTest.cs" />
+    <Compile Include="Domain\Core\Messages\TimelineMessage.cs" />
+    <Compile Include="Domain\Core\Messages\TimelineMessageTest.cs" />
     <Compile Include="Domain\Core\Subscriptions\AddMessageOnFollowerTimelineTest.cs" />
     <Compile Include="Domain\Identity\SessionHandlerTest.cs" />
     <Compile Include="Domain\Identity\SessionIdTest.cs" />
