@@ -4,9 +4,10 @@ using Mixter.Domain.Core.Messages;
 using Mixter.Domain.Core.Messages.Handlers;
 using Mixter.Domain.Core.Subscriptions.Handlers;
 using Mixter.Domain.Identity;
+using Mixter.Infrastructure;
 using Mixter.Infrastructure.Repositories;
 
-namespace Mixter.Infrastructure
+namespace Mixter
 {
     public class EventHandlersGenerator
     {

@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CB553652-F519-45FA-8BDD-9E01E1B8ED95}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{27059D26-D46B-4387-8F68-6C61D0591692}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Mixter</RootNamespace>
-    <AssemblyName>Mixter</AssemblyName>
+    <RootNamespace>Mixter.Infrastructure</RootNamespace>
+    <AssemblyName>Mixter.Infrastructure</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -41,25 +39,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EventHandlersGenerator.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="EventPublisher.cs" />
+    <Compile Include="EventPublisherWithStorage.cs" />
+    <Compile Include="EventsDatabase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Domain\" />
-    <Folder Include="Infrastructure\" />
+    <Compile Include="Repositories\FollowersRepository.cs" />
+    <Compile Include="Repositories\MessagesRepository.cs" />
+    <Compile Include="Repositories\SessionsRepository.cs" />
+    <Compile Include="Repositories\TimelineMessagesRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mixter.Domain\Mixter.Domain.csproj">
       <Project>{AF57893A-FD8C-4F69-8D32-8FA47FF8860D}</Project>
       <Name>Mixter.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Mixter.Infrastructure\Mixter.Infrastructure.csproj">
-      <Project>{27059D26-D46B-4387-8F68-6C61D0591692}</Project>
-      <Name>Mixter.Infrastructure</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
