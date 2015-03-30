@@ -27,6 +27,7 @@ namespace Mixter.Infrastructure
             yield return new AddMessageOnFollowerTimeline(_eventsDatabase, _timelineMessagesRepository);
             yield return new SessionHandler(new SessionsRepository());
             yield return new UpdateTimeline(_timelineMessagesRepository);
+            yield return new UpdateFollowers(new FollowersRepository());
         }
     }
 }
