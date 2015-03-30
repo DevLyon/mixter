@@ -41,53 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\Core\Messages\Handlers\UpdateTimeline.cs" />
-    <Compile Include="Domain\Core\Messages\TimelineMessage.cs" />
-    <Compile Include="Domain\Core\Messages\TimelineMessageId.cs" />
-    <Compile Include="Domain\Core\Messages\Events\TimelineMessagePublished.cs" />
-    <Compile Include="Domain\Core\Subscriptions\FollowerProjection.cs" />
-    <Compile Include="Domain\Core\Subscriptions\Handlers\UpdateFollowers.cs" />
     <Compile Include="Infrastructure\Repositories\FollowersRepository.cs" />
-    <Compile Include="Domain\Core\Subscriptions\IFollowersRepository.cs" />
-    <Compile Include="Domain\Identity\Events\UserDisconnected.cs" />
-    <Compile Include="Domain\Identity\ISessionsRepository.cs" />
-    <Compile Include="Domain\Identity\Session.cs" />
-    <Compile Include="Domain\Identity\SessionHandler.cs" />
-    <Compile Include="Domain\Identity\SessionId.cs" />
-    <Compile Include="Domain\Identity\SessionProjection.cs" />
-    <Compile Include="Domain\Identity\SessionState.cs" />
-    <Compile Include="Domain\Identity\UserEmailCannotBeEmpty.cs" />
-    <Compile Include="Domain\Identity\Events\UserConnected.cs" />
-    <Compile Include="Domain\Identity\Events\UserRegistered.cs" />
-    <Compile Include="Domain\Identity\UserIdentity.cs" />
-    <Compile Include="Domain\IDomainEvent.cs" />
-    <Compile Include="Domain\IEventPublisher.cs" />
-    <Compile Include="Domain\DecisionProjectionBase.cs" />
-    <Compile Include="Domain\Core\Messages\Handlers\AddMessageOnAuthorTimeline.cs" />
-    <Compile Include="Domain\Core\Messages\Handlers\NotifyFollowerOfFolloweeMessage.cs" />
-    <Compile Include="Domain\Core\Messages\IMessagesRepository.cs" />
-    <Compile Include="Domain\Core\Messages\ITimelineMessagesRepository.cs" />
-    <Compile Include="Domain\Core\Messages\Message.cs" />
-    <Compile Include="Domain\Core\Messages\Events\MessageDeleted.cs" />
-    <Compile Include="Domain\Core\Messages\MessageId.cs" />
-    <Compile Include="Domain\Core\Messages\Events\MessagePublished.cs" />
-    <Compile Include="Domain\Core\Messages\Events\MessageRepublished.cs" />
-    <Compile Include="Domain\Core\Messages\Events\ReplyMessagePublished.cs" />
-    <Compile Include="Domain\Core\Messages\TimelineMessageProjection.cs" />
-    <Compile Include="Domain\Core\Subscriptions\Subscription.cs" />
-    <Compile Include="Domain\Core\Subscriptions\SubscriptionId.cs" />
-    <Compile Include="Domain\Core\Subscriptions\Events\UserFollowed.cs" />
-    <Compile Include="Domain\Core\Subscriptions\Events\UserUnfollowed.cs" />
-    <Compile Include="Domain\Identity\UserId.cs" />
-    <Compile Include="Domain\Seo\UserProfiles\Events\UserDescriptionUpdated.cs" />
-    <Compile Include="Domain\Seo\UserProfiles\UserProfile.cs" />
-    <Compile Include="Domain\Seo\UserProfiles\Events\UserProfileCreated.cs" />
-    <Compile Include="Domain\Seo\UserProfiles\UserProfileId.cs" />
     <Compile Include="Infrastructure\EventHandlersGenerator.cs" />
     <Compile Include="Infrastructure\EventPublisher.cs" />
     <Compile Include="Infrastructure\EventPublisherWithStorage.cs" />
     <Compile Include="Infrastructure\EventsDatabase.cs" />
-    <Compile Include="Infrastructure\IEventHandler.cs" />
     <Compile Include="Infrastructure\Repositories\MessagesRepository.cs" />
     <Compile Include="Infrastructure\Repositories\SessionsRepository.cs" />
     <Compile Include="Infrastructure\Repositories\TimelineMessagesRepository.cs" />
@@ -97,7 +55,15 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Domain\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Mixter.Domain\Mixter.Domain.csproj">
+      <Project>{AF57893A-FD8C-4F69-8D32-8FA47FF8860D}</Project>
+      <Name>Mixter.Domain</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

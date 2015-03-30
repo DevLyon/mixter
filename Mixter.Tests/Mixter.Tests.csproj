@@ -82,6 +82,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Mixter.Domain\Mixter.Domain.csproj">
+      <Project>{AF57893A-FD8C-4F69-8D32-8FA47FF8860D}</Project>
+      <Name>Mixter.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Mixter\Mixter.csproj">
       <Project>{CB553652-F519-45FA-8BDD-9E01E1B8ED95}</Project>
       <Name>Mixter</Name>

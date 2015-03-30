@@ -1,6 +1,4 @@
-using Mixter.Domain;
-
-namespace Mixter.Infrastructure
+namespace Mixter.Domain
 {
     public interface IEventHandler
     {

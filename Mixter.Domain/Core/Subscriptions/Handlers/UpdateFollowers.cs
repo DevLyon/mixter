@@ -1,5 +1,4 @@
 ﻿using Mixter.Domain.Core.Subscriptions.Events;
-using Mixter.Infrastructure;
 
 namespace Mixter.Domain.Core.Subscriptions.Handlers
 {

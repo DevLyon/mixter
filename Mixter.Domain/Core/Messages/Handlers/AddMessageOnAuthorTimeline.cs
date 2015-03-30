@@ -1,5 +1,4 @@
 using Mixter.Domain.Core.Messages.Events;
-using Mixter.Infrastructure;
 
 namespace Mixter.Domain.Core.Messages.Handlers
 {

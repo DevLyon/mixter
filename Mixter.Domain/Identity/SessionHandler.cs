@@ -1,5 +1,4 @@
 ﻿using Mixter.Domain.Identity.Events;
-using Mixter.Infrastructure;
 
 namespace Mixter.Domain.Identity
 {

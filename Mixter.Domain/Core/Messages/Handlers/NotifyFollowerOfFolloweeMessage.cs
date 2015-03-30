@@ -2,7 +2,6 @@ using System.Linq;
 using Mixter.Domain.Core.Messages.Events;
 using Mixter.Domain.Core.Subscriptions;
 using Mixter.Domain.Identity;
-using Mixter.Infrastructure;
 
 namespace Mixter.Domain.Core.Messages.Handlers
 {
@@ -13,9 +12,9 @@ namespace Mixter.Domain.Core.Messages.Handlers
     {
         private readonly IFollowersRepository _followersRepository;
         private readonly IEventPublisher _eventPublisher;
-        private readonly EventsDatabase _eventsDatabase;
+        private readonly IEventsDatabase _eventsDatabase;
 
-        public NotifyFollowerOfFolloweeMessage(IFollowersRepository followersRepository, IEventPublisher eventPublisher, EventsDatabase eventsDatabase)
+        public NotifyFollowerOfFolloweeMessage(IFollowersRepository followersRepository, IEventPublisher eventPublisher, IEventsDatabase eventsDatabase)
         {
             _followersRepository = followersRepository;
             _eventPublisher = eventPublisher;
