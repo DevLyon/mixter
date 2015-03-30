@@ -7,23 +7,21 @@ namespace Mixter.Domain.Core.Messages.Handlers
         IEventHandler<MessagePublished>,
         IEventHandler<ReplyMessagePublished>
     {
-        private readonly ITimelineMessagesRepository _timelineMessagesRepository;
+        private readonly IEventPublisher _eventPublisher;
 
-        public AddMessageOnAuthorTimeline(ITimelineMessagesRepository timelineMessagesRepository)
+        public AddMessageOnAuthorTimeline(IEventPublisher eventPublisher)
         {
-            _timelineMessagesRepository = timelineMessagesRepository;
+            _eventPublisher = eventPublisher;
         }
 
         public void Handle(MessagePublished evt)
         {
-            var authorMessage = new TimelineMessageProjection(evt.Author, evt);
-            _timelineMessagesRepository.Save(authorMessage);
+            TimelineMessage.Publish(_eventPublisher, evt.Author, evt.Author, evt.Content, evt.Id);
         }
 
         public void Handle(ReplyMessagePublished evt)
         {
-            var authorMessage = new TimelineMessageProjection(evt.Replier, evt);
-            _timelineMessagesRepository.Save(authorMessage);
+            TimelineMessage.Publish(_eventPublisher, evt.Replier, evt.Replier, evt.ReplyContent, evt.ReplyId);
         }
     }
 }

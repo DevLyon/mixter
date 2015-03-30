@@ -1,9 +1,7 @@
-using Mixter.Domain;
-using Mixter.Domain.Core.Messages;
 using Mixter.Domain.Core.Messages.Events;
 using Mixter.Domain.Identity;
 
-namespace Mixter.Tests.Domain.Core.Messages
+namespace Mixter.Domain.Core.Messages
 {
     public class TimelineMessage
     {

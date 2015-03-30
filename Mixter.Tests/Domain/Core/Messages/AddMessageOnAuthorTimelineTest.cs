@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mixter.Domain.Core.Messages;
 using Mixter.Domain.Core.Messages.Events;
 using Mixter.Domain.Core.Messages.Handlers;
 using Mixter.Domain.Identity;
+using Mixter.Tests.Infrastructure;
 using NFluent;
 
 namespace Mixter.Tests.Domain.Core.Messages
@@ -13,23 +11,27 @@ namespace Mixter.Tests.Domain.Core.Messages
     [TestClass]
     public class AddMessageOnAuthorTimelineTest
     {
-        private TimelineMessagesRepositoryFake _timelineMessagesRepositoryFake;
         private AddMessageOnAuthorTimeline _handler;
+        private EventPublisherFake _eventPublisher;
 
         [TestInitialize]
         public void Initialize()
         {
-            _timelineMessagesRepositoryFake = new TimelineMessagesRepositoryFake();
-            _handler = new AddMessageOnAuthorTimeline(_timelineMessagesRepositoryFake);
+            _eventPublisher = new EventPublisherFake();
+            _handler = new AddMessageOnAuthorTimeline(_eventPublisher);
         }
 
         [TestMethod]
-        public void WhenHandleMessagePublishedThenMessageIsSaved()
+        public void WhenHandleMessagePublishedThenRaiseTimelineMessagePublished()
         {
             var messagePublished = new MessagePublished(MessageId.Generate(), new UserId("author"), "content");
+
             _handler.Handle(messagePublished);
 
-            Check.That(_timelineMessagesRepositoryFake.Messages.Single()).IsEqualTo(new TimelineMessageProjection(new UserId("author"), messagePublished));
+            var timelineMessageId = new TimelineMessageId(messagePublished.Author, messagePublished.Id);
+            var expectedEvent = new TimelineMessagePublished(timelineMessageId, messagePublished.Author, messagePublished.Content);
+            Check.That(_eventPublisher.Events)
+                .ContainsExactly(expectedEvent);
         }
 
         [TestMethod]
@@ -38,27 +40,10 @@ namespace Mixter.Tests.Domain.Core.Messages
             var replyMessagePublished = new ReplyMessagePublished(MessageId.Generate(), new UserId("author"), "content", MessageId.Generate());
             _handler.Handle(replyMessagePublished);
 
-            Check.That(_timelineMessagesRepositoryFake.Messages.Single()).IsEqualTo(new TimelineMessageProjection(new UserId("author"), replyMessagePublished));
-        }
-
-        private class TimelineMessagesRepositoryFake : ITimelineMessagesRepository
-        {
-            private readonly IList<TimelineMessageProjection> _messages = new List<TimelineMessageProjection>();
-
-            public IEnumerable<TimelineMessageProjection> Messages
-            {
-                get { return _messages; }
-            }
-
-            public void Save(TimelineMessageProjection messageProjection)
-            {
-                _messages.Add(messageProjection);
-            }
-
-            public IEnumerable<TimelineMessageProjection> GetMessagesOfUser(UserId userId)
-            {
-                throw new NotImplementedException();
-            }
+            var timelineMessageId = new TimelineMessageId(replyMessagePublished.Replier, replyMessagePublished.ReplyId);
+            var expectedEvent = new TimelineMessagePublished(timelineMessageId, replyMessagePublished.Replier, replyMessagePublished.ReplyContent);
+            Check.That(_eventPublisher.Events)
+                .ContainsExactly(expectedEvent);
         }
     }
 }

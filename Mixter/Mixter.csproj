@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\Core\Messages\Handlers\UpdateTimeline.cs" />
+    <Compile Include="Domain\Core\Messages\TimelineMessage.cs" />
     <Compile Include="Domain\Core\Messages\TimelineMessageId.cs" />
     <Compile Include="Domain\Core\Messages\Events\TimelineMessagePublished.cs" />
     <Compile Include="Domain\Identity\Events\UserDisconnected.cs" />
