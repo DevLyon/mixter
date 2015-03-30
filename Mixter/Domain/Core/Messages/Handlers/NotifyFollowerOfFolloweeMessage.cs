@@ -1,3 +1,4 @@
+using System.Linq;
 using Mixter.Domain.Core.Messages.Events;
 using Mixter.Domain.Core.Subscriptions;
 using Mixter.Domain.Identity;
@@ -10,36 +11,39 @@ namespace Mixter.Domain.Core.Messages.Handlers
         IEventHandler<ReplyMessagePublished>,
         IEventHandler<MessageRepublished>
     {
-        private readonly ISubscriptionRepository _subscriptionRepository;
+        private readonly IFollowersRepository _followersRepository;
         private readonly IEventPublisher _eventPublisher;
+        private readonly EventsDatabase _eventsDatabase;
 
-        public NotifyFollowerOfFolloweeMessage(ISubscriptionRepository subscriptionRepository, IEventPublisher eventPublisher)
+        public NotifyFollowerOfFolloweeMessage(IFollowersRepository followersRepository, IEventPublisher eventPublisher, EventsDatabase eventsDatabase)
         {
-            _subscriptionRepository = subscriptionRepository;
+            _followersRepository = followersRepository;
             _eventPublisher = eventPublisher;
+            _eventsDatabase = eventsDatabase;
         }
 
         public void Handle(MessagePublished evt)
         {
-            NotifyAllFollowers(evt.Author, evt.Id);
+            NotifyAllFollowers(evt.Author, evt.Author, evt.Id, evt.Content);
         }
 
         public void Handle(ReplyMessagePublished evt)
         {
-            NotifyAllFollowers(evt.Replier, evt.ReplyId);
+            NotifyAllFollowers(evt.Replier, evt.Replier, evt.ReplyId, evt.ReplyContent);
         }
 
         public void Handle(MessageRepublished evt)
         {
-            NotifyAllFollowers(evt.Republisher, evt.Id);
+            var messagePublished = _eventsDatabase.GetEventsOfAggregate(evt.Id).OfType<MessagePublished>().First();
+
+            NotifyAllFollowers(evt.Republisher, messagePublished.Author, evt.Id, messagePublished.Content);
         }
 
-        private void NotifyAllFollowers(UserId author, MessageId messageId)
+        private void NotifyAllFollowers(UserId followee, UserId author, MessageId messageId, string content)
         {
-            var followers = _subscriptionRepository.GetFollowers(author);
-            foreach (var follower in followers)
+            foreach (var follower in _followersRepository.GetFollowers(followee))
             {
-                follower.NotifyFollower(_eventPublisher, messageId);
+                TimelineMessage.Publish(_eventPublisher, follower, author, content, messageId);
             }
         }
     }

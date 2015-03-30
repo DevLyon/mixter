@@ -1,10 +1,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Mixter.Domain.Core;
 using Mixter.Domain.Core.Messages;
 using Mixter.Domain.Core.Messages.Events;
 using Mixter.Domain.Core.Messages.Handlers;
 using Mixter.Domain.Core.Subscriptions;
-using Mixter.Domain.Core.Subscriptions.Events;
 using Mixter.Domain.Identity;
 using Mixter.Infrastructure;
 using Mixter.Infrastructure.Repositories;
@@ -18,22 +16,22 @@ namespace Mixter.Tests.Domain.Core.Messages
     {
         private static readonly UserId Followee = new UserId("followee@mixit.fr");
 
-        private ISubscriptionRepository _subscriptionRepository;
         private NotifyFollowerOfFolloweeMessage _handler;
         private EventPublisherFake _eventPublisher;
         private EventsDatabase _database;
+        private FollowersRepository _followersRepository;
 
         [TestInitialize]
         public void Initialize()
         {
             _database = new EventsDatabase();
-            _subscriptionRepository = new SubscriptionsRepository(_database);
             _eventPublisher = new EventPublisherFake();
-            _handler = new NotifyFollowerOfFolloweeMessage(_subscriptionRepository, _eventPublisher);
+            _followersRepository = new FollowersRepository();
+            _handler = new NotifyFollowerOfFolloweeMessage(_followersRepository, _eventPublisher, _database);
         }
 
         [TestMethod]
-        public void WhenMessagePublishedByFolloweeThenRaiseFollowerMessagePublished()
+        public void WhenMessagePublishedByFolloweeThenRaiseTimelineMessagePublished()
         {
             var follower = new UserId("follower@mixit.fr");
             AddFollower(follower);
@@ -41,36 +39,51 @@ namespace Mixter.Tests.Domain.Core.Messages
 
             _handler.Handle(messagePublished);
 
-            Check.That(_eventPublisher.Events).Contains(new FollowerMessagePublished(new SubscriptionId(follower, Followee), messagePublished.Id));
+            Check.That(_eventPublisher.Events)
+                .Contains(new TimelineMessagePublished(new TimelineMessageId(follower, messagePublished.Id), Followee, messagePublished.Content));
         }
 
         [TestMethod]
-        public void WhenReplyMessagePublishedByFolloweeThenRaiseFollowerMessagePublished()
+        public void WhenReplyMessagePublishedByFolloweeThenRaiseTimelineMessagePublished()
         {
             var follower = new UserId("follower@mixit.fr");
             AddFollower(follower);
-            var replyMessagePublished = new ReplyMessagePublished(MessageId.Generate(), Followee, "Hello", MessageId.Generate());
+            var messagePublished = PublishMessage(new UserId("author@mixit.fr"), "Hello");
+            var replyMessagePublished = new ReplyMessagePublished(MessageId.Generate(), Followee, "Hello", messagePublished.Id);
 
             _handler.Handle(replyMessagePublished);
 
-            Check.That(_eventPublisher.Events).Contains(new FollowerMessagePublished(new SubscriptionId(follower, Followee), replyMessagePublished.ReplyId));
+            Check.That(_eventPublisher.Events)
+                .Contains(new TimelineMessagePublished(new TimelineMessageId(follower, replyMessagePublished.ReplyId), Followee, replyMessagePublished.ReplyContent));
         }
 
         [TestMethod]
-        public void WhenMessageRepublishedByFolloweeThenRaiseFollowerMessageRepublished()
+        public void WhenMessageRepublishedByFolloweeThenRaiseTimelineMessageRepublished()
         {
             var follower = new UserId("follower@mixit.fr");
             AddFollower(follower);
-            var messageRepublished = new MessageRepublished(MessageId.Generate(), Followee);
+            var author = new UserId("author@mixit.fr");
+            var messagePublished = PublishMessage(author, "Hello");
+            var messageRepublished = new MessageRepublished(messagePublished.Id, Followee);
 
             _handler.Handle(messageRepublished);
 
-            Check.That(_eventPublisher.Events).Contains(new FollowerMessagePublished(new SubscriptionId(follower, Followee), messageRepublished.Id));
+            Check.That(_eventPublisher.Events)
+                .Contains(new TimelineMessagePublished(new TimelineMessageId(follower, messagePublished.Id), author, messagePublished.Content));
+        }
+
+        private MessagePublished PublishMessage(UserId author, string content)
+        {
+            var messageId = MessageId.Generate();
+            var messagePublished = new MessagePublished(messageId, author, content);
+            _database.Store(messagePublished);
+
+            return messagePublished;
         }
 
         private void AddFollower(UserId follower)
         {
-            _database.Store(new UserFollowed(new SubscriptionId(follower, Followee)));
+            _followersRepository.Save(new FollowerProjection(Followee, follower));
         }
     }
 }
