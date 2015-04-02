@@ -48,7 +48,6 @@ namespace Mixter.Domain.Core.Subscriptions
             {
                 AddHandler<UserUnfollowed>(When);
                 AddHandler<UserFollowed>(When);
-                IsActive = true;
             }
 
             public SubscriptionId Id { get; private set; }
@@ -58,6 +57,7 @@ namespace Mixter.Domain.Core.Subscriptions
             private void When(UserFollowed evt)
             {
                 Id = evt.SubscriptionId;
+                IsActive = true;
             }
 
             private void When(UserUnfollowed evt)

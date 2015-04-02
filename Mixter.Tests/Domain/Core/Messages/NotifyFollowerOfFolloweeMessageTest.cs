@@ -1,8 +1,10 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Mixter.Domain;
 using Mixter.Domain.Core.Messages;
 using Mixter.Domain.Core.Messages.Events;
 using Mixter.Domain.Core.Messages.Handlers;
 using Mixter.Domain.Core.Subscriptions;
+using Mixter.Domain.Core.Subscriptions.Events;
 using Mixter.Domain.Identity;
 using Mixter.Infrastructure;
 using Mixter.Infrastructure.Repositories;
@@ -20,6 +22,7 @@ namespace Mixter.Tests.Domain.Core.Messages
         private EventPublisherFake _eventPublisher;
         private EventsDatabase _database;
         private FollowersRepository _followersRepository;
+        private SubscriptionsesRepository _subscriptionsesRepository;
 
         [TestInitialize]
         public void Initialize()
@@ -27,11 +30,12 @@ namespace Mixter.Tests.Domain.Core.Messages
             _database = new EventsDatabase();
             _eventPublisher = new EventPublisherFake();
             _followersRepository = new FollowersRepository();
-            _handler = new NotifyFollowerOfFolloweeMessage(_followersRepository, _eventPublisher, _database);
+            _subscriptionsesRepository = new SubscriptionsesRepository(_database);
+            _handler = new NotifyFollowerOfFolloweeMessage(_followersRepository, _eventPublisher, _database, _subscriptionsesRepository);
         }
 
         [TestMethod]
-        public void WhenMessagePublishedByFolloweeThenRaiseTimelineMessagePublished()
+        public void WhenMessagePublishedByFolloweeThenRaiseFolloweeMessagePublished()
         {
             var follower = new UserId("follower@mixit.fr");
             AddFollower(follower);
@@ -40,7 +44,7 @@ namespace Mixter.Tests.Domain.Core.Messages
             _handler.Handle(messagePublished);
 
             Check.That(_eventPublisher.Events)
-                .Contains(new TimelineMessagePublished(new TimelineMessageId(follower, messagePublished.Id), Followee, messagePublished.Content));
+                .Contains(new FolloweeMessagePublished(new SubscriptionId(follower, Followee), messagePublished.Id));
         }
 
         [TestMethod]
@@ -84,6 +88,7 @@ namespace Mixter.Tests.Domain.Core.Messages
         private void AddFollower(UserId follower)
         {
             _followersRepository.Save(new FollowerProjection(Followee, follower));
+            _database.Store(new UserFollowed(new SubscriptionId(follower, Followee)));
         }
     }
 }
