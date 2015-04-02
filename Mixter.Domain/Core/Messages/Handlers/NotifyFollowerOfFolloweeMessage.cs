@@ -30,14 +30,14 @@ namespace Mixter.Domain.Core.Messages.Handlers
 
         public void Handle(ReplyMessagePublished evt)
         {
-            NotifyAllFollowers_old(evt.Replier, evt.Replier, evt.ReplyId, evt.ReplyContent);
+            NotifyAllFollowers(evt.Replier, evt.Replier, evt.ReplyId, evt.ReplyContent);
         }
 
         public void Handle(MessageRepublished evt)
         {
             var messagePublished = _eventsDatabase.GetEventsOfAggregate(evt.Id).OfType<MessagePublished>().First();
 
-            NotifyAllFollowers_old(evt.Republisher, messagePublished.Author, evt.Id, messagePublished.Content);
+            NotifyAllFollowers(evt.Republisher, messagePublished.Author, evt.Id, messagePublished.Content);
         }
 
         private void NotifyAllFollowers(UserId followee, UserId author, MessageId messageId, string content)
@@ -46,14 +46,6 @@ namespace Mixter.Domain.Core.Messages.Handlers
             {
                 var subscription = _subscriptionsRepository.Get(new SubscriptionId(follower, followee));
                 subscription.NotifyFollower(_eventPublisher, messageId, content);
-            }
-        }
-
-        private void NotifyAllFollowers_old(UserId followee, UserId author, MessageId messageId, string content)
-        {
-            foreach (var follower in _followersRepository.GetFollowers(followee))
-            {
-                TimelineMessage.Publish(_eventPublisher, follower, author, content, messageId);
             }
         }
     }

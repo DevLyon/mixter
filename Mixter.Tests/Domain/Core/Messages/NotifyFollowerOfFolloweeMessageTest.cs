@@ -49,7 +49,7 @@ namespace Mixter.Tests.Domain.Core.Messages
         }
 
         [TestMethod]
-        public void WhenReplyMessagePublishedByFolloweeThenRaiseTimelineMessagePublished()
+        public void WhenReplyMessagePublishedByFolloweeThenRaiseFolloweeMessagePublished()
         {
             var follower = new UserId("follower@mixit.fr");
             AddFollower(follower);
@@ -59,11 +59,11 @@ namespace Mixter.Tests.Domain.Core.Messages
             _handler.Handle(replyMessagePublished);
 
             Check.That(_eventPublisher.Events)
-                .Contains(new TimelineMessagePublished(new TimelineMessageId(follower, replyMessagePublished.ReplyId), Followee, replyMessagePublished.ReplyContent));
+                .Contains(new FolloweeMessagePublished(new SubscriptionId(follower, Followee), replyMessagePublished.ReplyId, replyMessagePublished.ReplyContent));
         }
 
         [TestMethod]
-        public void WhenMessageRepublishedByFolloweeThenRaiseTimelineMessageRepublished()
+        public void WhenMessageRepublishedByFolloweeThenRaiseFolloweeMessagePublished()
         {
             var follower = new UserId("follower@mixit.fr");
             AddFollower(follower);
@@ -74,7 +74,7 @@ namespace Mixter.Tests.Domain.Core.Messages
             _handler.Handle(messageRepublished);
 
             Check.That(_eventPublisher.Events)
-                .Contains(new TimelineMessagePublished(new TimelineMessageId(follower, messagePublished.Id), author, messagePublished.Content));
+                .Contains(new FolloweeMessagePublished(new SubscriptionId(follower, Followee), messagePublished.Id, messagePublished.Content));
         }
 
         private MessagePublished PublishMessage(UserId author, string content)
