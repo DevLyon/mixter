@@ -16,7 +16,7 @@ class Message {
     }
 
     public void republish(UserId userId, EventPublisher eventPublisher) {
-        if (projection.publishers.contains(userId)) {
+        if (projection.publishers.contains(userId) || projection.isDeleted()) {
             return;
         }
         MessageRepublished event = new MessageRepublished(projection.getId(), userId);
@@ -78,6 +78,10 @@ class Message {
 
         public boolean isNotDeleted() {
             return !deleted;
+        }
+
+        public boolean isDeleted() {
+            return deleted;
         }
     }
 
