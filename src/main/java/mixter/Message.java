@@ -1,16 +1,13 @@
 package mixter;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Consumer;
 
 class Message {
     private final DecisionProjection projection;
 
     public Message(List<Event> eventHistory) {
-        projection = new DecisionProjection();
-        eventHistory.forEach(projection::apply);
+        projection = new DecisionProjection(eventHistory);
     }
 
     public static void publish(PublishMessage publishMessage, EventPublisher eventPublisher) {
@@ -29,23 +26,26 @@ class Message {
 
     private class DecisionProjection {
         private MessageId id;
+        private Map<Class,Consumer> appliers=new HashMap<>();
 
         public Set<UserId> publishers = new HashSet<>();
 
-
-        public DecisionProjection() {
+        public DecisionProjection(List<Event> eventHistory) {
+            Consumer<MessagePublished> applyMessagePublished = this::apply;
+            Consumer<MessageRepublished> applyMessageRepublished = this::apply;
+            appliers.put(MessagePublished.class, applyMessagePublished);
+            appliers.put(MessageRepublished.class, applyMessageRepublished);
+            eventHistory.forEach(this::apply);
         }
 
         public MessageId getId() {
             return id;
         }
 
-        public void apply(Event event) {
-            if(event instanceof MessagePublished) {
-                this.apply((MessagePublished) event);
-            } else if (event instanceof MessageRepublished) {
-                this.apply((MessageRepublished) event);
-            }
+        @SuppressWarnings("unchecked")
+        public void apply(Event event){
+            Consumer consumer = appliers.get(event.getClass());
+            consumer.accept(event);
         }
 
         private void apply(MessagePublished event) {
