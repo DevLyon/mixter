@@ -25,7 +25,9 @@ class Message {
     }
 
     public void delete(UserId authorId, EventPublisher eventPublisher) {
-        eventPublisher.publish(new MessageDeleted(projection.getId()));
+        if(projection.getAuthorId() == authorId){
+            eventPublisher.publish(new MessageDeleted(projection.getId()));
+        }
     }
 
     private class DecisionProjection {
@@ -33,6 +35,7 @@ class Message {
         private Map<Class,Consumer> appliers=new HashMap<>();
 
         public Set<UserId> publishers = new HashSet<>();
+        private UserId authorId;
 
         public DecisionProjection(List<Event> eventHistory) {
             Consumer<MessagePublished> applyMessagePublished = this::apply;
@@ -54,6 +57,7 @@ class Message {
 
         private void apply(MessagePublished event) {
             id = event.getMessageId();
+            authorId = event.getAuthorId();
             publishers.add(event.getAuthorId());
         }
 
@@ -61,6 +65,9 @@ class Message {
             publishers.add(event.getUserId());
         }
 
+        public UserId getAuthorId() {
+            return authorId;
+        }
     }
 
     public static class MessageId {
