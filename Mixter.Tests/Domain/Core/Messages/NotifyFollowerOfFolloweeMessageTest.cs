@@ -39,12 +39,13 @@ namespace Mixter.Tests.Domain.Core.Messages
         {
             var follower = new UserId("follower@mixit.fr");
             AddFollower(follower);
-            var messagePublished = new MessagePublished(MessageId.Generate(), Followee, "content");
+            var content = "content";
+            var messagePublished = new MessagePublished(MessageId.Generate(), Followee, content);
 
             _handler.Handle(messagePublished);
 
             Check.That(_eventPublisher.Events)
-                .Contains(new FolloweeMessagePublished(new SubscriptionId(follower, Followee), messagePublished.Id));
+                .Contains(new FolloweeMessagePublished(new SubscriptionId(follower, Followee), messagePublished.Id, content));
         }
 
         [TestMethod]

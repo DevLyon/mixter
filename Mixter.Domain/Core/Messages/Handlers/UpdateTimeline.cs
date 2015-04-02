@@ -1,4 +1,5 @@
 ﻿using Mixter.Domain.Core.Messages.Events;
+using Mixter.Domain.Core.Subscriptions.Events;
 
 namespace Mixter.Domain.Core.Messages.Handlers
 {
@@ -14,6 +15,13 @@ namespace Mixter.Domain.Core.Messages.Handlers
         public void Handle(TimelineMessagePublished evt)
         {
             var projection = new TimelineMessageProjection(evt.Id.Owner, evt.Author, evt.Content, evt.Id.MessageId);
+            _repository.Save(projection);
+        }
+
+        public void Handle(FolloweeMessagePublished evt)
+        {
+            var projection = 
+                new TimelineMessageProjection(evt.SubscriptionId.Follower, evt.SubscriptionId.Followee, evt.Content, evt.MessageId);
             _repository.Save(projection);
         }
     }

@@ -8,11 +8,14 @@ namespace Mixter.Domain.Core.Subscriptions.Events
 
         public MessageId MessageId { get; private set; }
 
-        public FolloweeMessagePublished(SubscriptionId subscriptionId, MessageId messageId)
+        public string Content { get; private set; }
+
+        public FolloweeMessagePublished(SubscriptionId subscriptionId, MessageId messageId, string content)
             : this()
         {
             SubscriptionId = subscriptionId;
             MessageId = messageId;
+            Content = content;
         }
 
         public object GetAggregateId()
