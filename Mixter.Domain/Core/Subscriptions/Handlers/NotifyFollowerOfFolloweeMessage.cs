@@ -1,9 +1,9 @@
 using System.Linq;
+using Mixter.Domain.Core.Messages;
 using Mixter.Domain.Core.Messages.Events;
-using Mixter.Domain.Core.Subscriptions;
 using Mixter.Domain.Identity;
 
-namespace Mixter.Domain.Core.Messages.Handlers
+namespace Mixter.Domain.Core.Subscriptions.Handlers
 {
     public class NotifyFollowerOfFolloweeMessage : 
         IEventHandler<MessagePublished>,
