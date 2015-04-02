@@ -14,22 +14,6 @@ namespace Mixter.Tests.Domain.Core.Messages
     public class UpdateTimelineTest
     {
         [TestMethod]
-        public void WhenHandleTimelineMessagePublishedThenSaveTimelineMessageProjection()
-        {
-            var repository = new TimelineMessagesRepository();
-            var handler = new UpdateTimeline(repository);
-
-            var owner = new UserId("owner@mixit.fr");
-            var messageId = MessageId.Generate();
-            var author = new UserId("author@mixit.fr");
-            var content = "Hello";
-            handler.Handle(new TimelineMessagePublished(new TimelineMessageId(owner, messageId), author, content));
-
-            Check.That(repository.GetMessagesOfUser(owner))
-                 .ContainsExactly(new TimelineMessageProjection(owner, author, content, messageId));
-        }
-
-        [TestMethod]
         public void WhenHandleMessagePublishedThenSaveTimelineMessageProjectionForAuthor()
         {
             var repository = new TimelineMessagesRepository();
