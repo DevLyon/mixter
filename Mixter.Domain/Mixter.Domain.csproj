@@ -44,7 +44,6 @@
     <Compile Include="Core\Messages\Events\MessageRepublished.cs" />
     <Compile Include="Core\Messages\Events\ReplyMessagePublished.cs" />
     <Compile Include="Core\Messages\Events\TimelineMessagePublished.cs" />
-    <Compile Include="Core\Messages\Handlers\AddMessageOnAuthorTimeline.cs" />
     <Compile Include="Core\Subscriptions\ISubscriptionsRepository.cs" />
     <Compile Include="Core\Messages\Handlers\NotifyFollowerOfFolloweeMessage.cs" />
     <Compile Include="Core\Messages\Handlers\UpdateTimeline.cs" />

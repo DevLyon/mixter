@@ -30,6 +30,37 @@ namespace Mixter.Tests.Domain.Core.Messages
         }
 
         [TestMethod]
+        public void WhenHandleMessagePublishedThenSaveTimelineMessageProjectionForAuthor()
+        {
+            var repository = new TimelineMessagesRepository();
+            var handler = new UpdateTimeline(repository);
+
+            var messageId = MessageId.Generate();
+            var author = new UserId("author@mixit.fr");
+            var content = "Hello";
+            handler.Handle(new MessagePublished(messageId, author, content));
+
+            Check.That(repository.GetMessagesOfUser(author))
+                 .ContainsExactly(new TimelineMessageProjection(author, author, content, messageId));
+        }
+
+        [TestMethod]
+        public void WhenHandleMessageRepliedThenSaveTimelineMessageProjectionForReplier()
+        {
+            var repository = new TimelineMessagesRepository();
+            var handler = new UpdateTimeline(repository);
+
+            var parentMessageId = MessageId.Generate();
+            var messageId = MessageId.Generate();
+            var replier = new UserId("author@mixit.fr");
+            var replyContent = "Hello";
+            handler.Handle(new ReplyMessagePublished(messageId, replier, replyContent, parentMessageId));
+
+            Check.That(repository.GetMessagesOfUser(replier))
+                 .ContainsExactly(new TimelineMessageProjection(replier, replier, replyContent, messageId));
+        }
+
+        [TestMethod]
         public void WhenHandleFolloweeMessagePublishedThenSaveTimelineMessageProjection()
         {
             var repository = new TimelineMessagesRepository();

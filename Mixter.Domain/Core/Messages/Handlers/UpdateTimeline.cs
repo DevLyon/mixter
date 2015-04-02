@@ -24,5 +24,19 @@ namespace Mixter.Domain.Core.Messages.Handlers
                 new TimelineMessageProjection(evt.SubscriptionId.Follower, evt.SubscriptionId.Followee, evt.Content, evt.MessageId);
             _repository.Save(projection);
         }
+
+        public void Handle(MessagePublished evt)
+        {
+            var projection =
+                new TimelineMessageProjection(evt.Author, evt.Author, evt.Content, evt.Id);
+            _repository.Save(projection);
+        }
+
+        public void Handle(ReplyMessagePublished evt)
+        {
+            var projection =
+                new TimelineMessageProjection(evt.Replier, evt.Replier, evt.ReplyContent, evt.ReplyId);
+            _repository.Save(projection);
+        }
     }
 }
