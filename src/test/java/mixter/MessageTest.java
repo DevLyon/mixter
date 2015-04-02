@@ -86,6 +86,25 @@ public class MessageTest {
         assertThat(eventPublisher.publishedEvents).isEmpty();
     }
 
+    @Test
+    public void whenAMessageIsDeletedByItsAuthorThenItShouldSendMessageDeletedEvent(){
+        Message.MessageId messageId = new Message.MessageId();
+        UserId authorId=new UserId();
+        List<Event> eventHistory = history(
+                new MessagePublished(messageId, "hello",authorId)
+        );
+
+        Message message = new Message(eventHistory);
+        SpyEventPublisher eventPublisher = new SpyEventPublisher();
+
+        // When
+        message.delete(authorId, eventPublisher);
+
+        // Then
+        MessageDeleted expectedEvent = new MessageDeleted(messageId);
+        assertThat(eventPublisher.publishedEvents).extracting("messageId").containsExactly(expectedEvent.getMessageId());
+    }
+
     public List<Event> history(Event... events) {
         List<Event> eventHistory = new ArrayList<>();
         Collections.addAll(eventHistory, events);

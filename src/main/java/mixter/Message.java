@@ -24,6 +24,10 @@ class Message {
         projection.apply(event);
     }
 
+    public void delete(UserId authorId, EventPublisher eventPublisher) {
+        eventPublisher.publish(new MessageDeleted(projection.getId()));
+    }
+
     private class DecisionProjection {
         private MessageId id;
         private Map<Class,Consumer> appliers=new HashMap<>();
