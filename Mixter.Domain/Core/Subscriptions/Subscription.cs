@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Mixter.Domain.Core.Messages;
 using Mixter.Domain.Core.Subscriptions.Events;
 using Mixter.Domain.Identity;
 
@@ -33,19 +34,35 @@ namespace Mixter.Domain.Core.Subscriptions
         {
             eventPublisher.Publish(new UserUnfollowed(_projection.Id));
         }
+        public void NotifyFollower(IEventPublisher eventPublisher, MessageId messageId)
+        {
+            if (_projection.IsActive)
+            {
+                eventPublisher.Publish(new FolloweeMessagePublished(_projection.Id, messageId));
+            }
+        }
 
         private class DecisionProjection : DecisionProjectionBase
         {
             public DecisionProjection()
             {
+                AddHandler<UserUnfollowed>(When);
                 AddHandler<UserFollowed>(When);
+                IsActive = true;
             }
 
             public SubscriptionId Id { get; private set; }
 
+            public bool IsActive { get; private set; }
+
             private void When(UserFollowed evt)
             {
                 Id = evt.SubscriptionId;
+            }
+
+            private void When(UserUnfollowed evt)
+            {
+                IsActive = false;
             }
         }
     }
