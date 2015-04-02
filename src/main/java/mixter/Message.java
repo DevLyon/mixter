@@ -25,7 +25,7 @@ class Message {
     }
 
     public void delete(UserId authorId, EventPublisher eventPublisher) {
-        if(projection.getAuthorId() == authorId){
+        if (projection.getAuthorId() == authorId && projection.isNotDeleted()) {
             eventPublisher.publish(new MessageDeleted(projection.getId()));
         }
     }
@@ -36,12 +36,15 @@ class Message {
 
         public Set<UserId> publishers = new HashSet<>();
         private UserId authorId;
+        private boolean deleted = false;
 
         public DecisionProjection(List<Event> eventHistory) {
             Consumer<MessagePublished> applyMessagePublished = this::apply;
             Consumer<MessageRepublished> applyMessageRepublished = this::apply;
+            Consumer<MessageDeleted> applyMessageDeleted = this::apply;
             appliers.put(MessagePublished.class, applyMessagePublished);
             appliers.put(MessageRepublished.class, applyMessageRepublished);
+            appliers.put(MessageDeleted.class, applyMessageDeleted);
             eventHistory.forEach(this::apply);
         }
 
@@ -65,8 +68,16 @@ class Message {
             publishers.add(event.getUserId());
         }
 
+        private void apply(MessageDeleted event) {
+            deleted = true;
+        }
+
         public UserId getAuthorId() {
             return authorId;
+        }
+
+        public boolean isNotDeleted() {
+            return !deleted;
         }
     }
 

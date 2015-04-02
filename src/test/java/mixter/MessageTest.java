@@ -123,6 +123,25 @@ public class MessageTest {
         assertThat(eventPublisher.publishedEvents).isEmpty();
     }
 
+    @Test
+    public void whenAMessageIsDeletedTwiceThenItShouldNotSendMessageDeletedEvent(){
+        Message.MessageId messageId = new Message.MessageId();
+        UserId authorId=new UserId();
+        List<Event> eventHistory = history(
+                new MessagePublished(messageId, "hello",authorId),
+                new MessageDeleted(messageId)
+        );
+
+        Message message = new Message(eventHistory);
+        SpyEventPublisher eventPublisher = new SpyEventPublisher();
+
+        // When
+        message.delete(authorId, eventPublisher);
+
+        // Then
+        assertThat(eventPublisher.publishedEvents).isEmpty();
+    }
+
     public List<Event> history(Event... events) {
         List<Event> eventHistory = new ArrayList<>();
         Collections.addAll(eventHistory, events);
