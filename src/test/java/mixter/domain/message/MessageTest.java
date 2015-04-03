@@ -1,5 +1,8 @@
-package mixter;
+package mixter.domain.message;
 
+import mixter.AggregateTest;
+import mixter.Event;
+import mixter.UserId;
 import org.junit.Test;
 
 import java.util.List;
@@ -20,14 +23,14 @@ public class MessageTest extends AggregateTest {
         Message.publish(publishMessage, eventPublisher);
 
         // Then
-        MessagePublished expectedEvent = new MessagePublished(new Message.MessageId(), message, authorId);
+        MessagePublished expectedEvent = new MessagePublished(new MessageId(), message, authorId);
         assertThat(eventPublisher.publishedEvents).extracting("message").containsExactly(expectedEvent.getMessage());
     }
 
     @Test
     public void whenAMessageIsRepublishedThenItSendsAMessageRepublishedEvent() {
         // Given
-        Message.MessageId messageId = new Message.MessageId();
+        MessageId messageId = new MessageId();
         UserId authorId = new UserId();
         List<Event> eventHistory = history(new MessagePublished(messageId, "hello", authorId));
         Message message = new Message(eventHistory);
@@ -47,7 +50,7 @@ public class MessageTest extends AggregateTest {
     @Test
     public void whenAMessageIsRepublishedByItsAuthorThenItShouldNotSendRepublishedEvent() {
         // Given
-        Message.MessageId messageId = new Message.MessageId();
+        MessageId messageId = new MessageId();
         UserId authorId = new UserId();
         List<Event> eventHistory = history(
                 new MessagePublished(messageId, "hello", authorId)
@@ -66,7 +69,7 @@ public class MessageTest extends AggregateTest {
     @Test
     public void whenAMessageIsRepublishedTwiceByTheSameUserThenItShouldNotSendMessageRepublishedEvent() {
         // Given
-        Message.MessageId messageId = new Message.MessageId();
+        MessageId messageId = new MessageId();
         UserId userId = new UserId();
         UserId authorId = new UserId();
         List<Event> eventHistory = history(
@@ -86,7 +89,7 @@ public class MessageTest extends AggregateTest {
 
     @Test
     public void whenAMessageIsDeletedByItsAuthorThenItShouldSendMessageDeletedEvent() {
-        Message.MessageId messageId = new Message.MessageId();
+        MessageId messageId = new MessageId();
         UserId authorId = new UserId();
         List<Event> eventHistory = history(
                 new MessagePublished(messageId, "hello", authorId)
@@ -105,7 +108,7 @@ public class MessageTest extends AggregateTest {
 
     @Test
     public void whenAMessageIsDeletedBySomeoneElseThenItShouldNotSendMessageDeletedEvent() {
-        Message.MessageId messageId = new Message.MessageId();
+        MessageId messageId = new MessageId();
         UserId authorId = new UserId();
         List<Event> eventHistory = history(
                 new MessagePublished(messageId, "hello", authorId)
@@ -123,7 +126,7 @@ public class MessageTest extends AggregateTest {
 
     @Test
     public void whenAMessageIsDeletedTwiceThenItShouldNotSendMessageDeletedEvent() {
-        Message.MessageId messageId = new Message.MessageId();
+        MessageId messageId = new MessageId();
         UserId authorId = new UserId();
         List<Event> eventHistory = history(
                 new MessagePublished(messageId, "hello", authorId),
@@ -142,7 +145,7 @@ public class MessageTest extends AggregateTest {
 
     @Test
     public void whenADeletedMessageIsRepublishedThenItShouldNotSendMessageRepublishedEvent() {
-        Message.MessageId messageId = new Message.MessageId();
+        MessageId messageId = new MessageId();
         UserId authorId = new UserId();
         List<Event> eventHistory = history(
                 new MessagePublished(messageId, "hello", authorId),

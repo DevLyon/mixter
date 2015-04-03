@@ -1,5 +1,5 @@
 package mixter;
 
-interface EventPublisher {
+public interface EventPublisher {
     void publish(Event event);
 }

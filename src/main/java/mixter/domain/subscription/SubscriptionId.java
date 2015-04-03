@@ -1,6 +1,8 @@
-package mixter;
+package mixter.domain.subscription;
 
-public class SubscriptionId {
+import mixter.UserId;
+
+class SubscriptionId {
     private final UserId follower;
     private final UserId followee;
 

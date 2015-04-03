@@ -1,5 +1,7 @@
-package mixter;
+package mixter.domain.subscription;
 
+import mixter.AggregateTest;
+import mixter.UserId;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

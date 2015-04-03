@@ -1,17 +1,20 @@
-package mixter;
+package mixter.domain.message;
 
-class MessagePublished implements Event{
-    private final Message.MessageId messageId;
+import mixter.Event;
+import mixter.UserId;
+
+class MessagePublished implements Event {
+    private final MessageId messageId;
     private final String message;
     private final UserId authorId;
 
-    MessagePublished(Message.MessageId messageId, String message, UserId authorId) {
+    MessagePublished(MessageId messageId, String message, UserId authorId) {
         this.messageId = messageId;
         this.message = message;
         this.authorId = authorId;
     }
 
-    public Message.MessageId getMessageId() {
+    public MessageId getMessageId() {
         return messageId;
     }
 

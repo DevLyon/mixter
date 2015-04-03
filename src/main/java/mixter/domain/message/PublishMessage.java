@@ -1,4 +1,6 @@
-package mixter;
+package mixter.domain.message;
+
+import mixter.UserId;
 
 class PublishMessage {
     private final String message;

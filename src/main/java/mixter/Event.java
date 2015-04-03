@@ -1,5 +1,5 @@
 package mixter;
 
-interface Event {
+public interface Event {
 
 }

@@ -1,6 +1,8 @@
-package mixter;
+package mixter.domain.subscription;
 
-public class UserFollowed implements Event{
+import mixter.Event;
+
+class UserFollowed implements Event {
     private final SubscriptionId subscriptionId;
 
     public UserFollowed(SubscriptionId subscriptionId) {
