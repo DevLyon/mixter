@@ -2,12 +2,9 @@ package mixter;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import static org.assertj.core.api.Assertions.*;
-
-public class SubscriptionTest {
+public class SubscriptionTest extends AggregateTest {
     @Test
     public void WhenAUserFollowsAnotherUserFollowedIsRaised() throws Exception {
         //Given
@@ -19,15 +16,8 @@ public class SubscriptionTest {
         Subscription.follow(follower, followee, eventPublisher);
 
         //Then
-        UserFollowed userFollowed=new UserFollowed(new SubscriptionId(follower, followee));
+        UserFollowed userFollowed = new UserFollowed(new SubscriptionId(follower, followee));
         assertThat(eventPublisher.publishedEvents).containsExactly(userFollowed);
     }
 
-    class SpyEventPublisher implements EventPublisher {
-        public List<Event> publishedEvents = new ArrayList<>();
-
-        public void publish(Event event) {
-            publishedEvents.add(event);
-        }
-    }
 }

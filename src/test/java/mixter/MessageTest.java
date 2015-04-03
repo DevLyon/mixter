@@ -2,18 +2,16 @@ package mixter;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class MessageTest {
+public class MessageTest extends AggregateTest {
     @Test
     public void whenAMessageIsCreatedByAPublishMessageCommandThenItSendsAMessagePublishedEvent() {
         // Given
         String message = "message";
-        UserId authorId=new UserId();
+        UserId authorId = new UserId();
         PublishMessage publishMessage = new PublishMessage(message, authorId);
 
         SpyEventPublisher eventPublisher = new SpyEventPublisher();
@@ -30,8 +28,8 @@ public class MessageTest {
     public void whenAMessageIsRepublishedThenItSendsAMessageRepublishedEvent() {
         // Given
         Message.MessageId messageId = new Message.MessageId();
-        UserId authorId=new UserId();
-        List<Event> eventHistory = history(new MessagePublished(messageId, "hello",authorId));
+        UserId authorId = new UserId();
+        List<Event> eventHistory = history(new MessagePublished(messageId, "hello", authorId));
         Message message = new Message(eventHistory);
         UserId userId = new UserId();
 
@@ -50,7 +48,7 @@ public class MessageTest {
     public void whenAMessageIsRepublishedByItsAuthorThenItShouldNotSendRepublishedEvent() {
         // Given
         Message.MessageId messageId = new Message.MessageId();
-        UserId authorId=new UserId();
+        UserId authorId = new UserId();
         List<Event> eventHistory = history(
                 new MessagePublished(messageId, "hello", authorId)
         );
@@ -70,9 +68,9 @@ public class MessageTest {
         // Given
         Message.MessageId messageId = new Message.MessageId();
         UserId userId = new UserId();
-        UserId authorId=new UserId();
+        UserId authorId = new UserId();
         List<Event> eventHistory = history(
-                new MessagePublished(messageId, "hello",authorId),
+                new MessagePublished(messageId, "hello", authorId),
                 new MessageRepublished(messageId, userId)
         );
 
@@ -87,11 +85,11 @@ public class MessageTest {
     }
 
     @Test
-    public void whenAMessageIsDeletedByItsAuthorThenItShouldSendMessageDeletedEvent(){
+    public void whenAMessageIsDeletedByItsAuthorThenItShouldSendMessageDeletedEvent() {
         Message.MessageId messageId = new Message.MessageId();
-        UserId authorId=new UserId();
+        UserId authorId = new UserId();
         List<Event> eventHistory = history(
-                new MessagePublished(messageId, "hello",authorId)
+                new MessagePublished(messageId, "hello", authorId)
         );
 
         Message message = new Message(eventHistory);
@@ -106,11 +104,11 @@ public class MessageTest {
     }
 
     @Test
-    public void whenAMessageIsDeletedBySomeoneElseThenItShouldNotSendMessageDeletedEvent(){
+    public void whenAMessageIsDeletedBySomeoneElseThenItShouldNotSendMessageDeletedEvent() {
         Message.MessageId messageId = new Message.MessageId();
-        UserId authorId=new UserId();
+        UserId authorId = new UserId();
         List<Event> eventHistory = history(
-                new MessagePublished(messageId, "hello",authorId)
+                new MessagePublished(messageId, "hello", authorId)
         );
 
         Message message = new Message(eventHistory);
@@ -124,11 +122,11 @@ public class MessageTest {
     }
 
     @Test
-    public void whenAMessageIsDeletedTwiceThenItShouldNotSendMessageDeletedEvent(){
+    public void whenAMessageIsDeletedTwiceThenItShouldNotSendMessageDeletedEvent() {
         Message.MessageId messageId = new Message.MessageId();
-        UserId authorId=new UserId();
+        UserId authorId = new UserId();
         List<Event> eventHistory = history(
-                new MessagePublished(messageId, "hello",authorId),
+                new MessagePublished(messageId, "hello", authorId),
                 new MessageDeleted(messageId)
         );
 
@@ -143,11 +141,11 @@ public class MessageTest {
     }
 
     @Test
-    public void whenADeletedMessageIsRepublishedThenItShouldNotSendMessageRepublishedEvent(){
+    public void whenADeletedMessageIsRepublishedThenItShouldNotSendMessageRepublishedEvent() {
         Message.MessageId messageId = new Message.MessageId();
-        UserId authorId=new UserId();
+        UserId authorId = new UserId();
         List<Event> eventHistory = history(
-                new MessagePublished(messageId, "hello",authorId),
+                new MessagePublished(messageId, "hello", authorId),
                 new MessageDeleted(messageId)
         );
 
@@ -161,18 +159,5 @@ public class MessageTest {
         assertThat(eventPublisher.publishedEvents).isEmpty();
     }
 
-    public List<Event> history(Event... events) {
-        List<Event> eventHistory = new ArrayList<>();
-        Collections.addAll(eventHistory, events);
-        return eventHistory;
-    }
-
-    class SpyEventPublisher implements EventPublisher {
-        public List<Event> publishedEvents = new ArrayList<>();
-
-        public void publish(Event event) {
-            publishedEvents.add(event);
-        }
-    }
 }
 
