@@ -7,7 +7,7 @@ using NFluent;
 namespace Mixter.Tests.Infrastructure
 {
     [TestClass]
-    public class EventsDatabaseTest
+    public class EventsStoreTest
     {
         private static readonly AgregateAId AgregateId1 = new AgregateAId("A");
         private static readonly AgregateAId AgregateId2 = new AgregateAId("B");
