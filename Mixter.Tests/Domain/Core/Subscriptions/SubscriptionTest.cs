@@ -15,7 +15,6 @@ namespace Mixter.Tests.Domain.Core.Subscriptions
         private static readonly UserId Follower = new UserId("emilien@mixit.fr");
         private static readonly UserId Followee = new UserId("florent@mixit.fr");
         private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Follower, Followee);
-        private static readonly string Content = "some content published";
 
         private EventPublisherFake _eventPublisher;
 
@@ -59,9 +58,9 @@ namespace Mixter.Tests.Domain.Core.Subscriptions
             var subscription = Create(new UserFollowed(SubscriptionId));
 
             var messageId = MessageId.Generate();
-            subscription.NotifyFollower(_eventPublisher, messageId, Content);
+            subscription.NotifyFollower(_eventPublisher, messageId);
 
-            Check.That(_eventPublisher.Events).Contains(new FolloweeMessagePublished(SubscriptionId, messageId, Content));
+            Check.That(_eventPublisher.Events).Contains(new FolloweeMessagePublished(SubscriptionId, messageId));
         }
 
         [TestMethod]
@@ -72,7 +71,7 @@ namespace Mixter.Tests.Domain.Core.Subscriptions
                 new UserUnfollowed(SubscriptionId));
 
             var messageId = MessageId.Generate();
-            subscription.NotifyFollower(_eventPublisher, messageId, Content);
+            subscription.NotifyFollower(_eventPublisher, messageId);
 
             Check.That(_eventPublisher.Events).IsEmpty();
         }

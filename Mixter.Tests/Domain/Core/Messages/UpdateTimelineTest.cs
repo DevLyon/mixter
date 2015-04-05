@@ -57,7 +57,7 @@ namespace Mixter.Tests.Domain.Core.Messages
             var followee = Author;
             _database.Store(new MessagePublished(MessageId, followee, Content));
             var follower = new UserId("owner@mixit.fr");
-            _handler.Handle(new FolloweeMessagePublished(new SubscriptionId(follower, followee), MessageId, Content));
+            _handler.Handle(new FolloweeMessagePublished(new SubscriptionId(follower, followee), MessageId));
 
             Check.That(_repository.GetMessagesOfUser(follower))
                  .ContainsExactly(new TimelineMessageProjection(follower, followee, Content, MessageId));
@@ -70,7 +70,7 @@ namespace Mixter.Tests.Domain.Core.Messages
             var followee = new UserId("followee@mixit.fr");
             _database.Store(new MessageRepublished(MessageId, followee));
             var follower = new UserId("owner@mixit.fr");
-            _handler.Handle(new FolloweeMessagePublished(new SubscriptionId(follower, followee), MessageId, Content));
+            _handler.Handle(new FolloweeMessagePublished(new SubscriptionId(follower, followee), MessageId));
 
             Check.That(_repository.GetMessagesOfUser(follower))
                  .ContainsExactly(new TimelineMessageProjection(follower, Author, Content, MessageId));

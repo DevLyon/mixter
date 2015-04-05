@@ -34,11 +34,12 @@ namespace Mixter.Domain.Core.Subscriptions
         {
             eventPublisher.Publish(new UserUnfollowed(_projection.Id));
         }
-        public void NotifyFollower(IEventPublisher eventPublisher, MessageId messageId, string content)
+
+        public void NotifyFollower(IEventPublisher eventPublisher, MessageId messageId)
         {
             if (_projection.IsActive)
             {
-                eventPublisher.Publish(new FolloweeMessagePublished(_projection.Id, messageId, content));
+                eventPublisher.Publish(new FolloweeMessagePublished(_projection.Id, messageId));
             }
         }
 

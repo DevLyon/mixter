@@ -39,13 +39,12 @@ namespace Mixter.Tests.Domain.Core.Messages
         {
             var follower = new UserId("follower@mixit.fr");
             AddFollower(follower);
-            var content = "content";
-            var messagePublished = new MessagePublished(MessageId.Generate(), Followee, content);
+            var messagePublished = new MessagePublished(MessageId.Generate(), Followee, "content");
 
             _handler.Handle(messagePublished);
 
             Check.That(_eventPublisher.Events)
-                .Contains(new FolloweeMessagePublished(new SubscriptionId(follower, Followee), messagePublished.Id, content));
+                .Contains(new FolloweeMessagePublished(new SubscriptionId(follower, Followee), messagePublished.Id));
         }
 
         [TestMethod]
@@ -59,7 +58,7 @@ namespace Mixter.Tests.Domain.Core.Messages
             _handler.Handle(replyMessagePublished);
 
             Check.That(_eventPublisher.Events)
-                .Contains(new FolloweeMessagePublished(new SubscriptionId(follower, Followee), replyMessagePublished.ReplyId, replyMessagePublished.ReplyContent));
+                .Contains(new FolloweeMessagePublished(new SubscriptionId(follower, Followee), replyMessagePublished.ReplyId));
         }
 
         [TestMethod]
@@ -74,7 +73,7 @@ namespace Mixter.Tests.Domain.Core.Messages
             _handler.Handle(messageRepublished);
 
             Check.That(_eventPublisher.Events)
-                .Contains(new FolloweeMessagePublished(new SubscriptionId(follower, Followee), messagePublished.Id, messagePublished.Content));
+                .Contains(new FolloweeMessagePublished(new SubscriptionId(follower, Followee), messagePublished.Id));
         }
 
         private MessagePublished PublishMessage(UserId author, string content)

@@ -48,7 +48,7 @@ namespace Mixter.Domain.Core.Subscriptions.Handlers
             foreach (var follower in _followersRepository.GetFollowers(followee))
             {
                 var subscription = _subscriptionsRepository.Get(new SubscriptionId(follower, followee));
-                subscription.NotifyFollower(_eventPublisher, messageId, content);
+                subscription.NotifyFollower(_eventPublisher, messageId);
             }
         }
     }
