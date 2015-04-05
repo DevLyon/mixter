@@ -1,0 +1,1 @@
+$env:Path = $env:Path + ";.\node_modules\.bin"
