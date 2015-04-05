@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Mixter.Domain.Core.Messages;
 using Mixter.Domain.Core.Messages.Events;
 
@@ -20,8 +21,19 @@ namespace Mixter.Infrastructure.Repositories
 
         public MessageDescription GetDescription(MessageId id)
         {
-            var evt = _eventsDatabase.GetEventsOfAggregate(id).OfType<MessagePublished>().First();
-            return new MessageDescription(evt);
+            var creationEvent = _eventsDatabase.GetEventsOfAggregate(id).First();
+
+            if (creationEvent is MessagePublished)
+            {
+                return new MessageDescription((MessagePublished)creationEvent);
+            }
+
+            if (creationEvent is ReplyMessagePublished)
+            {
+                return new MessageDescription((ReplyMessagePublished)creationEvent);
+            }
+            
+            throw new NotSupportedException("Unknown creation event of message " + id);
         }
     }
 }

@@ -43,5 +43,17 @@ namespace Mixter.Tests.Infrastructure.Repositories
             Check.That(description.Author).IsEqualTo(messagePublished.Author);
             Check.That(description.Content).IsEqualTo(messagePublished.Content);
         }
+
+        [TestMethod]
+        public void GivenReplyMessagePublishedThenGetDescriptionThenReturnMessageDescription()
+        {
+            var replyMessagePublished = new ReplyMessagePublished(MessageId.Generate(), new UserId("bob@mixit.fr"), "Hello", MessageId.Generate());
+            _eventsDatabase.Store(replyMessagePublished);
+
+            var description = _repository.GetDescription(replyMessagePublished.ReplyId);
+
+            Check.That(description.Author).IsEqualTo(replyMessagePublished.Replier);
+            Check.That(description.Content).IsEqualTo(replyMessagePublished.ReplyContent);
+        }
     }
 }

@@ -14,6 +14,11 @@ namespace Mixter.Domain.Core.Messages
         {
         }
 
+        public MessageDescription(ReplyMessagePublished evt)
+            : this(evt.Replier, evt.ReplyContent)
+        {
+        }
+
         public MessageDescription(UserId author, string content)
             : this()
         {
