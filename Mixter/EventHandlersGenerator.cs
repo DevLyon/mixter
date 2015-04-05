@@ -23,8 +23,7 @@ namespace Mixter
         public IEnumerable<IEventHandler> Generate(IEventPublisher eventPublisher)
         {
             yield return new MessagePublishedHandler();
-            yield return new AddMessageOnAuthorTimeline(eventPublisher);
-            yield return new NotifyFollowerOfFolloweeMessage(new FollowersRepository(), eventPublisher, _eventsDatabase);
+            yield return new NotifyFollowerOfFolloweeMessage(new FollowersRepository(), eventPublisher, _eventsDatabase, new SubscriptionsesRepository(_eventsDatabase));
             yield return new SessionHandler(new SessionsRepository());
             yield return new UpdateTimeline(_timelineMessagesRepository);
             yield return new UpdateFollowers(new FollowersRepository());

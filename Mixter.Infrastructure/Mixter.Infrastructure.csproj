@@ -46,6 +46,7 @@
     <Compile Include="Repositories\FollowersRepository.cs" />
     <Compile Include="Repositories\MessagesRepository.cs" />
     <Compile Include="Repositories\SessionsRepository.cs" />
+    <Compile Include="Repositories\SubscriptionsRepository.cs" />
     <Compile Include="Repositories\TimelineMessagesRepository.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,9 +1,9 @@
 using System.Linq;
+using Mixter.Domain.Core.Messages;
 using Mixter.Domain.Core.Messages.Events;
-using Mixter.Domain.Core.Subscriptions;
 using Mixter.Domain.Identity;
 
-namespace Mixter.Domain.Core.Messages.Handlers
+namespace Mixter.Domain.Core.Subscriptions.Handlers
 {
     public class NotifyFollowerOfFolloweeMessage : 
         IEventHandler<MessagePublished>,
@@ -13,12 +13,14 @@ namespace Mixter.Domain.Core.Messages.Handlers
         private readonly IFollowersRepository _followersRepository;
         private readonly IEventPublisher _eventPublisher;
         private readonly IEventsDatabase _eventsDatabase;
+        private readonly ISubscriptionsRepository _subscriptionsRepository;
 
-        public NotifyFollowerOfFolloweeMessage(IFollowersRepository followersRepository, IEventPublisher eventPublisher, IEventsDatabase eventsDatabase)
+        public NotifyFollowerOfFolloweeMessage(IFollowersRepository followersRepository, IEventPublisher eventPublisher, IEventsDatabase eventsDatabase, ISubscriptionsRepository subscriptionsRepository)
         {
             _followersRepository = followersRepository;
             _eventPublisher = eventPublisher;
             _eventsDatabase = eventsDatabase;
+            _subscriptionsRepository = subscriptionsRepository;
         }
 
         public void Handle(MessagePublished evt)
@@ -42,7 +44,8 @@ namespace Mixter.Domain.Core.Messages.Handlers
         {
             foreach (var follower in _followersRepository.GetFollowers(followee))
             {
-                TimelineMessage.Publish(_eventPublisher, follower, author, content, messageId);
+                var subscription = _subscriptionsRepository.Get(new SubscriptionId(follower, followee));
+                subscription.NotifyFollower(_eventPublisher, messageId, content);
             }
         }
     }
