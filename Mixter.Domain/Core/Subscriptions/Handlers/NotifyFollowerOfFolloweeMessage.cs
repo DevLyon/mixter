@@ -1,4 +1,3 @@
-using System.Linq;
 using Mixter.Domain.Core.Messages;
 using Mixter.Domain.Core.Messages.Events;
 using Mixter.Domain.Identity;
@@ -11,15 +10,19 @@ namespace Mixter.Domain.Core.Subscriptions.Handlers
         IEventHandler<MessageRepublished>
     {
         private readonly IFollowersRepository _followersRepository;
+        private readonly IMessagesRepository _messagesRepository;
         private readonly IEventPublisher _eventPublisher;
-        private readonly IEventsDatabase _eventsDatabase;
         private readonly ISubscriptionsRepository _subscriptionsRepository;
 
-        public NotifyFollowerOfFolloweeMessage(IFollowersRepository followersRepository, IEventPublisher eventPublisher, IEventsDatabase eventsDatabase, ISubscriptionsRepository subscriptionsRepository)
+        public NotifyFollowerOfFolloweeMessage(
+            IFollowersRepository followersRepository, 
+            IMessagesRepository messagesRepository,
+            IEventPublisher eventPublisher, 
+            ISubscriptionsRepository subscriptionsRepository)
         {
             _followersRepository = followersRepository;
+            _messagesRepository = messagesRepository;
             _eventPublisher = eventPublisher;
-            _eventsDatabase = eventsDatabase;
             _subscriptionsRepository = subscriptionsRepository;
         }
 
@@ -35,9 +38,9 @@ namespace Mixter.Domain.Core.Subscriptions.Handlers
 
         public void Handle(MessageRepublished evt)
         {
-            var messagePublished = _eventsDatabase.GetEventsOfAggregate(evt.Id).OfType<MessagePublished>().First();
+            var messageDescription = _messagesRepository.GetDescription(evt.Id);
 
-            NotifyAllFollowers(evt.Republisher, messagePublished.Author, evt.Id, messagePublished.Content);
+            NotifyAllFollowers(evt.Republisher, messageDescription.Author, evt.Id, messageDescription.Content);
         }
 
         private void NotifyAllFollowers(UserId followee, UserId author, MessageId messageId, string content)

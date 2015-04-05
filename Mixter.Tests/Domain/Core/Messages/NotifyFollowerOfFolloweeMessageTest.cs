@@ -1,8 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Mixter.Domain;
 using Mixter.Domain.Core.Messages;
 using Mixter.Domain.Core.Messages.Events;
-using Mixter.Domain.Core.Messages.Handlers;
 using Mixter.Domain.Core.Subscriptions;
 using Mixter.Domain.Core.Subscriptions.Events;
 using Mixter.Domain.Core.Subscriptions.Handlers;
@@ -32,7 +30,8 @@ namespace Mixter.Tests.Domain.Core.Messages
             _eventPublisher = new EventPublisherFake();
             _followersRepository = new FollowersRepository();
             _subscriptionsesRepository = new SubscriptionsesRepository(_database);
-            _handler = new NotifyFollowerOfFolloweeMessage(_followersRepository, _eventPublisher, _database, _subscriptionsesRepository);
+            var messagesRepository = new MessagesRepository(_database);
+            _handler = new NotifyFollowerOfFolloweeMessage(_followersRepository, messagesRepository, _eventPublisher, _subscriptionsesRepository);
         }
 
         [TestMethod]

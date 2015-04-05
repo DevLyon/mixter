@@ -22,11 +22,16 @@ namespace Mixter
 
         public IEnumerable<IEventHandler> Generate(IEventPublisher eventPublisher)
         {
+            var messagesRepository = new MessagesRepository(_eventsDatabase);
+            var subscriptionsesRepository = new SubscriptionsesRepository(_eventsDatabase);
+            var followersRepository = new FollowersRepository();
+            var sessionsRepository = new SessionsRepository();
+
             yield return new MessagePublishedHandler();
-            yield return new NotifyFollowerOfFolloweeMessage(new FollowersRepository(), eventPublisher, _eventsDatabase, new SubscriptionsesRepository(_eventsDatabase));
-            yield return new SessionHandler(new SessionsRepository());
+            yield return new NotifyFollowerOfFolloweeMessage(followersRepository, messagesRepository, eventPublisher, subscriptionsesRepository);
+            yield return new SessionHandler(sessionsRepository);
             yield return new UpdateTimeline(_timelineMessagesRepository);
-            yield return new UpdateFollowers(new FollowersRepository());
+            yield return new UpdateFollowers(followersRepository);
         }
     }
 }
