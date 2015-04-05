@@ -11,15 +11,23 @@ namespace Mixter.Tests.Infrastructure.Repositories
     [TestClass]
     public class MessagesRepositoryTest
     {
+        private EventsDatabase _eventsDatabase;
+        private MessagesRepository _repository;
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            _eventsDatabase = new EventsDatabase();
+            _repository = new MessagesRepository(_eventsDatabase);
+        }
+
         [TestMethod]
         public void GivenMessagePublishedThenGetMessageThenReturnTheMessage()
         {
-            var eventsDatabase = new EventsDatabase();
-            var repository = new MessagesRepository(eventsDatabase);
             var messagePublished = new MessagePublished(MessageId.Generate(), new UserId("bob@mixit.fr"), "Hello");
-            eventsDatabase.Store(messagePublished);
+            _eventsDatabase.Store(messagePublished);
 
-            var message = repository.Get(messagePublished.Id);
+            var message = _repository.Get(messagePublished.Id);
 
             Check.That(message.GetId()).IsEqualTo(messagePublished.Id);
         }
@@ -27,12 +35,10 @@ namespace Mixter.Tests.Infrastructure.Repositories
         [TestMethod]
         public void GivenMessagePublishedThenGetDescriptionThenReturnMessageDescription()
         {
-            var eventsDatabase = new EventsDatabase();
-            var repository = new MessagesRepository(eventsDatabase);
             var messagePublished = new MessagePublished(MessageId.Generate(), new UserId("bob@mixit.fr"), "Hello");
-            eventsDatabase.Store(messagePublished);
+            _eventsDatabase.Store(messagePublished);
 
-            var description = repository.GetDescription(messagePublished.Id);
+            var description = _repository.GetDescription(messagePublished.Id);
 
             Check.That(description.Author).IsEqualTo(messagePublished.Author);
             Check.That(description.Content).IsEqualTo(messagePublished.Content);
