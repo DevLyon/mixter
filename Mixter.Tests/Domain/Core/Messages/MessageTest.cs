@@ -130,6 +130,15 @@ namespace Mixter.Tests.Domain.Core.Messages
             .ThenNothing();
         }
 
+        [TestMethod]
+        public void GivenDeletedMessageWhenRepublishThenDoNotRaiseMessageRepublished()
+        {
+            Given(new MessagePublished(MessageId, Author, MessageContent))
+                .And(new MessageDeleted(MessageId))
+            .When(o => o.Republish(_eventPublisher, Republisher))
+            .ThenNothing();
+        }
+
         private Message CreateMessage(params IDomainEvent[] events)
         {
             return new Message(events);
