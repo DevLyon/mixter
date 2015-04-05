@@ -13,51 +13,49 @@ namespace Mixter.Tests.Domain.Core.Messages
     [TestClass]
     public class UpdateTimelineTest
     {
+        private const string Content = "Hello";
+
+        private static readonly UserId Author = new UserId("author@mixit.fr");
+        private static readonly MessageId MessageId = MessageId.Generate();
+
+        private TimelineMessagesRepository _repository;
+        private UpdateTimeline _handler;
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            _repository = new TimelineMessagesRepository();
+            _handler = new UpdateTimeline(_repository);
+        }
+
         [TestMethod]
         public void WhenHandleMessagePublishedThenSaveTimelineMessageProjectionForAuthor()
         {
-            var repository = new TimelineMessagesRepository();
-            var handler = new UpdateTimeline(repository);
+            _handler.Handle(new MessagePublished(MessageId, Author, Content));
 
-            var messageId = MessageId.Generate();
-            var author = new UserId("author@mixit.fr");
-            var content = "Hello";
-            handler.Handle(new MessagePublished(messageId, author, content));
-
-            Check.That(repository.GetMessagesOfUser(author))
-                 .ContainsExactly(new TimelineMessageProjection(author, author, content, messageId));
+            Check.That(_repository.GetMessagesOfUser(Author))
+                 .ContainsExactly(new TimelineMessageProjection(Author, Author, Content, MessageId));
         }
 
         [TestMethod]
         public void WhenHandleMessageRepliedThenSaveTimelineMessageProjectionForReplier()
         {
-            var repository = new TimelineMessagesRepository();
-            var handler = new UpdateTimeline(repository);
-
             var parentMessageId = MessageId.Generate();
-            var messageId = MessageId.Generate();
             var replier = new UserId("author@mixit.fr");
-            var replyContent = "Hello";
-            handler.Handle(new ReplyMessagePublished(messageId, replier, replyContent, parentMessageId));
+            _handler.Handle(new ReplyMessagePublished(MessageId, replier, Content, parentMessageId));
 
-            Check.That(repository.GetMessagesOfUser(replier))
-                 .ContainsExactly(new TimelineMessageProjection(replier, replier, replyContent, messageId));
+            Check.That(_repository.GetMessagesOfUser(replier))
+                 .ContainsExactly(new TimelineMessageProjection(replier, replier, Content, MessageId));
         }
 
         [TestMethod]
         public void WhenHandleFolloweeMessagePublishedThenSaveTimelineMessageProjection()
         {
-            var repository = new TimelineMessagesRepository();
-            var handler = new UpdateTimeline(repository);
-
             var owner = new UserId("owner@mixit.fr");
-            var messageId = MessageId.Generate();
-            var author = new UserId("author@mixit.fr");
-            var content = "Hello";
-            handler.Handle(new FolloweeMessagePublished(new SubscriptionId(owner, author), messageId, content));
+            _handler.Handle(new FolloweeMessagePublished(new SubscriptionId(owner, Author), MessageId, Content));
 
-            Check.That(repository.GetMessagesOfUser(owner))
-                 .ContainsExactly(new TimelineMessageProjection(owner, author, content, messageId));
+            Check.That(_repository.GetMessagesOfUser(owner))
+                 .ContainsExactly(new TimelineMessageProjection(owner, Author, Content, MessageId));
         }
     }
 }
