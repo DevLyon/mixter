@@ -7,7 +7,9 @@
     "test": "mocha --recursive"
   },
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "node-uuid": "^1.4.3"
+  },
   "devDependencies": {
     "chai": "^2.2.0",
     "jshint": "^2.6.3",
