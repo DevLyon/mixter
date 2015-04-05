@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mixter.Domain;
-using Mixter.Domain.Core;
 using Mixter.Domain.Core.Messages;
 using Mixter.Domain.Core.Messages.Events;
 using Mixter.Domain.Identity;
@@ -101,6 +100,15 @@ namespace Mixter.Tests.Domain.Core.Messages
             Given(new MessagePublished(MessageId, Author, MessageContent))
                 .And(new MessageRepublished(MessageId, Republisher))
             .When(o => o.Delete(_eventPublisher, Republisher))
+            .ThenNothing();
+        }
+
+        [TestMethod]
+        public void GiveDeletedMessageWhenDeleteThenNothing()
+        {
+            Given(new MessagePublished(MessageId, Author, MessageContent))
+                .And(new MessageDeleted(MessageId))
+            .When(o => o.Delete(_eventPublisher, Author))
             .ThenNothing();
         }
 
