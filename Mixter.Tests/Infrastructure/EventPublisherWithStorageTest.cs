@@ -25,7 +25,7 @@ namespace Mixter.Tests.Infrastructure
         {
             _publisher.Publish(new EventA());
 
-            Check.That(_database.GetEvents()).HasSize(1);
+            Check.That(_database.GetEventsOfAggregate("A")).HasSize(1);
         }
 
         [TestMethod]

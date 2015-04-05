@@ -53,17 +53,6 @@ namespace Mixter.Tests.Infrastructure
             Check.That(eventsOfAggregateA.Cast<EventA>().Select(o => o.Value)).ContainsExactly(1, 2, 3);
         }
 
-        [TestMethod]
-        public void WhenGetEventsThenReturnAllEvents()
-        {
-            _database.Store(new EventA(AgregateId1));
-            _database.Store(new EventA(AgregateId2));
-
-            var events = _database.GetEvents();
-
-            Check.That(events).HasSize(2);
-        }
-
         private struct EventA : IDomainEvent
         {
             public AgregateAId Id { get; private set; }

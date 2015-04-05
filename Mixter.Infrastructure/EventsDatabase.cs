@@ -17,10 +17,5 @@ namespace Mixter.Infrastructure
         {
             return _events.Where(o => o.GetAggregateId().Equals(id));
         }
-
-        public IEnumerable<IDomainEvent> GetEvents()
-        {
-            return _events;
-        }
     }
 }
