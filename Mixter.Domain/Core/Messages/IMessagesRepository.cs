@@ -3,5 +3,7 @@
     public interface IMessagesRepository
     {
         Message Get(MessageId id);
+
+        MessageDescription GetDescription(MessageId id);
     }
 }
