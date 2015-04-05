@@ -30,7 +30,7 @@ namespace Mixter
             yield return new MessagePublishedHandler();
             yield return new NotifyFollowerOfFolloweeMessage(followersRepository, messagesRepository, eventPublisher, subscriptionsesRepository);
             yield return new SessionHandler(sessionsRepository);
-            yield return new UpdateTimeline(_timelineMessagesRepository);
+            yield return new UpdateTimeline(_timelineMessagesRepository, messagesRepository);
             yield return new UpdateFollowers(followersRepository);
         }
     }

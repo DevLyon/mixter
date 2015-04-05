@@ -6,21 +6,21 @@ namespace Mixter.Domain.Core.Messages.Handlers
 {
     public class UpdateTimeline : IEventHandler<MessagePublished>, IEventHandler<ReplyMessagePublished>, IEventHandler<FolloweeMessagePublished>
     {
-        private readonly ITimelineMessagesRepository _repository;
+        private readonly ITimelineMessagesRepository _timelineMessagesRepository;
+        private readonly IMessagesRepository _messagesRepository;
 
-        public UpdateTimeline(ITimelineMessagesRepository repository)
+        public UpdateTimeline(ITimelineMessagesRepository timelineMessagesRepository, IMessagesRepository messagesRepository)
         {
-            _repository = repository;
+            _timelineMessagesRepository = timelineMessagesRepository;
+            _messagesRepository = messagesRepository;
         }
 
         public void Handle(FolloweeMessagePublished evt)
         {
             var ownerId = evt.SubscriptionId.Follower;
-            var authorId = evt.SubscriptionId.Followee;
-            var content = evt.Content;
-            var messageId = evt.MessageId;
+            var messageDescription = _messagesRepository.GetDescription(evt.MessageId);
 
-            Save(ownerId, authorId, content, messageId);
+            Save(ownerId, messageDescription.Author, messageDescription.Content, evt.MessageId);
         }
 
         public void Handle(MessagePublished evt)
@@ -46,7 +46,7 @@ namespace Mixter.Domain.Core.Messages.Handlers
         private void Save(UserId ownerId, UserId authorId, string content, MessageId messageId)
         {
             var projection = new TimelineMessageProjection(ownerId, authorId, content, messageId);
-            _repository.Save(projection);
+            _timelineMessagesRepository.Save(projection);
         }
     }
 }

@@ -5,6 +5,7 @@ using Mixter.Domain.Core.Messages.Handlers;
 using Mixter.Domain.Core.Subscriptions;
 using Mixter.Domain.Core.Subscriptions.Events;
 using Mixter.Domain.Identity;
+using Mixter.Infrastructure;
 using Mixter.Infrastructure.Repositories;
 using NFluent;
 
@@ -20,12 +21,14 @@ namespace Mixter.Tests.Domain.Core.Messages
 
         private TimelineMessagesRepository _repository;
         private UpdateTimeline _handler;
+        private EventsDatabase _database;
 
         [TestInitialize]
         public void Initialize()
         {
+            _database = new EventsDatabase();
             _repository = new TimelineMessagesRepository();
-            _handler = new UpdateTimeline(_repository);
+            _handler = new UpdateTimeline(_repository, new MessagesRepository(_database));
         }
 
         [TestMethod]
@@ -49,13 +52,28 @@ namespace Mixter.Tests.Domain.Core.Messages
         }
 
         [TestMethod]
-        public void WhenHandleFolloweeMessagePublishedThenSaveTimelineMessageProjection()
+        public void GivenMessagePublishedByFolloweeWhenHandleFolloweeMessagePublishedThenSaveTimelineMessageProjection()
         {
-            var owner = new UserId("owner@mixit.fr");
-            _handler.Handle(new FolloweeMessagePublished(new SubscriptionId(owner, Author), MessageId, Content));
+            var followee = Author;
+            _database.Store(new MessagePublished(MessageId, followee, Content));
+            var follower = new UserId("owner@mixit.fr");
+            _handler.Handle(new FolloweeMessagePublished(new SubscriptionId(follower, followee), MessageId, Content));
 
-            Check.That(_repository.GetMessagesOfUser(owner))
-                 .ContainsExactly(new TimelineMessageProjection(owner, Author, Content, MessageId));
+            Check.That(_repository.GetMessagesOfUser(follower))
+                 .ContainsExactly(new TimelineMessageProjection(follower, followee, Content, MessageId));
+        }
+
+        [TestMethod]
+        public void GivenMessageRepublishedByFolloweeWhenHandleFolloweeMessagePublishedThenSaveTimelineMessageProjectionWithOriginalAuthor()
+        {
+            _database.Store(new MessagePublished(MessageId, Author, Content));
+            var followee = new UserId("followee@mixit.fr");
+            _database.Store(new MessageRepublished(MessageId, followee));
+            var follower = new UserId("owner@mixit.fr");
+            _handler.Handle(new FolloweeMessagePublished(new SubscriptionId(follower, followee), MessageId, Content));
+
+            Check.That(_repository.GetMessagesOfUser(follower))
+                 .ContainsExactly(new TimelineMessageProjection(follower, Author, Content, MessageId));
         }
     }
 }
