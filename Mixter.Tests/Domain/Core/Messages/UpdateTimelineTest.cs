@@ -21,14 +21,14 @@ namespace Mixter.Tests.Domain.Core.Messages
 
         private TimelineMessagesRepository _repository;
         private UpdateTimeline _handler;
-        private EventsDatabase _database;
+        private EventsStore _store;
 
         [TestInitialize]
         public void Initialize()
         {
-            _database = new EventsDatabase();
+            _store = new EventsStore();
             _repository = new TimelineMessagesRepository();
-            _handler = new UpdateTimeline(_repository, new MessagesRepository(_database));
+            _handler = new UpdateTimeline(_repository, new MessagesRepository(_store));
         }
 
         [TestMethod]
@@ -55,7 +55,7 @@ namespace Mixter.Tests.Domain.Core.Messages
         public void GivenMessagePublishedByFolloweeWhenHandleFolloweeMessagePublishedThenSaveTimelineMessageProjection()
         {
             var followee = Author;
-            _database.Store(new MessagePublished(MessageId, followee, Content));
+            _store.Store(new MessagePublished(MessageId, followee, Content));
             var follower = new UserId("owner@mixit.fr");
             _handler.Handle(new FolloweeMessagePublished(new SubscriptionId(follower, followee), MessageId));
 
@@ -66,9 +66,9 @@ namespace Mixter.Tests.Domain.Core.Messages
         [TestMethod]
         public void GivenMessageRepublishedByFolloweeWhenHandleFolloweeMessagePublishedThenSaveTimelineMessageProjectionWithOriginalAuthor()
         {
-            _database.Store(new MessagePublished(MessageId, Author, Content));
+            _store.Store(new MessagePublished(MessageId, Author, Content));
             var followee = new UserId("followee@mixit.fr");
-            _database.Store(new MessageRepublished(MessageId, followee));
+            _store.Store(new MessageRepublished(MessageId, followee));
             var follower = new UserId("owner@mixit.fr");
             _handler.Handle(new FolloweeMessagePublished(new SubscriptionId(follower, followee), MessageId));
 

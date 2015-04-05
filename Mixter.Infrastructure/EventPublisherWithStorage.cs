@@ -4,18 +4,18 @@ namespace Mixter.Infrastructure
 {
     public class EventPublisherWithStorage : IEventPublisher
     {
-        private readonly EventsDatabase _database;
+        private readonly EventsStore _store;
         private readonly IEventPublisher _publisher;
 
-        public EventPublisherWithStorage(EventsDatabase database, IEventPublisher publisher)
+        public EventPublisherWithStorage(EventsStore store, IEventPublisher publisher)
         {
-            _database = database;
+            _store = store;
             _publisher = publisher;
         }
 
         public void Publish<TEvent>(TEvent evt) where TEvent : IDomainEvent
         {
-            _database.Store(evt);
+            _store.Store(evt);
             _publisher.Publish(evt);
         }
     }

@@ -12,30 +12,30 @@ namespace Mixter.Tests.Infrastructure
         private static readonly AgregateAId AgregateId1 = new AgregateAId("A");
         private static readonly AgregateAId AgregateId2 = new AgregateAId("B");
 
-        private EventsDatabase _database;
+        private EventsStore _store;
 
         [TestInitialize]
         public void Initialize()
         {
-            _database = new EventsDatabase();
+            _store = new EventsStore();
         }
 
         [TestMethod]
         public void WhenStoreEventOfAggregateThenCanGetThisEventOfAggregate()
         {
-            _database.Store(new EventA(AgregateId1));
+            _store.Store(new EventA(AgregateId1));
 
-            Check.That(_database.GetEventsOfAggregate(AgregateId1)).HasSize(1);
+            Check.That(_store.GetEventsOfAggregate(AgregateId1)).HasSize(1);
         }
 
         [TestMethod]
         public void GivenEventsOfSeveralAggregatesWhenGetEventsOfAggregateThenReturnEventsOfOnlyThisAggregate()
         {
-            _database.Store(new EventA(AgregateId1));
-            _database.Store(new EventA(AgregateId2));
-            _database.Store(new EventA(AgregateId1));
+            _store.Store(new EventA(AgregateId1));
+            _store.Store(new EventA(AgregateId2));
+            _store.Store(new EventA(AgregateId1));
 
-            var eventsOfAggregateA = _database.GetEventsOfAggregate(AgregateId1).ToArray();
+            var eventsOfAggregateA = _store.GetEventsOfAggregate(AgregateId1).ToArray();
 
             Check.That(eventsOfAggregateA).HasSize(2);
             Check.That(eventsOfAggregateA.Cast<EventA>().Select(o => o.Id).Distinct()).ContainsExactly(AgregateId1);
@@ -44,11 +44,11 @@ namespace Mixter.Tests.Infrastructure
         [TestMethod]
         public void GivenSeveralEventsWhenGetEventsOfAggregateThenReturnEventsAndPreserveOrder()
         {
-            _database.Store(new EventA(AgregateId1, 1));
-            _database.Store(new EventA(AgregateId1, 2));
-            _database.Store(new EventA(AgregateId1, 3));
+            _store.Store(new EventA(AgregateId1, 1));
+            _store.Store(new EventA(AgregateId1, 2));
+            _store.Store(new EventA(AgregateId1, 3));
 
-            var eventsOfAggregateA = _database.GetEventsOfAggregate(AgregateId1).ToArray();
+            var eventsOfAggregateA = _store.GetEventsOfAggregate(AgregateId1).ToArray();
 
             Check.That(eventsOfAggregateA.Cast<EventA>().Select(o => o.Value)).ContainsExactly(1, 2, 3);
         }

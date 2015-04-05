@@ -19,18 +19,18 @@ namespace Mixter.Tests.Domain.Core.Messages
 
         private NotifyFollowerOfFolloweeMessage _handler;
         private EventPublisherFake _eventPublisher;
-        private EventsDatabase _database;
+        private EventsStore _store;
         private FollowersRepository _followersRepository;
         private SubscriptionsesRepository _subscriptionsesRepository;
 
         [TestInitialize]
         public void Initialize()
         {
-            _database = new EventsDatabase();
+            _store = new EventsStore();
             _eventPublisher = new EventPublisherFake();
             _followersRepository = new FollowersRepository();
-            _subscriptionsesRepository = new SubscriptionsesRepository(_database);
-            var messagesRepository = new MessagesRepository(_database);
+            _subscriptionsesRepository = new SubscriptionsesRepository(_store);
+            var messagesRepository = new MessagesRepository(_store);
             _handler = new NotifyFollowerOfFolloweeMessage(_followersRepository, messagesRepository, _eventPublisher, _subscriptionsesRepository);
         }
 
@@ -80,7 +80,7 @@ namespace Mixter.Tests.Domain.Core.Messages
         {
             var messageId = MessageId.Generate();
             var messagePublished = new MessagePublished(messageId, author, content);
-            _database.Store(messagePublished);
+            _store.Store(messagePublished);
 
             return messagePublished;
         }
@@ -88,7 +88,7 @@ namespace Mixter.Tests.Domain.Core.Messages
         private void AddFollower(UserId follower)
         {
             _followersRepository.Save(new FollowerProjection(Followee, follower));
-            _database.Store(new UserFollowed(new SubscriptionId(follower, Followee)));
+            _store.Store(new UserFollowed(new SubscriptionId(follower, Followee)));
         }
     }
 }

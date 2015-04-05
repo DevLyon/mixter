@@ -7,21 +7,21 @@ namespace Mixter.Infrastructure.Repositories
 {
     public class MessagesRepository : IMessagesRepository
     {
-        private readonly EventsDatabase _eventsDatabase;
+        private readonly EventsStore _eventsStore;
 
-        public MessagesRepository(EventsDatabase eventsDatabase)
+        public MessagesRepository(EventsStore eventsStore)
         {
-            _eventsDatabase = eventsDatabase;
+            _eventsStore = eventsStore;
         }
 
         public Message Get(MessageId id)
         {
-            return new Message(_eventsDatabase.GetEventsOfAggregate(id));
+            return new Message(_eventsStore.GetEventsOfAggregate(id));
         }
 
         public MessageDescription GetDescription(MessageId id)
         {
-            var creationEvent = _eventsDatabase.GetEventsOfAggregate(id).First();
+            var creationEvent = _eventsStore.GetEventsOfAggregate(id).First();
 
             if (creationEvent is MessagePublished)
             {

@@ -11,19 +11,19 @@ namespace Mixter
 {
     public class EventHandlersGenerator
     {
-        private readonly EventsDatabase _eventsDatabase;
+        private readonly EventsStore _eventsStore;
         private readonly ITimelineMessagesRepository _timelineMessagesRepository;
 
-        public EventHandlersGenerator(EventsDatabase eventsDatabase, ITimelineMessagesRepository timelineMessagesRepository)
+        public EventHandlersGenerator(EventsStore eventsStore, ITimelineMessagesRepository timelineMessagesRepository)
         {
-            _eventsDatabase = eventsDatabase;
+            _eventsStore = eventsStore;
             _timelineMessagesRepository = timelineMessagesRepository;
         }
 
         public IEnumerable<IEventHandler> Generate(IEventPublisher eventPublisher)
         {
-            var messagesRepository = new MessagesRepository(_eventsDatabase);
-            var subscriptionsesRepository = new SubscriptionsesRepository(_eventsDatabase);
+            var messagesRepository = new MessagesRepository(_eventsStore);
+            var subscriptionsesRepository = new SubscriptionsesRepository(_eventsStore);
             var followersRepository = new FollowersRepository();
             var sessionsRepository = new SessionsRepository();
 

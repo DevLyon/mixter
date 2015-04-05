@@ -41,7 +41,7 @@
   <ItemGroup>
     <Compile Include="EventPublisher.cs" />
     <Compile Include="EventPublisherWithStorage.cs" />
-    <Compile Include="EventsDatabase.cs" />
+    <Compile Include="EventsStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\FollowersRepository.cs" />
     <Compile Include="Repositories\MessagesRepository.cs" />

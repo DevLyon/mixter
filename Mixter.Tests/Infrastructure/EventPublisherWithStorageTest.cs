@@ -8,16 +8,16 @@ namespace Mixter.Tests.Infrastructure
     [TestClass]
     public class EventPublisherWithStorageTest
     {
-        private EventsDatabase _database;
+        private EventsStore _store;
         private EventPublisherWithStorage _publisher;
         private EventPublisherFake _publisherBase;
 
         [TestInitialize]
         public void Initialize()
         {
-            _database = new EventsDatabase();
+            _store = new EventsStore();
             _publisherBase = new EventPublisherFake();
-            _publisher = new EventPublisherWithStorage(_database, _publisherBase);
+            _publisher = new EventPublisherWithStorage(_store, _publisherBase);
         }
 
         [TestMethod]
@@ -25,7 +25,7 @@ namespace Mixter.Tests.Infrastructure
         {
             _publisher.Publish(new EventA());
 
-            Check.That(_database.GetEventsOfAggregate("A")).HasSize(1);
+            Check.That(_store.GetEventsOfAggregate("A")).HasSize(1);
         }
 
         [TestMethod]

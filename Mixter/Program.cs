@@ -19,7 +19,7 @@ namespace Mixter
 
         static Program()
         {
-            var eventsDatabase = new EventsDatabase();
+            var eventsDatabase = new EventsStore();
 
             TimelineMessagesRepository = new TimelineMessagesRepository();
             MessagesRepository = new MessagesRepository(eventsDatabase);

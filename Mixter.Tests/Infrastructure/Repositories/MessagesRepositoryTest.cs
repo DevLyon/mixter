@@ -11,21 +11,21 @@ namespace Mixter.Tests.Infrastructure.Repositories
     [TestClass]
     public class MessagesRepositoryTest
     {
-        private EventsDatabase _eventsDatabase;
+        private EventsStore _eventsStore;
         private MessagesRepository _repository;
 
         [TestInitialize]
         public void Initialize()
         {
-            _eventsDatabase = new EventsDatabase();
-            _repository = new MessagesRepository(_eventsDatabase);
+            _eventsStore = new EventsStore();
+            _repository = new MessagesRepository(_eventsStore);
         }
 
         [TestMethod]
         public void GivenMessagePublishedThenGetMessageThenReturnTheMessage()
         {
             var messagePublished = new MessagePublished(MessageId.Generate(), new UserId("bob@mixit.fr"), "Hello");
-            _eventsDatabase.Store(messagePublished);
+            _eventsStore.Store(messagePublished);
 
             var message = _repository.Get(messagePublished.Id);
 
@@ -36,7 +36,7 @@ namespace Mixter.Tests.Infrastructure.Repositories
         public void GivenMessagePublishedThenGetDescriptionThenReturnMessageDescription()
         {
             var messagePublished = new MessagePublished(MessageId.Generate(), new UserId("bob@mixit.fr"), "Hello");
-            _eventsDatabase.Store(messagePublished);
+            _eventsStore.Store(messagePublished);
 
             var description = _repository.GetDescription(messagePublished.Id);
 
@@ -48,7 +48,7 @@ namespace Mixter.Tests.Infrastructure.Repositories
         public void GivenReplyMessagePublishedThenGetDescriptionThenReturnMessageDescription()
         {
             var replyMessagePublished = new ReplyMessagePublished(MessageId.Generate(), new UserId("bob@mixit.fr"), "Hello", MessageId.Generate());
-            _eventsDatabase.Store(replyMessagePublished);
+            _eventsStore.Store(replyMessagePublished);
 
             var description = _repository.GetDescription(replyMessagePublished.ReplyId);
 

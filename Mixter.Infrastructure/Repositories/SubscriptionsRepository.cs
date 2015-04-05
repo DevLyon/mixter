@@ -5,16 +5,16 @@ namespace Mixter.Infrastructure.Repositories
 {
     public class SubscriptionsesRepository : ISubscriptionsRepository
     {
-        private readonly EventsDatabase _eventsDatabase;
+        private readonly EventsStore _eventsStore;
 
-        public SubscriptionsesRepository(EventsDatabase eventsDatabase)
+        public SubscriptionsesRepository(EventsStore eventsStore)
         {
-            _eventsDatabase = eventsDatabase;
+            _eventsStore = eventsStore;
         }
 
         public Subscription Get(SubscriptionId subscriptionId)
         {
-            return new Subscription(_eventsDatabase.GetEventsOfAggregate(subscriptionId));
+            return new Subscription(_eventsStore.GetEventsOfAggregate(subscriptionId));
         }
     }
 }

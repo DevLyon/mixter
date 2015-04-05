@@ -4,7 +4,7 @@ using Mixter.Domain;
 
 namespace Mixter.Infrastructure
 {
-    public class EventsDatabase
+    public class EventsStore
     {
         private readonly IList<IDomainEvent> _events = new List<IDomainEvent>();
 

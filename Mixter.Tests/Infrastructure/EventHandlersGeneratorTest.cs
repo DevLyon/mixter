@@ -13,7 +13,7 @@ namespace Mixter.Tests.Infrastructure
         [TestMethod]
         public void WhenGenerateThenCreateAllEventHandlers()
         {
-            var generator = new EventHandlersGenerator(new EventsDatabase(), new TimelineMessagesRepository());
+            var generator = new EventHandlersGenerator(new EventsStore(), new TimelineMessagesRepository());
 
             var handlers = generator.Generate(new EventPublisher()).ToArray();
 
