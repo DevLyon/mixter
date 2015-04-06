@@ -9,7 +9,7 @@ class UserIdentity {
     /** @var DecisionProjection */
     private $decisionProjection;
 
-    public static function register(IEventPublisher $eventPublisher, $userId) {
+    public static function register(IEventPublisher $eventPublisher, UserId $userId) {
         $eventPublisher->publish(new UserRegistered($userId));
     }
 
@@ -27,7 +27,7 @@ class UserIdentity {
 
 class DecisionProjection extends DecisionProjectionBase {
 
-    /** @var string */
+    /** @var UserId */
     private $userId;
 
     /**
@@ -39,7 +39,7 @@ class DecisionProjection extends DecisionProjectionBase {
     }
 
     /**
-     * @return string
+     * @return UserId
      */
     public function getUserId()
     {
