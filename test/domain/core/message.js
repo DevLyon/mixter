@@ -127,4 +127,15 @@ describe('Message Aggregate', function() {
 
         expect(eventsRaised).to.be.empty;
     });
+
+    it('Given deleted message When requack Then do not raise MessageRequacked', function () {
+        var userMessage = message.create([
+            new message.MessageQuacked(messageId, author, messageContent),
+            new message.MessageDeleted(messageId)
+        ]);
+
+        userMessage.requack(publishEvent, new UserId('requacker@mix-it.fr'));
+
+        expect(eventsRaised).to.be.empty;
+    });
 });
