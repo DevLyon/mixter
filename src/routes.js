@@ -1,5 +1,6 @@
 var userIdentity = require('./domain/identity/userIdentity');
 var eventPublisherModule = require('./infrastructure/eventPublisher');
+var sessionHandler = require('./domain/identity/sessionHandler');
 var UserIdentityId = require('./domain/identity/userIdentity').UserIdentityId;
 
 var eventsStore = require('./infrastructure/eventsStore').create();
@@ -7,6 +8,7 @@ var eventsStore = require('./infrastructure/eventsStore').create();
 var createPublishEvent = function createPublishEvent(eventsStore) {
     var eventPublisher = eventPublisherModule.create();
     eventPublisher.onAny(eventsStore.store);
+    sessionHandler.create().register(eventPublisher);
 
     return eventPublisher.publish;
 };
