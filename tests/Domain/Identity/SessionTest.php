@@ -10,7 +10,7 @@ use App\Domain\Identity\UserId;
 use Tests\Domain\FakeEventPublisher;
 
 class SessionTest extends \PHPUnit_Framework_TestCase {
-    public function testWhenLogout_ThenUserDisconnectedEventIsRaised() {
+    public function testWhenLogOut_ThenUserDisconnectedEventIsRaised() {
         $fakeEventPublisher = new FakeEventPublisher();
         $userConnected = new UserConnected(
             new UserId("florent@mix-it.fr"),
@@ -26,5 +26,21 @@ class SessionTest extends \PHPUnit_Framework_TestCase {
         \Assert\that($userDisconnected)->isInstanceOf('App\Domain\Identity\UserDisconnected');
         \Assert\that($userDisconnected->getUserId())->eq($userConnected->getUserId());
         \Assert\that($userDisconnected->getSessionId())->eq($userConnected->getSessionId());
+    }
+
+    public function testGivenUserAlreadyDisconnected_WhenLogOut_ThenNothingHappens() {
+        $fakeEventPublisher = new FakeEventPublisher();
+        $userConnected = new UserConnected(
+            new UserId("florent@mix-it.fr"),
+            SessionId::generate(),
+            new \DateTime());
+        $userDisconnected = new UserDisconnected(
+            new UserId("florent@mix-it.fr"),
+            SessionId::generate());
+        $session = new Session(array($userConnected, $userDisconnected));
+
+        $session->logOut($fakeEventPublisher);
+
+        \Assert\that($fakeEventPublisher->events)->count(0);
     }
 }
