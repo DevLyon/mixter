@@ -4,7 +4,7 @@ namespace App\Domain\Identity;
 
 use App\Domain\IDomainEvent;
 
-class UserConnected implements IDomainEvent {
+class UserDisconnected implements IDomainEvent {
     /**
      * @var UserId
      */
@@ -15,15 +15,9 @@ class UserConnected implements IDomainEvent {
      */
     private $sessionId;
 
-    /**
-     * @var \DateTime
-     */
-    private $connectedAt;
-
-    public function __construct(UserId $userId, SessionId $sessionId, \DateTime $connectedAt) {
+    public function __construct(UserId $userId, SessionId $sessionId) {
         $this->userId = $userId;
         $this->sessionId = $sessionId;
-        $this->connectedAt = $connectedAt;
     }
 
     /**
@@ -40,13 +34,5 @@ class UserConnected implements IDomainEvent {
     public function getSessionId()
     {
         return $this->sessionId;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getConnectedAt()
-    {
-        return $this->connectedAt;
     }
 }
