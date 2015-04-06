@@ -105,4 +105,15 @@ describe('Message Aggregate', function() {
         var expectedEvent = new message.MessageDeleted(messageId);
         expect(eventsRaised).to.contains(expectedEvent);
     });
+
+    it('When delete by someone else than author Then do not raise MessageDeleted', function () {
+        var userMessage = message.create([
+            new message.MessageQuacked(messageId, author, messageContent)
+        ]);
+        var deleter = new UserId('baduser@mix-it.fr');
+
+        userMessage.delete(publishEvent, deleter);
+
+        expect(eventsRaised).to.be.empty;
+    });
 });
