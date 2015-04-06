@@ -128,4 +128,14 @@ describe('Message Aggregate', function() {
         var expectedEvent = new Message.MessageRepublished(messageId, republisher);
         expect(eventsRaised).to.contains(expectedEvent);
     });
+
+    it('Given reply message published When replier republish Then nothing', function () {
+        var message = Message.create([
+            new Message.ReplyMessagePublished(messageId, author, messageContent, new Message.MessageId('MessageId'))
+        ]);
+
+        message.republish(publishEvent, author);
+
+        expect(eventsRaised).to.be.empty;
+    });
 });
