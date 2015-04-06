@@ -2,6 +2,7 @@
 
 namespace App\Domain\Identity;
 
+use App\Domain\DecisionProjectionBase;
 use App\Domain\IEventPublisher;
 
 class UserIdentity {
@@ -24,7 +25,7 @@ class UserIdentity {
     }
 }
 
-class DecisionProjection {
+class DecisionProjection extends DecisionProjectionBase {
 
     /** @var string */
     private $userId;
@@ -33,12 +34,8 @@ class DecisionProjection {
      * @param array $events
      */
     public function __construct($events) {
-        foreach ($events as $event) {
-            if (get_class($event) == 'App\Domain\Identity\UserRegistered') {
-                /** @var UserRegistered $event */
-                $this->userId = $event->getUserId();
-            }
-        }
+        $this->registerUserRegistered();
+        parent::__construct($events);
     }
 
     /**
@@ -47,5 +44,12 @@ class DecisionProjection {
     public function getUserId()
     {
         return $this->userId;
+    }
+
+    private function registerUserRegistered()
+    {
+        $this->register('App\Domain\Identity\UserRegistered', function(UserRegistered $event) {
+            $this->userId = $event->getUserId();
+        });
     }
 }
