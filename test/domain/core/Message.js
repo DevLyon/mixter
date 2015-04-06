@@ -138,10 +138,22 @@ describe('Message Aggregate', function() {
 
         expect(eventsRaised).to.be.empty;
     });
-    
+
     it('When create MessageDeleted Then aggregateId is messageId', function() {
         var event = new Message.MessageDeleted(messageId);
 
         expect(event.getAggregateId()).to.equal(event.messageId);
+    });
+
+    it('When delete Then raise MessageDeleted', function () {
+        var message = Message.create([
+            new Message.MessagePublished(messageId, author, messageContent)
+        ]);
+        var deleter = author;
+
+        message.delete(publishEvent, deleter);
+
+        var expectedEvent = new Message.MessageDeleted(messageId);
+        expect(eventsRaised).to.contains(expectedEvent);
     });
 });
