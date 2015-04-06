@@ -3,6 +3,7 @@
 namespace Tests\Domain\Identity;
 
 use App\Domain\Identity\UserConnected;
+use App\Domain\Identity\UserId;
 use App\Domain\Identity\UserIdentity;
 use App\Domain\Identity\UserRegistered;
 use Tests\Domain\FakeEventPublisher;
@@ -10,7 +11,7 @@ use Tests\Domain\FakeEventPublisher;
 class UserIdentityTest extends \PHPUnit_Framework_TestCase {
     public function testWhenRegisterUser_ThenUserRegisteredIsRaised() {
         $fakeEventPublisher = new FakeEventPublisher();
-        $userId = 'clem@mix-it.fr';
+        $userId = new UserId('clem@mix-it.fr');
 
         UserIdentity::register($fakeEventPublisher, $userId);
 
@@ -22,7 +23,7 @@ class UserIdentityTest extends \PHPUnit_Framework_TestCase {
 
     public function testWhenLogIn_ThenUserConnectedIsRaised() {
         $fakeEventPublisher = new FakeEventPublisher();
-        $userId = 'clem@mix-it.fr';
+        $userId = new UserId('clem@mix-it.fr');
         $userIdentity = new UserIdentity(array(new UserRegistered($userId)));
 
         $userIdentity->logIn($fakeEventPublisher);
