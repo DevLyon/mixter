@@ -84,6 +84,10 @@ var Message = function Message(events){
         var replyId = new MessageId(idGenerator.generate());
         publishEvent(new ReplyMessagePublished(replyId, replier, replyContent, projection.messageId));
     };
+
+    self.delete = function(publishEvent, deleter){
+        publishEvent(new MessageDeleted(projection.messageId))
+    };
 };
 
 exports.publish = function publish(publishEvent, author, content){
