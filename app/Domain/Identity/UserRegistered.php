@@ -6,16 +6,16 @@ use App\Domain\IDomainEvent;
 
 class UserRegistered implements IDomainEvent {
     /**
-     * @var string
+     * @var UserId
      */
     private $userId;
 
-    public function __construct($userId) {
+    public function __construct(UserId $userId) {
         $this->userId = $userId;
     }
 
     /**
-     * @return string
+     * @return UserId
      */
     public function getUserId()
     {
