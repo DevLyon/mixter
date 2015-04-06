@@ -116,4 +116,16 @@ describe('Message Aggregate', function() {
 
         expect(event.getAggregateId()).to.equal(event.replyId);
     });
+
+    it('Given reply message published When use messageId Then is replyId', function () {
+        var message = Message.create([
+            new Message.ReplyMessagePublished(messageId, author, messageContent, new Message.MessageId('MessageId'))
+        ]);
+        var republisher = new UserId('republisher@mix-it.fr');
+
+        message.republish(publishEvent, republisher);
+
+        var expectedEvent = new Message.MessageRepublished(messageId, republisher);
+        expect(eventsRaised).to.contains(expectedEvent);
+    });
 });

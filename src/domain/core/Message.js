@@ -51,6 +51,9 @@ var Message = function Message(events){
     var projection = DecisionProjection.create().register(MessagePublished, function(event) {
         this.messageId = event.messageId;
         this.author = event.author;
+    }).register(ReplyMessagePublished, function(event) {
+        this.messageId = event.replyId;
+        this.author = event.replier;
     }).register(MessageRepublished, function(event) {
         if(!this.republishers){
             this.republishers = [];
