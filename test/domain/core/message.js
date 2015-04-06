@@ -116,4 +116,15 @@ describe('Message Aggregate', function() {
 
         expect(eventsRaised).to.be.empty;
     });
+
+    it('Given deleted message When delete Then nothing', function () {
+        var userMessage = message.create([
+            new message.MessageQuacked(messageId, author, messageContent),
+            new message.MessageDeleted(messageId)
+        ]);
+
+        userMessage.delete(publishEvent, author);
+
+        expect(eventsRaised).to.be.empty;
+    });
 });
