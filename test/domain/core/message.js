@@ -93,4 +93,16 @@ describe('Message Aggregate', function() {
 
         expect(event.getAggregateId()).to.equal(event.messageId);
     });
+
+    it('When delete Then raise MessageDeleted', function () {
+        var userMessage = message.create([
+            new message.MessageQuacked(messageId, author, messageContent)
+        ]);
+        var deleter = author;
+
+        userMessage.delete(publishEvent, deleter);
+
+        var expectedEvent = new message.MessageDeleted(messageId);
+        expect(eventsRaised).to.contains(expectedEvent);
+    });
 });
