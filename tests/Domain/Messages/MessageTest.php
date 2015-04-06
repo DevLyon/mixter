@@ -1,7 +1,8 @@
-<?php namespace Tests\Domain;
+<?php namespace Tests\Domain\Messages;
 
-use App\Domain\Message;
-use App\Domain\MessagePublished;
+use App\Domain\Messages\Message;
+use App\Domain\Messages\MessagePublished;
+use Tests\Domain\FakeEventPublisher;
 
 class MessageTest extends \PHPUnit_Framework_TestCase {
     public function testWhenPublishAMessage_ThenMessagePublishedIsRaised() {

@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Domain;
+namespace App\Domain\Messages;
+
+use app\Domain\IDomainEvent;
 
 class MessagePublished implements IDomainEvent {
 
