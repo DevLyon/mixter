@@ -86,7 +86,11 @@ var Message = function Message(events){
     };
 
     self.delete = function(publishEvent, deleter){
-        publishEvent(new MessageDeleted(projection.messageId))
+        if(!deleter.equals(projection.author)){
+            return;
+        }
+
+        publishEvent(new MessageDeleted(projection.messageId));
     };
 };
 
