@@ -13,6 +13,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase {
         \Assert\that($fakeEventPublisher->events)->count(1);
         /** @var MessagePublished $messagePublished */
         $messagePublished = $fakeEventPublisher->events[0];
+        \Assert\that($messagePublished->getMessageId())->notNull();
         \Assert\that($messagePublished->getContent())->eq('hello');
     }
 }
