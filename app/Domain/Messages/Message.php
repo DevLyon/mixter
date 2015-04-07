@@ -108,6 +108,7 @@ namespace App\Domain\Messages\Message {
         {
             $this->register('App\Domain\Messages\ReplyMessagePublished', function (ReplyMessagePublished $event) {
                 $this->messageId = $event->getReplyId();
+                $this->authorId = $event->getReplierId();
             });
         }
     }
