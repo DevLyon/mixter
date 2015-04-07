@@ -2,6 +2,7 @@
 
 namespace App\Domain\Messages;
 
+use App\Domain\Identity\UserId;
 use App\Domain\IDomainEvent;
 
 class MessagePublished implements IDomainEvent {
@@ -17,12 +18,19 @@ class MessagePublished implements IDomainEvent {
     private $content;
 
     /**
+     * @var UserId
+     */
+    private $authorId;
+
+    /**
      * @param MessageId $messageId
      * @param string $content
+     * @param UserId $authorId
      */
-    public function __construct(MessageId $messageId, $content) {
+    public function __construct(MessageId $messageId, $content, UserId $authorId) {
         $this->content = $content;
         $this->messageId = $messageId;
+        $this->authorId = $authorId;
     }
 
     /**
@@ -39,6 +47,14 @@ class MessagePublished implements IDomainEvent {
     public function getContent()
     {
         return $this->content;
+    }
+
+    /**
+     * @return UserId
+     */
+    public function getAuthorId()
+    {
+        return $this->authorId;
     }
 
     public function getAggregateId()
