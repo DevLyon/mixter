@@ -6,11 +6,18 @@ use App\Domain\Identity\ISessionRepository;
 use App\Domain\Identity\SessionId;
 use App\Domain\Identity\SessionProjection;
 use App\Domain\Identity\UserId;
+use App\Infrastructure\IProjectionStore;
 
 class SessionRepository implements ISessionRepository
 {
-    /** @var array */
-    private $sessionProjections;
+    /**
+     * @var IProjectionStore
+     */
+    private $projectionStore;
+
+    public function __construct(IProjectionStore $projectionStore) {
+        $this->projectionStore = $projectionStore;
+    }
 
     /**
      * @param SessionId $sessionId
@@ -19,7 +26,7 @@ class SessionRepository implements ISessionRepository
     public function getUserIdOfSessionId(SessionId $sessionId)
     {
         /** @var SessionProjection $sessionProjection */
-        $sessionProjection = $this->sessionProjections[$sessionId->getId()];
+        $sessionProjection = $this->projectionStore->get($sessionId->getId());
         if (is_null($sessionProjection)) {
             return null;
         }
@@ -28,7 +35,7 @@ class SessionRepository implements ISessionRepository
 
     public function save(SessionProjection $sessionProjection)
     {
-        $this->sessionProjections[$sessionProjection->getSessionId()->getId()] = $sessionProjection;
+        $this->projectionStore->store($sessionProjection->getSessionId()->getId(), $sessionProjection);
     }
 
     public function remove(SessionId $sessionId)

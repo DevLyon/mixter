@@ -24,7 +24,7 @@ class FileEventStoreTest extends \PHPUnit_Framework_TestCase {
     private $eventStore;
 
     public function setUp() {
-        $this->filesystem = new FilesystemAdapter(new \League\Flysystem\Filesystem(new Local(__DIR__.'/../../storage/tests')));
+        $this->filesystem = new FilesystemAdapter(new \League\Flysystem\Filesystem(new Local(__DIR__.'/../../storage/tests/eventStore')));
         $this->event = new EventA();
         $this->aggregateId = $this->event->getAggregateId();
         $this->filesystem->delete($this->filesystem->allFiles());
