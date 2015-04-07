@@ -4,8 +4,8 @@ namespace Tests\Domain\Identity;
 
 use App\Domain\Identity\SessionId;
 use App\Domain\Identity\SessionProjection;
-use App\Domain\Identity\SessionRepository;
 use App\Domain\Identity\UserId;
+use App\Infrastructure\Identity\SessionRepository;
 
 class SessionRepositoryTest extends \PHPUnit_Framework_TestCase {
     public function testGivenNoProjections_WhenGetUserIdOfSessionId_ThenReturnNull() {
