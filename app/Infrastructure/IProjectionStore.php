@@ -9,4 +9,6 @@ interface IProjectionStore {
     public function store($id, $projection);
 
     public function getAll($projectionType);
+
+    public function remove($id, $projectionType);
 }

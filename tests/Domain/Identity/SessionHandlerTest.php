@@ -49,7 +49,7 @@ class FakeSessionRepository implements ISessionRepository {
      */
     public function getUserIdOfSessionId(SessionId $sessionId)
     {
-        // TODO: Implement getUserIdOfSessionId() method.
+        // Not used for these tests
     }
 
     public function save(SessionProjection $sessionProjection)
@@ -64,6 +64,6 @@ class FakeSessionRepository implements ISessionRepository {
 
     public function getAll()
     {
-        // TODO: Implement getAll() method.
+        // Not used for these tests
     }
 }

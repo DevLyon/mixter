@@ -40,4 +40,9 @@ class FileProjectionStore implements IProjectionStore
         }
         return $allProjections;
     }
+
+    public function remove($id, $projectionType)
+    {
+        $this->filesystem->delete((new \ReflectionClass($projectionType))->getShortName() . DIRECTORY_SEPARATOR . $id);
+    }
 }

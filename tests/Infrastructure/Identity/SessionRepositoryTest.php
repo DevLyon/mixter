@@ -16,7 +16,7 @@ class SessionRepositoryTest extends \PHPUnit_Framework_TestCase
 
         $userId = $sessionRepository->getUserIdOfSessionId(SessionId::generate());
 
-        \Assert\that($userId)->nullOr();
+        \Assert\that(is_null($userId))->true();
     }
 
     public function testGivenSeveralUsersAreConnected_WhenGetUserIdOfSessionId_ThenReturnUserIdOfThisSession()
@@ -41,5 +41,16 @@ class SessionRepositoryTest extends \PHPUnit_Framework_TestCase
         $allSessions = $sessionRepository->getAll();
 
         \Assert\that($allSessions)->count(2);
+    }
+
+    public function testGivenAUserIsConnected_WhenRemove_ThenProjectionIsRemoved() {
+        $sessionRepository = new SessionRepository(new InMemoryProjectionStore());
+        $currentSession = new SessionProjection(new UserId('emilien@mix-it.fr'), SessionId::generate());
+        $sessionRepository->save($currentSession);
+
+        $sessionRepository->remove($currentSession->getSessionId());
+
+        $userId = $sessionRepository->getUserIdOfSessionId($currentSession->getSessionId());
+        \Assert\that(is_null($userId))->true();
     }
 }

@@ -43,7 +43,7 @@ class SessionRepository implements ISessionRepository
 
     public function remove(SessionId $sessionId)
     {
-        // TODO: Implement remove() method.
+        $this->projectionStore->remove($sessionId->getId(), self::PROJECTION_TYPE);
     }
 
     public function getAll()
