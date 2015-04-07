@@ -16,6 +16,7 @@ class AppServiceProvider extends ServiceProvider {
         $this->app->bind('App\Infrastructure\IProjectionStore', 'App\Infrastructure\FileProjectionStore');
         $this->app->bind('App\Domain\Identity\ISessionProjectionRepository', 'App\Infrastructure\Identity\SessionProjectionRepository');
         $this->app->bind('App\Domain\Identity\ISessionRepository', 'App\Infrastructure\Identity\SessionRepository');
+        $this->app->bind('App\Domain\Messages\IMessageRepository', 'App\Infrastructure\Messages\MessageRepository');
 	}
 
 	/**
