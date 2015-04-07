@@ -6,10 +6,11 @@ use App\Domain\Identity\SessionId;
 use App\Domain\Identity\SessionProjection;
 use App\Domain\Identity\UserId;
 use App\Infrastructure\Identity\SessionRepository;
+use Tests\Infrastructure\InMemoryProjectionStore;
 
 class SessionRepositoryTest extends \PHPUnit_Framework_TestCase {
     public function testGivenNoProjections_WhenGetUserIdOfSessionId_ThenReturnNull() {
-        $sessionRepository = new SessionRepository();
+        $sessionRepository = new SessionRepository(new InMemoryProjectionStore());
 
         $userId = $sessionRepository->getUserIdOfSessionId(SessionId::generate());
 
@@ -17,7 +18,7 @@ class SessionRepositoryTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGivenSeveralUsersAreConnected_WhenGetUserIdOfSessionId_ThenReturnUserIdOfThisSession() {
-        $sessionRepository = new SessionRepository();
+        $sessionRepository = new SessionRepository(new InMemoryProjectionStore());
         $currentSession = new SessionProjection(new UserId('emilien@mix-it.fr'), SessionId::generate());
         $sessionRepository->save($currentSession);
         $sessionRepository->save(new SessionProjection(new UserId('jean@mix-it.fr'), SessionId::generate()));
