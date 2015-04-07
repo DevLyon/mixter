@@ -23,7 +23,7 @@ class FileEventStore implements IEventStore {
      */
     public function storeEvent(IDomainEvent $event)
     {
-        $path = $event->getAggregateId();
+        $path = $this->getPath($event->getAggregateId());
         if ($this->filesystem->exists($path)) {
             $this->filesystem->append($path, serialize($event));
         } else {
@@ -38,8 +38,9 @@ class FileEventStore implements IEventStore {
      */
     public function getEvents($aggregateId)
     {
-        if ($this->filesystem->exists($aggregateId)) {
-            $lines = explode("\n", $this->filesystem->get($aggregateId));
+        $path = $this->getPath($aggregateId);
+        if ($this->filesystem->exists($path)) {
+            $lines = explode("\n", $this->filesystem->get($path));
             $events = array();
             foreach ($lines as $line) {
                 $events[] = unserialize($line);
@@ -47,5 +48,10 @@ class FileEventStore implements IEventStore {
             return $events;
         }
         throw new UnknownAggregate();
+    }
+
+    private function getPath($aggregateId)
+    {
+        return 'eventStore'.PATH_SEPARATOR.$aggregateId;
     }
 }
