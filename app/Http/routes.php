@@ -11,5 +11,6 @@
 |
 */
 
-Route::get('/', 'WelcomeController@index');
-Route::post('/api/user/register', 'WelcomeController@register');
+Route::get('/', 'IdentityController@index');
+Route::post('/api/user/register', 'IdentityController@register');
+Route::post('/api/user/logIn', 'IdentityController@logIn');
