@@ -2,13 +2,13 @@
 
 namespace App\Infrastructure\Identity;
 
-use App\Domain\Identity\ISessionRepository;
+use App\Domain\Identity\ISessionProjectionRepository;
 use App\Domain\Identity\SessionId;
 use App\Domain\Identity\SessionProjection;
 use App\Domain\Identity\UserId;
 use App\Infrastructure\IProjectionStore;
 
-class SessionRepository implements ISessionRepository
+class SessionProjectionRepository implements ISessionProjectionRepository
 {
     const PROJECTION_TYPE = 'App\Domain\Identity\SessionProjection';
 
