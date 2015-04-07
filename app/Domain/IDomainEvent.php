@@ -1,7 +1,11 @@
 <?php
 
-namespace app\Domain;
+namespace App\Domain;
 
 interface IDomainEvent {
 
+    /**
+     * @return string
+     */
+    public function getAggregateId();
 }

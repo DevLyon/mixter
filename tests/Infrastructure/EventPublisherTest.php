@@ -24,4 +24,8 @@ class EventPublisherTest extends \PHPUnit_Framework_TestCase {
 
 class EventA implements IDomainEvent {
 
+    public function getAggregateId()
+    {
+        return 0;
+    }
 }
