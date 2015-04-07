@@ -21,4 +21,9 @@ class UserRegistered implements IDomainEvent {
     {
         return $this->userId;
     }
+
+    public function getAggregateId()
+    {
+        return $this->getUserId()->getId();
+    }
 }

@@ -49,4 +49,9 @@ class UserConnected implements IDomainEvent {
     {
         return $this->connectedAt;
     }
+
+    public function getAggregateId()
+    {
+        return $this->getSessionId()->getId();
+    }
 }

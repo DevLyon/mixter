@@ -39,14 +39,26 @@ class DecisionProjectionBaseTest extends \PHPUnit_Framework_TestCase {
 
 class EventA implements IDomainEvent {
 
+    public function getAggregateId()
+    {
+        return 0;
+    }
 }
 
 class EventB implements IDomainEvent {
 
+    public function getAggregateId()
+    {
+        return 0;
+    }
 }
 
 class EventC implements IDomainEvent {
 
+    public function getAggregateId()
+    {
+        return 0;
+    }
 }
 
 class DecisionProjectionWithEventARegistered extends DecisionProjectionBase {
