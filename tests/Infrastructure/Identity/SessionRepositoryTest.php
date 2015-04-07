@@ -5,6 +5,7 @@ namespace Infrastructure\Identity;
 use App\Domain\Identity\SessionId;
 use App\Domain\Identity\UserConnected;
 use App\Domain\Identity\UserId;
+use App\Infrastructure\Identity\SessionRepository;
 use Tests\Infrastructure\InMemoryEventStore;
 
 class SessionRepositoryTest extends \PHPUnit_Framework_TestCase {
