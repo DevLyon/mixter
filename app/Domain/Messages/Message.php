@@ -27,6 +27,13 @@ namespace App\Domain\Messages {
             $eventPublisher->publish(
                 new MessageRepublished($this->decisionProjection->getMessageId(), $republisherId));
         }
+
+        public function reply(IEventPublisher $eventPublisher, $replyContent, UserId $replier)
+        {
+            $replyId = MessageId::generate();
+            $eventPublisher->publish(
+                new ReplyMessagePublished($replyId, $replyContent, $replier, $this->decisionProjection->getMessageId()));
+        }
     }
 }
 

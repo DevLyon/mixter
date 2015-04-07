@@ -5,6 +5,7 @@ use App\Domain\Messages\Message;
 use App\Domain\Messages\MessageId;
 use App\Domain\Messages\MessagePublished;
 use App\Domain\Messages\MessageRepublished;
+use App\Domain\Messages\ReplyMessagePublished;
 use Tests\Domain\FakeEventPublisher;
 
 class MessageTest extends \PHPUnit_Framework_TestCase
@@ -82,5 +83,27 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         $message->republish($fakeEventPublisher, $republisherId);
 
         \Assert\that($fakeEventPublisher->events)->count(0);
+    }
+
+    public function testWhenReplyToAMessage_ThenReplyMessagePublishedIsRaised()
+    {
+        $fakeEventPublisher = new FakeEventPublisher();
+        $authorId = new UserId('clem@mix-it.fr');
+        $messagePublished = new MessagePublished(MessageId::generate(), 'Hello', $authorId);
+        $message = new Message(array($messagePublished));
+
+        $replier = new UserId('emilien@mix-it.fr');
+        $replyContent = 'Hello too';
+        $message->reply($fakeEventPublisher, $replyContent, $replier);
+
+        \Assert\that($fakeEventPublisher->events)->count(1);
+        /** @var ReplyMessagePublished $replyMessagePublished */
+        $replyMessagePublished = $fakeEventPublisher->events[0];
+        \Assert\that($replyMessagePublished)->isInstanceOf('App\Domain\Messages\ReplyMessagePublished');
+        \Assert\that($replyMessagePublished->getReplierId())->eq($replier);
+        \Assert\that($replyMessagePublished->getReplyContent())->eq($replyContent);
+        \Assert\that($replyMessagePublished->getParentMessageId())->eq($messagePublished->getMessageId());
+        \Assert\that($replyMessagePublished->getReplyId())->notNull()->notEq($messagePublished->getMessageId());
+        \Assert\that($replyMessagePublished->getAggregateId())->eq($replyMessagePublished->getReplyId());
     }
 }
