@@ -4,9 +4,9 @@ namespace App\Infrastructure;
 
 use App\Domain\IDomainEvent;
 use App\Domain\UnknownAggregate;
-use Prophecy\Exception\Prediction\AggregateException;
 
-class EventStore {
+class InMemoryEventStore implements IEventStore
+{
 
     /** @var array */
     private $eventsByAggregate = array();
@@ -17,11 +17,20 @@ class EventStore {
     public function __construct($events = array()) {
         /** @var IDomainEvent $event */
         foreach ($events as $event) {
-            if (empty($this->eventsByAggregate[$event->getAggregateId()])) {
-                $this->eventsByAggregate[$event->getAggregateId()] = array($event);
-            } else {
-                $this->eventsByAggregate[$event->getAggregateId()][] = $event;
-            }
+            $this->storeEvent($event);
+        }
+    }
+
+    /**
+     * Called through Laravel Event Listener
+     * @param IDomainEvent $event
+     */
+    public function storeEvent(IDomainEvent $event) {
+        $aggregateId = $event->getAggregateId();
+        if (empty($this->eventsByAggregate[$aggregateId])) {
+            $this->eventsByAggregate[$aggregateId] = array($event);
+        } else {
+            $this->eventsByAggregate[$aggregateId][] = $event;
         }
     }
 
