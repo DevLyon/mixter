@@ -2,7 +2,7 @@ package mixter.domain.message;
 
 import java.util.UUID;
 
-class MessageId {
+public class MessageId {
     private final String id;
 
     public MessageId() {
