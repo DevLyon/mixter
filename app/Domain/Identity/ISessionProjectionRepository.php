@@ -1,7 +1,7 @@
 <?php
 namespace App\Domain\Identity;
 
-interface ISessionRepository
+interface ISessionProjectionRepository
 {
     /**
      * @param SessionId $sessionId
