@@ -1,56 +1,20 @@
 <?php
 
-namespace Tests\Domain\Identity;
+namespace Infrastructure\Identity;
 
 use App\Domain\Identity\SessionId;
-use App\Domain\Identity\SessionProjection;
+use App\Domain\Identity\UserConnected;
 use App\Domain\Identity\UserId;
-use App\Infrastructure\Identity\SessionRepository;
-use Tests\Infrastructure\InMemoryProjectionStore;
+use Tests\Infrastructure\InMemoryEventStore;
 
-class SessionRepositoryTest extends \PHPUnit_Framework_TestCase
-{
-    public function testGivenNoProjections_WhenGetUserIdOfSessionId_ThenReturnNull()
-    {
-        $sessionRepository = new SessionRepository(new InMemoryProjectionStore());
+class SessionRepositoryTest extends \PHPUnit_Framework_TestCase {
+    public function testGivenAUserIsConnected_WhenGetBySessionId_ThenReturnsSession() {
+        $userConnected = new UserConnected(new UserId('clement@mix-it.fr'), SessionId::generate(), new \DateTime());
+        $eventStore = new InMemoryEventStore(array($userConnected));
+        $sessionRepository = new SessionRepository($eventStore);
 
-        $userId = $sessionRepository->getUserIdOfSessionId(SessionId::generate());
+        $session = $sessionRepository->get($userConnected->getSessionId());
 
-        \Assert\that(is_null($userId))->true();
-    }
-
-    public function testGivenSeveralUsersAreConnected_WhenGetUserIdOfSessionId_ThenReturnUserIdOfThisSession()
-    {
-        $sessionRepository = new SessionRepository(new InMemoryProjectionStore());
-        $currentSession = new SessionProjection(new UserId('emilien@mix-it.fr'), SessionId::generate());
-        $sessionRepository->save($currentSession);
-        $sessionRepository->save(new SessionProjection(new UserId('jean@mix-it.fr'), SessionId::generate()));
-
-        $userId = $sessionRepository->getUserIdOfSessionId($currentSession->getSessionId());
-
-        \Assert\that($userId)->eq($currentSession->getUserId());
-    }
-
-    public function testGivenSeveralUsersAreConnected_WhenGetAll_ThenReturnAllSessions()
-    {
-        $sessionRepository = new SessionRepository(new InMemoryProjectionStore());
-        $currentSession = new SessionProjection(new UserId('emilien@mix-it.fr'), SessionId::generate());
-        $sessionRepository->save($currentSession);
-        $sessionRepository->save(new SessionProjection(new UserId('jean@mix-it.fr'), SessionId::generate()));
-
-        $allSessions = $sessionRepository->getAll();
-
-        \Assert\that($allSessions)->count(2);
-    }
-
-    public function testGivenAUserIsConnected_WhenRemove_ThenProjectionIsRemoved() {
-        $sessionRepository = new SessionRepository(new InMemoryProjectionStore());
-        $currentSession = new SessionProjection(new UserId('emilien@mix-it.fr'), SessionId::generate());
-        $sessionRepository->save($currentSession);
-
-        $sessionRepository->remove($currentSession->getSessionId());
-
-        $userId = $sessionRepository->getUserIdOfSessionId($currentSession->getSessionId());
-        \Assert\that(is_null($userId))->true();
+        \Assert\that($session)->notNull();
     }
 }

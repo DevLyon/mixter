@@ -2,7 +2,7 @@
 
 namespace Tests\Domain\Identity;
 
-use App\Domain\Identity\ISessionRepository;
+use App\Domain\Identity\ISessionProjectionRepository;
 use App\Domain\Identity\SessionHandler;
 use App\Domain\Identity\SessionId;
 use App\Domain\Identity\SessionProjection;
@@ -12,7 +12,7 @@ use App\Domain\Identity\UserId;
 
 class SessionHandlerTest extends \PHPUnit_Framework_TestCase {
     public function testWhenHandleUserConnected_ThenSessionProjectionIsSaved() {
-        $fakeSessionRepository = new FakeSessionRepository();
+        $fakeSessionRepository = new FakeSessionProjectionRepository();
         $sessionHandler = new SessionHandler($fakeSessionRepository);
         $userConnected = new UserConnected(new UserId("clem@mix-it.fr"), SessionId::generate(), new \DateTime());
 
@@ -26,7 +26,7 @@ class SessionHandlerTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testWhenHandleUserDisconnected_ThenSessionProjectionIsRemoved() {
-        $fakeSessionRepository = new FakeSessionRepository();
+        $fakeSessionRepository = new FakeSessionProjectionRepository();
         $sessionProjection = new SessionProjection(new UserId("clem@mix-it.fr"), SessionId::generate());
         $fakeSessionRepository->save($sessionProjection);
         $sessionHandler = new SessionHandler($fakeSessionRepository);
@@ -38,7 +38,7 @@ class SessionHandlerTest extends \PHPUnit_Framework_TestCase {
     }
 }
 
-class FakeSessionRepository implements ISessionRepository {
+class FakeSessionProjectionRepository implements ISessionProjectionRepository {
 
     /** @var array */
     public $savedSessionProjections;

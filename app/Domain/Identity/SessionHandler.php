@@ -4,11 +4,11 @@ namespace App\Domain\Identity;
 
 class SessionHandler {
     /**
-     * @var ISessionRepository
+     * @var ISessionProjectionRepository
      */
     private $sessionRepository;
 
-    public function __construct(ISessionRepository $sessionRepository) {
+    public function __construct(ISessionProjectionRepository $sessionRepository) {
         $this->sessionRepository = $sessionRepository;
     }
 
