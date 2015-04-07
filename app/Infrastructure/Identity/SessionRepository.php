@@ -1,8 +1,14 @@
 <?php
 
-namespace App\Domain\Identity;
+namespace App\Infrastructure\Identity;
 
-class SessionRepository {
+use App\Domain\Identity\ISessionRepository;
+use App\Domain\Identity\SessionId;
+use App\Domain\Identity\SessionProjection;
+use App\Domain\Identity\UserId;
+
+class SessionRepository implements ISessionRepository
+{
     /** @var array */
     private $sessionProjections;
 
@@ -23,5 +29,10 @@ class SessionRepository {
     public function save(SessionProjection $sessionProjection)
     {
         $this->sessionProjections[$sessionProjection->getSessionId()->getId()] = $sessionProjection;
+    }
+
+    public function remove(SessionId $sessionId)
+    {
+        // TODO: Implement remove() method.
     }
 }
