@@ -11,7 +11,10 @@ class AppServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
+        $this->app->bind('App\Domain\IEventPublisher', 'App\Infrastructure\EventPublisher');
 		$this->app->bind('App\Infrastructure\IEventStore', 'App\Infrastructure\FileEventStore');
+        $this->app->bind('App\Infrastructure\IProjectionStore', 'App\Infrastructure\FileProjectionStore');
+        $this->app->bind('App\Domain\Identity\ISessionRepository', 'App\Infrastructure\Identity\SessionRepository');
 	}
 
 	/**

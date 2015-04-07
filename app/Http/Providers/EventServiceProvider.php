@@ -14,6 +14,9 @@ class EventServiceProvider extends ServiceProvider {
 		'App\Domain\*' => [
 			'App\Infrastructure\IEventStore@storeEvent',
 		],
+        'App\Domain\Identity\UserConnected' => [
+            'App\Domain\Identity\SessionHandler@handleUserConnected'
+        ]
 	];
 
 	/**
