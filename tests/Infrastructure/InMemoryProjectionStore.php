@@ -7,11 +7,14 @@ use App\Infrastructure\IProjectionStore;
 class InMemoryProjectionStore implements IProjectionStore {
 
     /** @var array */
-    private $projections;
+    private $projections = array();
 
     public function get($id, $projectionType)
     {
-        return $this->projections[$id];
+        if (array_key_exists($id, $this->projections)) {
+            return $this->projections[$id];
+        }
+        return null;
     }
 
     public function store($id, $projection)
@@ -22,5 +25,10 @@ class InMemoryProjectionStore implements IProjectionStore {
     public function getAll($projectionType)
     {
         return array_values($this->projections);
+    }
+
+    public function remove($id, $projectionType)
+    {
+        unset($this->projections[$id]);
     }
 }
