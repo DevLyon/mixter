@@ -1,16 +1,17 @@
 <?php namespace App\Http\Controllers;
 
+use App\Domain\Identity\ISessionRepository;
 use App\Domain\Identity\UserId;
 use App\Domain\Identity\UserIdentity;
 use App\Domain\IEventPublisher;
 use App\Domain\UnknownAggregate;
-use App\Infrastructure\EventPublisher;
 use App\Infrastructure\Identity\UserIdentityRepository;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
 
-class IdentityController extends Controller {
-    /** @var EventPublisher */
+class IdentityController extends Controller
+{
+    /** @var IEventPublisher */
     private $eventPublisher;
 
     /** @var UserIdentityRepository */
@@ -18,26 +19,26 @@ class IdentityController extends Controller {
 
     /**
      * Create a new controller instance.
-     * @param EventPublisher $eventPublisher
+     * @param IEventPublisher $eventPublisher
      * @param UserIdentityRepository $userIdentityRepository
      */
-	public function __construct(
-        EventPublisher $eventPublisher,
+    public function __construct(
+        IEventPublisher $eventPublisher,
         UserIdentityRepository $userIdentityRepository)
-	{
+    {
         $this->eventPublisher = $eventPublisher;
         $this->userIdentityRepository = $userIdentityRepository;
     }
 
-	/**
-	 * Show the application welcome screen to the user.
-	 *
-	 * @return Response
-	 */
-	public function index()
-	{
-		return view('welcome');
-	}
+    /**
+     * Show the application welcome screen to the user.
+     *
+     * @return Response
+     */
+    public function index()
+    {
+        return view('welcome');
+    }
 
     public function register()
     {
@@ -54,7 +55,12 @@ class IdentityController extends Controller {
             $userIdentity->logIn($this->eventPublisher);
             return response('Logged in', 200);
         } catch (UnknownAggregate $unknownAggregate) {
-            return response('User '.$email.' not authenticated', 401);
+            return response('User ' . $email . ' not authenticated', 401);
         }
+    }
+
+    public function getSessions(ISessionRepository $sessionRepository)
+    {
+        return $sessionRepository->getAll();
     }
 }

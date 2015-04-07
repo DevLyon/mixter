@@ -14,3 +14,4 @@
 Route::get('/', 'IdentityController@index');
 Route::post('/api/user/register', 'IdentityController@register');
 Route::post('/api/user/logIn', 'IdentityController@logIn');
+Route::get('/api/user/session', 'IdentityController@getSessions');
