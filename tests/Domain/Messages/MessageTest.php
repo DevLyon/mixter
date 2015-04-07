@@ -69,4 +69,18 @@ class MessageTest extends \PHPUnit_Framework_TestCase
 
         \Assert\that($fakeEventPublisher->events)->count(0);
     }
+
+    public function testWhenRepublisherRepublishASecondTime_ThenNothingHappens()
+    {
+        $fakeEventPublisher = new FakeEventPublisher();
+        $authorId = new UserId('clem@mix-it.fr');
+        $messagePublished = new MessagePublished(MessageId::generate(), 'Hello', $authorId);
+        $republisherId = new UserId('emilien@mix-it.fr');
+        $messageRepublished = new MessageRepublished($messagePublished->getMessageId(), $republisherId);
+        $message = new Message(array($messagePublished, $messageRepublished));
+
+        $message->republish($fakeEventPublisher, $republisherId);
+
+        \Assert\that($fakeEventPublisher->events)->count(0);
+    }
 }
