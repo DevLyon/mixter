@@ -7,6 +7,7 @@ use App\Domain\Identity\UserIdentity;
 use App\Domain\Identity\UserRegistered;
 use App\Infrastructure\EventStore;
 use App\Infrastructure\Identity\UserIdentityRepository;
+use Symfony\Component\EventDispatcher\Event;
 
 class UserIdentityRepositoryTest extends \PHPUnit_Framework_TestCase {
     public function testGivenAUserIsRegistered_WhenGetByUserId_ThenReturnsUserIdentity() {
@@ -22,5 +23,14 @@ class UserIdentityRepositoryTest extends \PHPUnit_Framework_TestCase {
         $userId = new \ReflectionProperty('App\Domain\Identity\UserIdentity\DecisionProjection', 'userId');
         $userId->setAccessible(true);
         \Assert\that($userId->getValue($decisionProjection->getValue($userIdentity)))->eq($userRegistered->getUserId());
+    }
+
+    public function testGivenAUserIsNotRegistered_WhenGetByUserId_ThenThrowsUnknownAggregate() {
+        $eventStore = new EventStore();
+        $userIdentityRepository = new UserIdentityRepository($eventStore);
+
+        $this->setExpectedException('App\Domain\UnknownAggregate');
+
+        $userIdentityRepository->get(new UserId("unknown@mix-it.fr"));
     }
 }
