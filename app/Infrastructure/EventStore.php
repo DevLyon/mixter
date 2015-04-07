@@ -3,16 +3,18 @@
 namespace App\Infrastructure;
 
 use App\Domain\IDomainEvent;
+use App\Domain\UnknownAggregate;
+use Prophecy\Exception\Prediction\AggregateException;
 
 class EventStore {
 
     /** @var array */
-    private $eventsByAggregate;
+    private $eventsByAggregate = array();
 
     /**
      * @param array $events
      */
-    public function __construct($events) {
+    public function __construct($events = array()) {
         /** @var IDomainEvent $event */
         foreach ($events as $event) {
             if (empty($this->eventsByAggregate[$event->getAggregateId()])) {
@@ -26,9 +28,13 @@ class EventStore {
     /**
      * @param string $aggregateId
      * @return array
+     * @throws UnknownAggregate
      */
     public function getEvents($aggregateId)
     {
-        return $this->eventsByAggregate[$aggregateId];
+        if (array_key_exists($aggregateId, $this->eventsByAggregate)) {
+            return $this->eventsByAggregate[$aggregateId];
+        }
+        throw new UnknownAggregate();
     }
 }
