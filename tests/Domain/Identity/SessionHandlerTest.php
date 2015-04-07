@@ -61,4 +61,9 @@ class FakeSessionRepository implements ISessionRepository {
     {
         unset($this->savedSessionProjections[$sessionId->getId()]);
     }
+
+    public function getAll()
+    {
+        // TODO: Implement getAll() method.
+    }
 }

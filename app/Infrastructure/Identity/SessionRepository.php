@@ -17,7 +17,8 @@ class SessionRepository implements ISessionRepository
      */
     private $projectionStore;
 
-    public function __construct(IProjectionStore $projectionStore) {
+    public function __construct(IProjectionStore $projectionStore)
+    {
         $this->projectionStore = $projectionStore;
     }
 
@@ -43,5 +44,10 @@ class SessionRepository implements ISessionRepository
     public function remove(SessionId $sessionId)
     {
         // TODO: Implement remove() method.
+    }
+
+    public function getAll()
+    {
+        return $this->projectionStore->getAll(self::PROJECTION_TYPE);
     }
 }
