@@ -10,6 +10,8 @@ use App\Infrastructure\IProjectionStore;
 
 class SessionRepository implements ISessionRepository
 {
+    const PROJECTION_TYPE = 'App\Domain\Identity\SessionProjection';
+
     /**
      * @var IProjectionStore
      */
@@ -26,7 +28,7 @@ class SessionRepository implements ISessionRepository
     public function getUserIdOfSessionId(SessionId $sessionId)
     {
         /** @var SessionProjection $sessionProjection */
-        $sessionProjection = $this->projectionStore->get($sessionId->getId());
+        $sessionProjection = $this->projectionStore->get($sessionId->getId(), self::PROJECTION_TYPE);
         if (is_null($sessionProjection)) {
             return null;
         }
