@@ -3,7 +3,6 @@
 namespace Tests\Infrastructure;
 
 use App\Infrastructure\FileProjectionStore;
-use App\Infrastructure\IProjectionStore;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Filesystem\FilesystemAdapter;
 use League\Flysystem\Adapter\Local;
@@ -14,7 +13,7 @@ class FileProjectionStoreTest extends \PHPUnit_Framework_TestCase
     /** @var Filesystem */
     private $filesystem;
 
-    /** @var IProjectionStore */
+    /** @var FileProjectionStore */
     private $projectionStore;
 
     public function setUp()
@@ -22,6 +21,11 @@ class FileProjectionStoreTest extends \PHPUnit_Framework_TestCase
         $this->filesystem = new FilesystemAdapter(new \League\Flysystem\Filesystem(new Local(__DIR__ . '/../../storage/tests')));
         $this->filesystem->delete($this->filesystem->allFiles());
         $this->projectionStore = new FileProjectionStore($this->filesystem);
+    }
+
+    public function tearDown()
+    {
+        $this->filesystem->delete($this->filesystem->allFiles());
     }
 
     public function testGivenProjectionDoesNotExist_WhenStore_ThenFileIsCreatedWithProjectionSerialized()
@@ -59,6 +63,16 @@ class FileProjectionStoreTest extends \PHPUnit_Framework_TestCase
         $projections = $this->projectionStore->getAll('Tests\Infrastructure\FakeProjection');
 
         \Assert\that($projections)->count(2);
+    }
+
+    public function testGivenAProjectionExists_WhenRemoveIt_ThenFileIsRemoved() {
+        $fakeProjection = new FakeProjection('someId');
+        $this->projectionStore->store($fakeProjection->getId(), $fakeProjection);
+
+        $this->projectionStore->remove($fakeProjection->getId(), 'Tests\Infrastructure\FakeProjection');
+
+        $path = (new \ReflectionClass($fakeProjection))->getShortName() . DIRECTORY_SEPARATOR . $fakeProjection->getId();
+        \Assert\that($this->filesystem->exists($path))->false();
     }
 }
 
