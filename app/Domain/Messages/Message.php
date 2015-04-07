@@ -44,6 +44,7 @@ namespace App\Domain\Messages\Message {
     use App\Domain\Messages\MessageId;
     use App\Domain\Messages\MessagePublished;
     use App\Domain\Messages\MessageRepublished;
+    use App\Domain\Messages\ReplyMessagePublished;
 
     class DecisionProjection extends DecisionProjectionBase
     {
@@ -60,6 +61,7 @@ namespace App\Domain\Messages\Message {
         {
             $this->registerMessagePublished();
             $this->registerMessageRepublished();
+            $this->registerReplyMessagePublished();
             parent::__construct($events);
         }
 
@@ -99,6 +101,13 @@ namespace App\Domain\Messages\Message {
         {
             $this->register('App\Domain\Messages\MessageRepublished', function (MessageRepublished $event) {
                 $this->republishers[] = $event->getRepublisherId();
+            });
+        }
+
+        private function registerReplyMessagePublished()
+        {
+            $this->register('App\Domain\Messages\ReplyMessagePublished', function (ReplyMessagePublished $event) {
+                $this->messageId = $event->getReplyId();
             });
         }
     }

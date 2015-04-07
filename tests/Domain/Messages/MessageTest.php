@@ -106,4 +106,20 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         \Assert\that($replyMessagePublished->getReplyId())->notNull()->notEq($messagePublished->getMessageId());
         \Assert\that($replyMessagePublished->getAggregateId())->eq($replyMessagePublished->getReplyId());
     }
+
+    public function testWhenReplyMessageIsRepublished_ThenMessageRepublishedIdIsReplyId()
+    {
+        $fakeEventPublisher = new FakeEventPublisher();
+        $replierId = new UserId('clem@mix-it.fr');
+        $replyMessagePublished = new ReplyMessagePublished(MessageId::generate(), 'Hello too', $replierId, MessageId::generate());
+        $message = new Message(array($replyMessagePublished));
+
+        $republisherId = new UserId('jean@mix-it.fr');
+        $message->republish($fakeEventPublisher, $republisherId);
+
+        \Assert\that($fakeEventPublisher->events)->count(1);
+        /** @var MessageRepublished $messageRepublished */
+        $messageRepublished = $fakeEventPublisher->events[0];
+        \Assert\that($messageRepublished->getMessageId())->eq($replyMessagePublished->getReplyId());
+    }
 }
