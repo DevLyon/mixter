@@ -22,4 +22,9 @@ class MessagePublished implements IDomainEvent {
     {
         return $this->content;
     }
+
+    public function getAggregateId()
+    {
+        // TODO: Implement getAggregateId() method.
+    }
 }

@@ -35,4 +35,9 @@ class UserDisconnected implements IDomainEvent {
     {
         return $this->sessionId;
     }
+
+    public function getAggregateId()
+    {
+        return $this->getSessionId()->getId();
+    }
 }
