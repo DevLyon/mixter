@@ -6,14 +6,16 @@ use App\Domain\IDomainEvent;
 use App\Domain\UnknownAggregate;
 use Illuminate\Contracts\Filesystem\Filesystem;
 
-class FileEventStore implements IEventStore {
+class FileEventStore implements IEventStore
+{
 
     /**
      * @var Filesystem
      */
     private $filesystem;
 
-    public function __construct(Filesystem $filesystem) {
+    public function __construct(Filesystem $filesystem)
+    {
         $this->filesystem = $filesystem;
     }
 
@@ -52,6 +54,6 @@ class FileEventStore implements IEventStore {
 
     private function getPath($aggregateId)
     {
-        return 'eventStore'.PATH_SEPARATOR.$aggregateId;
+        return 'eventStore' . DIRECTORY_SEPARATOR . $aggregateId;
     }
 }

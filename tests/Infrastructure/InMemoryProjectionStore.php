@@ -18,4 +18,9 @@ class InMemoryProjectionStore implements IProjectionStore {
     {
         $this->projections[$id] = $projection;
     }
+
+    public function getAll($projectionType)
+    {
+        return array_values($this->projections);
+    }
 }

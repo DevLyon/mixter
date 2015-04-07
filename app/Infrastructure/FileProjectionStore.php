@@ -19,7 +19,7 @@ class FileProjectionStore implements IProjectionStore
 
     public function get($id, $projectionType)
     {
-        $path = (new \ReflectionClass($projectionType))->getShortName().PATH_SEPARATOR.$id;
+        $path = (new \ReflectionClass($projectionType))->getShortName() . DIRECTORY_SEPARATOR . $id;
         if ($this->filesystem->exists($path)) {
             return unserialize($this->filesystem->get($path));
         }
@@ -28,6 +28,16 @@ class FileProjectionStore implements IProjectionStore
 
     public function store($id, $projection)
     {
-        $this->filesystem->put((new \ReflectionClass($projection))->getShortName().PATH_SEPARATOR.$id, serialize($projection));
+        $this->filesystem->put((new \ReflectionClass($projection))->getShortName() . DIRECTORY_SEPARATOR . $id, serialize($projection));
+    }
+
+    public function getAll($projectionType)
+    {
+        $allProjections = array();
+        $path = (new \ReflectionClass($projectionType))->getShortName();
+        foreach ($this->filesystem->allFiles($path) as $file) {
+            $allProjections[] = unserialize($this->filesystem->get($file));
+        }
+        return $allProjections;
     }
 }

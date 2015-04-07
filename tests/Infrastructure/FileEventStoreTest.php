@@ -68,7 +68,7 @@ class FileEventStoreTest extends \PHPUnit_Framework_TestCase {
 
     private function getPath()
     {
-        return 'eventStore' . PATH_SEPARATOR . $this->aggregateId;
+        return 'eventStore' . DIRECTORY_SEPARATOR . $this->aggregateId;
     }
 }
 
