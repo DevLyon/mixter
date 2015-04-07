@@ -6,7 +6,7 @@ use App\Domain\Identity\UserId;
 use App\Domain\Identity\UserIdentity;
 use App\Domain\Identity\UserRegistered;
 use App\Infrastructure\Identity\UserIdentityRepository;
-use App\Infrastructure\InMemoryEventStore;
+use Tests\Infrastructure\InMemoryEventStore;
 
 class UserIdentityRepositoryTest extends \PHPUnit_Framework_TestCase {
     public function testGivenAUserIsRegistered_WhenGetByUserId_ThenReturnsUserIdentity() {

@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Infrastructure;
+namespace Tests\Infrastructure;
 
 use App\Domain\IDomainEvent;
 use App\Domain\UnknownAggregate;
+use App\Infrastructure\IEventStore;
 
 class InMemoryEventStore implements IEventStore
 {
