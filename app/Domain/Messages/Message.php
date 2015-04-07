@@ -2,14 +2,15 @@
 
 namespace App\Domain\Messages {
 
+    use App\Domain\Identity\UserId;
     use App\Domain\IEventPublisher;
     use App\Domain\Messages\Message\DecisionProjection;
 
     class Message
     {
-        public static function publish(IEventPublisher $eventPublisher, $messageContent)
+        public static function publish(IEventPublisher $eventPublisher, $messageContent, UserId $authorId)
         {
-            $eventPublisher->publish(new MessagePublished(MessageId::generate(), $messageContent));
+            $eventPublisher->publish(new MessagePublished(MessageId::generate(), $messageContent, $authorId));
         }
 
         public function __construct($events)
@@ -17,9 +18,13 @@ namespace App\Domain\Messages {
             $this->decisionProjection = new DecisionProjection($events);
         }
 
-        public function republish(IEventPublisher $eventPublisher)
+        public function republish(IEventPublisher $eventPublisher, UserId $republisherId)
         {
-            $eventPublisher->publish(new MessageRepublished($this->decisionProjection->getMessageId()));
+            if($republisherId == $this->decisionProjection->getAuthorId()) {
+                return;
+            }
+            $eventPublisher->publish(
+                new MessageRepublished($this->decisionProjection->getMessageId(), $republisherId));
         }
     }
 }
@@ -27,6 +32,7 @@ namespace App\Domain\Messages {
 namespace App\Domain\Messages\Message {
 
     use App\Domain\DecisionProjectionBase;
+    use App\Domain\Identity\UserId;
     use App\Domain\Messages\MessageId;
     use App\Domain\Messages\MessagePublished;
 
@@ -34,6 +40,9 @@ namespace App\Domain\Messages\Message {
     {
         /** @var MessageId */
         private $messageId;
+
+        /** @var UserId */
+        private $authorId;
 
         public function __construct($events)
         {
@@ -49,10 +58,19 @@ namespace App\Domain\Messages\Message {
             return $this->messageId;
         }
 
+        /**
+         * @return UserId
+         */
+        public function getAuthorId()
+        {
+            return $this->authorId;
+        }
+
         private function registerMessagePublished()
         {
             $this->register('App\Domain\Messages\MessagePublished', function (MessagePublished $event) {
                 $this->messageId = $event->getMessageId();
+                $this->authorId = $event->getAuthorId();
             });
         }
     }
