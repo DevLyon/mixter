@@ -24,7 +24,7 @@ class FileEventStoreTest extends \PHPUnit_Framework_TestCase {
     private $eventStore;
 
     public function setUp() {
-        $this->filesystem = new FilesystemAdapter(new \League\Flysystem\Filesystem(new Local(__DIR__.'/../../storage/tests/eventStore')));
+        $this->filesystem = new FilesystemAdapter(new \League\Flysystem\Filesystem(new Local(__DIR__.'/../../storage/tests')));
         $this->event = new EventA();
         $this->aggregateId = $this->event->getAggregateId();
         $this->filesystem->delete($this->filesystem->allFiles());
@@ -34,8 +34,8 @@ class FileEventStoreTest extends \PHPUnit_Framework_TestCase {
     public function testGivenAggregateDoesNotExists_WhenStoreEvent_ThenFileIsCreatedWithEventOnOneLine() {
         $this->eventStore->storeEvent($this->event);
 
-        \Assert\that($this->filesystem->exists($this->aggregateId))->true();
-        $contentLines = explode("\n", $this->filesystem->get($this->aggregateId));
+        \Assert\that($this->filesystem->exists($this->getPath()))->true();
+        $contentLines = explode("\n", $this->filesystem->get($this->getPath()));
         \Assert\that($contentLines)->count(1);
     }
 
@@ -44,8 +44,8 @@ class FileEventStoreTest extends \PHPUnit_Framework_TestCase {
 
         $this->eventStore->storeEvent($this->event);
 
-        \Assert\that($this->filesystem->exists($this->aggregateId))->true();
-        $contentLines = explode("\n", $this->filesystem->get($this->aggregateId));
+        \Assert\that($this->filesystem->exists($this->getPath()))->true();
+        $contentLines = explode("\n", $this->filesystem->get($this->getPath()));
         \Assert\that($contentLines)->count(2);
     }
 
@@ -64,6 +64,11 @@ class FileEventStoreTest extends \PHPUnit_Framework_TestCase {
         $this->setExpectedException('App\Domain\UnknownAggregate');
 
         $this->eventStore->getEvents($this->aggregateId);
+    }
+
+    private function getPath()
+    {
+        return 'eventStore' . PATH_SEPARATOR . $this->aggregateId;
     }
 }
 

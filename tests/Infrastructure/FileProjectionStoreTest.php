@@ -17,7 +17,7 @@ class FileProjectionStoreTest extends \PHPUnit_Framework_TestCase {
     private $projectionStore;
 
     public function setUp() {
-        $this->filesystem = new FilesystemAdapter(new \League\Flysystem\Filesystem(new Local(__DIR__.'/../../storage/tests/fakeProjection')));
+        $this->filesystem = new FilesystemAdapter(new \League\Flysystem\Filesystem(new Local(__DIR__.'/../../storage/tests')));
         $this->filesystem->delete($this->filesystem->allFiles());
         $this->projectionStore = new FileProjectionStore($this->filesystem);
     }
@@ -27,20 +27,21 @@ class FileProjectionStoreTest extends \PHPUnit_Framework_TestCase {
 
         $this->projectionStore->store($fakeProjection->getId(), $fakeProjection);
 
-        \Assert\that($this->filesystem->exists($fakeProjection->getId()))->true();
+        $path = (new \ReflectionClass($fakeProjection))->getShortName().PATH_SEPARATOR.$fakeProjection->getId();
+        \Assert\that($this->filesystem->exists($path))->true();
     }
 
     public function testGivenProjectionExists_WhenGet_ThenReturnProjection() {
         $fakeProjection = new FakeProjection('someId');
         $this->projectionStore->store($fakeProjection->getId(), $fakeProjection);
 
-        $projection = $this->projectionStore->get($fakeProjection->getId());
+        $projection = $this->projectionStore->get($fakeProjection->getId(), get_class($fakeProjection));
 
         \Assert\that($projection)->eq($fakeProjection);
     }
 
     public function testGivenProjectionDoesNotExist_WhenGet_ThenReturnNull() {
-        $projection = $this->projectionStore->get('doesNotExist');
+        $projection = $this->projectionStore->get('doesNotExist', 'Tests\Infrastructure\FakeProjection');
 
         \Assert\that($projection)->nullOr();
     }

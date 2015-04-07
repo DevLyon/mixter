@@ -9,7 +9,7 @@ class InMemoryProjectionStore implements IProjectionStore {
     /** @var array */
     private $projections;
 
-    public function get($id)
+    public function get($id, $projectionType)
     {
         return $this->projections[$id];
     }
