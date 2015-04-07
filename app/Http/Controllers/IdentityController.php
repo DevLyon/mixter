@@ -1,6 +1,8 @@
 <?php namespace App\Http\Controllers;
 
+use App\Domain\Identity\ISessionProjectionRepository;
 use App\Domain\Identity\ISessionRepository;
+use App\Domain\Identity\SessionId;
 use App\Domain\Identity\UserId;
 use App\Domain\Identity\UserIdentity;
 use App\Domain\IEventPublisher;
@@ -59,7 +61,19 @@ class IdentityController extends Controller
         }
     }
 
-    public function getSessions(ISessionRepository $sessionRepository)
+    public function logOut(ISessionRepository $sessionRepository)
+    {
+        $sessionId = new SessionId(Input::get('sessionId'));
+        try {
+            $session = $sessionRepository->get($sessionId);
+            $session->logOut($this->eventPublisher);
+            return response('Logged out', 200);
+        } catch (UnknownAggregate $unknownAggregate) {
+            return response('Session unknown', 401);
+        }
+    }
+
+    public function getSessions(ISessionProjectionRepository $sessionRepository)
     {
         return $sessionRepository->getAll();
     }

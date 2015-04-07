@@ -15,6 +15,7 @@ class AppServiceProvider extends ServiceProvider {
 		$this->app->bind('App\Infrastructure\IEventStore', 'App\Infrastructure\FileEventStore');
         $this->app->bind('App\Infrastructure\IProjectionStore', 'App\Infrastructure\FileProjectionStore');
         $this->app->bind('App\Domain\Identity\ISessionProjectionRepository', 'App\Infrastructure\Identity\SessionProjectionRepository');
+        $this->app->bind('App\Domain\Identity\ISessionRepository', 'App\Infrastructure\Identity\SessionRepository');
 	}
 
 	/**

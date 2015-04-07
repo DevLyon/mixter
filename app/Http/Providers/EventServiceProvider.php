@@ -16,6 +16,9 @@ class EventServiceProvider extends ServiceProvider {
 		],
         'App\Domain\Identity\UserConnected' => [
             'App\Domain\Identity\SessionHandler@handleUserConnected'
+        ],
+        'App\Domain\Identity\UserDisconnected' => [
+            'App\Domain\Identity\SessionHandler@handleUserDisconnected'
         ]
 	];
 
