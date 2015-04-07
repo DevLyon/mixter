@@ -5,14 +5,13 @@ namespace Tests\Infrastructure\Identity;
 use App\Domain\Identity\UserId;
 use App\Domain\Identity\UserIdentity;
 use App\Domain\Identity\UserRegistered;
-use App\Infrastructure\EventStore;
 use App\Infrastructure\Identity\UserIdentityRepository;
-use Symfony\Component\EventDispatcher\Event;
+use App\Infrastructure\InMemoryEventStore;
 
 class UserIdentityRepositoryTest extends \PHPUnit_Framework_TestCase {
     public function testGivenAUserIsRegistered_WhenGetByUserId_ThenReturnsUserIdentity() {
         $userRegistered = new UserRegistered(new UserId('clem@mix-it.fr'));
-        $eventStore = new EventStore(array($userRegistered));
+        $eventStore = new InMemoryEventStore(array($userRegistered));
         $userIdentityRepository = new UserIdentityRepository($eventStore);
 
         $userIdentity = $userIdentityRepository->get($userRegistered->getUserId());
@@ -26,7 +25,7 @@ class UserIdentityRepositoryTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGivenAUserIsNotRegistered_WhenGetByUserId_ThenThrowsUnknownAggregate() {
-        $eventStore = new EventStore();
+        $eventStore = new InMemoryEventStore();
         $userIdentityRepository = new UserIdentityRepository($eventStore);
 
         $this->setExpectedException('App\Domain\UnknownAggregate');

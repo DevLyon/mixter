@@ -5,16 +5,16 @@ namespace App\Infrastructure\Identity;
 
 use App\Domain\Identity\UserId;
 use App\Domain\Identity\UserIdentity;
-use App\Infrastructure\EventStore;
+use App\Infrastructure\IEventStore;
 
 class UserIdentityRepository {
 
     /**
-     * @var EventStore
+     * @var IEventStore
      */
     private $eventStore;
 
-    public function __construct(EventStore $eventStore) {
+    public function __construct(IEventStore $eventStore) {
 
         $this->eventStore = $eventStore;
     }
