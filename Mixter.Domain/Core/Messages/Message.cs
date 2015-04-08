@@ -30,7 +30,7 @@ namespace Mixter.Domain.Core.Messages
 
         public void Republish(IEventPublisher eventPublisher, UserId republisher)
         {
-            if (!_projection.Publishers.Contains(republisher) && !_projection.IsDeleted)
+            if (!_projection.Publishers.Contains(republisher))
             {
                 var evt = new MessageRepublished(GetId(), republisher);
                 PublishEvent(eventPublisher, evt);
@@ -45,11 +45,8 @@ namespace Mixter.Domain.Core.Messages
 
         public void Reply(IEventPublisher eventPublisher, UserId replier, string replyContent)
         {
-            if (!_projection.IsDeleted)
-            {
-                var evt = new ReplyMessagePublished(MessageId.Generate(), replier, replyContent, _projection.Id);
-                eventPublisher.Publish(evt);    
-            }
+            var evt = new ReplyMessagePublished(MessageId.Generate(), replier, replyContent, _projection.Id);
+            eventPublisher.Publish(evt);
         }
 
         public void Delete(IEventPublisher eventPublisher, UserId deleter)
