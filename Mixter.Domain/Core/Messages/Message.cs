@@ -45,8 +45,11 @@ namespace Mixter.Domain.Core.Messages
 
         public void Reply(IEventPublisher eventPublisher, UserId replier, string replyContent)
         {
-            var evt = new ReplyMessagePublished(MessageId.Generate(), replier, replyContent, _projection.Id);
-            eventPublisher.Publish(evt);
+            if (!_projection.IsDeleted)
+            {
+                var evt = new ReplyMessagePublished(MessageId.Generate(), replier, replyContent, _projection.Id);
+                eventPublisher.Publish(evt);
+            }
         }
 
         public void Delete(IEventPublisher eventPublisher, UserId deleter)
