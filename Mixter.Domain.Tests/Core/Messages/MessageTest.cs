@@ -108,5 +108,13 @@ namespace Mixter.Domain.Tests.Core.Messages
             Check.That(_eventPublisher.Events).IsEmpty();
         }
 
+        [TestMethod]
+        public void GivenDeletedMessageWhenRepublishThenNothing()
+        {
+            var message = Message.Publish(new EventPublisher(), Author, MessageContent);
+            message.Delete(new EventPublisher(), Author);
+            message.Republish(_eventPublisher, Republisher);
+            Check.That(_eventPublisher.Events).IsEmpty();
+        }
     }
 }
