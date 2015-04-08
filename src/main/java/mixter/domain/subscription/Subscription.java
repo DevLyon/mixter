@@ -3,6 +3,8 @@ package mixter.domain.subscription;
 import mixter.Event;
 import mixter.EventPublisher;
 import mixter.UserId;
+import mixter.domain.message.MessageId;
+import mixter.domain.subscription.events.FolloweeMessagePublished;
 import mixter.domain.subscription.events.UserFollowed;
 import mixter.domain.subscription.events.UserUnfollowed;
 
@@ -24,17 +26,25 @@ class Subscription {
     }
 
     public void unfollow(EventPublisher eventPublisher) {
-        eventPublisher.publish(new UserUnfollowed(new SubscriptionId(projection.follower, projection.followee)));
+        eventPublisher.publish(new UserUnfollowed(projection.getId()));
+    }
+
+    public void notifyFollower(MessageId messageId, EventPublisher eventPublisher) {
+        if (projection.isActive()) {
+            eventPublisher.publish(new FolloweeMessagePublished(projection.getId(), messageId));
+        }
     }
 
     class DecisionProjection {
-        public UserId follower;
+        public SubscriptionId id;
+        public boolean active;
         private Map<Class, Consumer> appliers = new HashMap<>();
-        public UserId followee;
 
         public DecisionProjection(List<Event> eventHistory) {
-            Consumer<UserFollowed> applyMessageDeleted = this::apply;
-            appliers.put(UserFollowed.class, applyMessageDeleted);
+            Consumer<UserFollowed> applyUserFollowed = this::apply;
+            Consumer<UserUnfollowed> applyUserUnfollowed = this::apply;
+            appliers.put(UserFollowed.class, applyUserFollowed);
+            appliers.put(UserUnfollowed.class, applyUserUnfollowed);
             eventHistory.forEach(this::apply);
         }
 
@@ -45,8 +55,20 @@ class Subscription {
         }
 
         private void apply(UserFollowed userFollowed) {
-            follower = userFollowed.getSubscriptionId().getFollower();
-            followee = userFollowed.getSubscriptionId().getFollowee();
+            id = userFollowed.getSubscriptionId();
+            active = true;
+        }
+
+        private void apply(UserUnfollowed userUnfollowed) {
+            active = false;
+        }
+
+        public boolean isActive() {
+            return active;
+        }
+
+        private SubscriptionId getId() {
+            return id;
         }
     }
 }
