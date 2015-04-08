@@ -30,6 +30,50 @@ namespace Mixter.Domain.Tests.Core.Messages
         }
 
         [TestMethod]
+        public void WhenDeleteThenRaiseMessageDeleted()
+        {
+            Given(new MessagePublished(MessageId, Author, MessageContent))
+            .When(o => o.Delete(_eventPublisher, Author))
+            .ThenHasOnly(new MessageDeleted(MessageId));
+        }
+
+        [TestMethod]
+        public void WhenDeleteBySomeoneElseThanAuthorThenDoNotRaiseMessageDeleted()
+        {
+            Given(new MessagePublished(MessageId, Author, MessageContent))
+            .When(o => o.Delete(_eventPublisher, new UserId("clement@mix-it.fr")))
+            .ThenNothing();
+        }
+
+        [TestMethod]
+        public void GivenDeletedMessageWhenDeleteThenNothing()
+        {
+            Given(new MessagePublished(MessageId, Author, MessageContent))
+                .And(new MessageDeleted(MessageId))
+            .When(o => o.Delete(_eventPublisher, Author))
+            .ThenNothing();
+        }
+
+        [TestMethod]
+        public void GivenADeletedMessageWhenReplyThenDoNotRaiseMessageDeleted()
+        {
+            Given(new MessagePublished(MessageId, Author, MessageContent))
+                .And(new MessageDeleted(MessageId))
+            .When(o => o.Reply(_eventPublisher, Replier, ReplyContent))
+            .ThenNothing();
+        }
+
+        [TestMethod]
+        public void GivenDeletedMessageWhenRepublishThenDoNotRaiseMessageRepublished()
+        {
+            Given(new MessagePublished(MessageId, Author, MessageContent))
+                .And(new MessageDeleted(MessageId))
+            .When(o => o.Republish(_eventPublisher, Republisher))
+            .ThenNothing();
+        }
+
+
+        [TestMethod]
         public void WhenPublishMessageThenRaiseUserMessagePublished()
         {
             Message.Publish(_eventPublisher, Author, MessageContent);
@@ -78,22 +122,6 @@ namespace Mixter.Domain.Tests.Core.Messages
         }
 
         [TestMethod]
-        public void WhenDeleteThenRaiseMessageDeleted()
-        {
-            Given(new MessagePublished(MessageId, Author, MessageContent))
-            .When(o => o.Delete(_eventPublisher, Author))
-            .ThenHasOnly(new MessageDeleted(MessageId));
-        }
-
-        [TestMethod]
-        public void WhenDeleteBySomeoneElseThanAuthorThenDoNotRaiseMessageDeleted()
-        {
-            Given(new MessagePublished(MessageId, Author, MessageContent))
-            .When(o => o.Delete(_eventPublisher, new UserId("clement@mix-it.fr")))
-            .ThenNothing();
-        }
-
-        [TestMethod]
         public void GivenIsRepublishedWhenDeleteByRepublisherThenDoNotRaiseMessageDeleted()
         {
             Given(new MessagePublished(MessageId, Author, MessageContent))
@@ -103,39 +131,12 @@ namespace Mixter.Domain.Tests.Core.Messages
         }
 
         [TestMethod]
-        public void GiveDeletedMessageWhenDeleteThenNothing()
-        {
-            Given(new MessagePublished(MessageId, Author, MessageContent))
-                .And(new MessageDeleted(MessageId))
-            .When(o => o.Delete(_eventPublisher, Author))
-            .ThenNothing();
-        }
-
-        [TestMethod]
-        public void GivenReplyMessageWhenGetIdHasReplayMessageId()
+        public void GivenReplyMessageWhenGetIdHasReplyMessageId()
         {
             var replyMessageId = MessageId.Generate();
             var message = CreateMessage(new ReplyMessagePublished(replyMessageId, Replier, ReplyContent, MessageId));
 
             Check.That(message.GetId()).IsEqualTo(replyMessageId);
-        }
-
-        [TestMethod]
-        public void GivenADeletedMessageWhenReplyThenDoNotRaiseMessageDeleted()
-        {
-            Given(new MessagePublished(MessageId, Author, MessageContent))
-                .And(new MessageDeleted(MessageId))
-            .When(o => o.Reply(_eventPublisher, Replier, ReplyContent))
-            .ThenNothing();
-        }
-
-        [TestMethod]
-        public void GivenDeletedMessageWhenRepublishThenDoNotRaiseMessageRepublished()
-        {
-            Given(new MessagePublished(MessageId, Author, MessageContent))
-                .And(new MessageDeleted(MessageId))
-            .When(o => o.Republish(_eventPublisher, Republisher))
-            .ThenNothing();
         }
 
         private Message CreateMessage(params IDomainEvent[] events)
