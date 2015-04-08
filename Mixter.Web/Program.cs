@@ -9,6 +9,7 @@ namespace Mixter.Web
         {
             using (WebApp.Start<Startup>("http://localhost:12345"))
             {
+                Console.WriteLine("Server web démarré: http://localhost:12345");
                 Console.ReadLine();
             }
         }
