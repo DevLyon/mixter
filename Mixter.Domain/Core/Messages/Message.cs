@@ -54,10 +54,6 @@ namespace Mixter.Domain.Core.Messages
 
         public void Delete(IEventPublisher eventPublisher, UserId deleter)
         {
-            if (_projection.Author.Equals(deleter) && !_projection.IsDeleted)
-            {
-                PublishEvent(eventPublisher, new MessageDeleted(_projection.Id));
-            }
         }
 
         public MessageId GetId()
@@ -75,8 +71,6 @@ namespace Mixter.Domain.Core.Messages
             {
                 get { return _publishers; }
             }
-
-            public UserId Author { get; private set; }
 
             public bool IsDeleted { get; private set; }
 
@@ -102,7 +96,6 @@ namespace Mixter.Domain.Core.Messages
             {
                 Id = evt.Id;
                 _publishers.Add(evt.Author);
-                Author = evt.Author;
             }
 
             private void When(MessageRepublished evt)

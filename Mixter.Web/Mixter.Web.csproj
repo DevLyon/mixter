@@ -65,7 +65,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="EventHandlersGenerator.cs" />
     <Compile Include="IndexModule.cs" />
     <Compile Include="MessagePublishedHandler.cs" />
     <Compile Include="Program.cs" />

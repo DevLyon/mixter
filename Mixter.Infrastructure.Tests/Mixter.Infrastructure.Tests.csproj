@@ -59,10 +59,6 @@
     <Compile Include="Infrastructure\EventPublisherTest.cs" />
     <Compile Include="Infrastructure\EventPublisherWithStorageTest.cs" />
     <Compile Include="Infrastructure\EventsStoreTest.cs" />
-    <Compile Include="Infrastructure\Repositories\FollowersRepositoryTest.cs" />
-    <Compile Include="Infrastructure\Repositories\MessagesRepositoryTest.cs" />
-    <Compile Include="Infrastructure\Repositories\SessionsRepositoryTest.cs" />
-    <Compile Include="Infrastructure\Repositories\TimelineMessagesRepositoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

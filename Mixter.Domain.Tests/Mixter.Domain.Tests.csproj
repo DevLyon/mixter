@@ -57,16 +57,7 @@
   <ItemGroup>
     <Compile Include="Core\Messages\MessageIdTest.cs" />
     <Compile Include="Core\Messages\MessageTest.cs" />
-    <Compile Include="Core\Messages\NotifyFollowerOfFolloweeMessageTest.cs" />
-    <Compile Include="Core\Messages\UpdateTimelineTest.cs" />
-    <Compile Include="Core\Subscriptions\SubscriptionTest.cs" />
-    <Compile Include="Core\Subscriptions\UpdateFollowersTest.cs" />
-    <Compile Include="Identity\SessionHandlerTest.cs" />
-    <Compile Include="Identity\SessionIdTest.cs" />
-    <Compile Include="Identity\SessionTest.cs" />
-    <Compile Include="Identity\UserIdentityTest.cs" />
     <Compile Include="Identity\UserIdTest.cs" />
-    <Compile Include="Seo\UserProfileTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
