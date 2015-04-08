@@ -5,6 +5,7 @@ import mixter.EventPublisher;
 import mixter.UserId;
 import mixter.domain.message.events.MessageDeleted;
 import mixter.domain.message.events.MessagePublished;
+import mixter.domain.message.events.MessageReplied;
 import mixter.domain.message.events.MessageRepublished;
 
 import java.util.*;
@@ -37,9 +38,19 @@ class Message {
         }
     }
 
+    public void reply(UserId replierId, MessageId messageId, UserId authorId, String replyContent, EventPublisher eventPublisher) {
+        if (projection.isNotDeleted()) {
+            eventPublisher.publish(new MessageReplied(authorId, replierId, replyContent, messageId, new MessageId()));
+        }
+    }
+
+    MessageId getId() {
+        return projection.getId();
+    }
+
     private class DecisionProjection {
         private MessageId id;
-        private Map<Class,Consumer> appliers=new HashMap<>();
+        private Map<Class, Consumer> appliers = new HashMap<>();
 
         public Set<UserId> publishers = new HashSet<>();
         private UserId authorId;
@@ -49,9 +60,11 @@ class Message {
             Consumer<MessagePublished> applyMessagePublished = this::apply;
             Consumer<MessageRepublished> applyMessageRepublished = this::apply;
             Consumer<MessageDeleted> applyMessageDeleted = this::apply;
+            Consumer<MessageReplied> applyMessageReplied = this::apply;
             appliers.put(MessagePublished.class, applyMessagePublished);
             appliers.put(MessageRepublished.class, applyMessageRepublished);
             appliers.put(MessageDeleted.class, applyMessageDeleted);
+            appliers.put(MessageReplied.class, applyMessageReplied);
             eventHistory.forEach(this::apply);
         }
 
@@ -60,7 +73,7 @@ class Message {
         }
 
         @SuppressWarnings("unchecked")
-        public void apply(Event event){
+        public void apply(Event event) {
             Consumer consumer = appliers.get(event.getClass());
             consumer.accept(event);
         }
@@ -77,6 +90,12 @@ class Message {
 
         private void apply(MessageDeleted event) {
             deleted = true;
+        }
+
+        private void apply(MessageReplied event) {
+            id = event.getMessageId();
+            authorId = event.getAuthorId();
+            publishers.add(event.getAuthorId());
         }
 
         public UserId getAuthorId() {

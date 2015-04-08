@@ -5,6 +5,7 @@ import mixter.Event;
 import mixter.UserId;
 import mixter.domain.message.events.MessageDeleted;
 import mixter.domain.message.events.MessagePublished;
+import mixter.domain.message.events.MessageReplied;
 import mixter.domain.message.events.MessageRepublished;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,6 +19,8 @@ public class MessageTest extends AggregateTest {
     public static final UserId AUTHOR_ID = new UserId();
     public static final String CONTENT = "hello";
     public static final UserId USER_ID = new UserId();
+    public static final UserId REPLIER_ID = new UserId();
+    public static final String REPLY_CONTENT = "reply content";
     private SpyEventPublisher eventPublisher;
 
     @Before
@@ -42,8 +45,9 @@ public class MessageTest extends AggregateTest {
     public void whenAMessageIsRepublishedThenItSendsAMessageRepublishedEvent() {
         // Given
         MessageId messageId = new MessageId();
-        List<Event> eventHistory = history(new MessagePublished(messageId, CONTENT, AUTHOR_ID));
-        Message message = new Message(eventHistory);
+        Message message = messageFor(
+                new MessagePublished(messageId, CONTENT, AUTHOR_ID)
+        );
         UserId userId = new UserId();
 
         // When
@@ -59,11 +63,10 @@ public class MessageTest extends AggregateTest {
     public void whenAMessageIsRepublishedByItsAuthorThenItShouldNotSendRepublishedEvent() {
         // Given
         MessageId messageId = new MessageId();
-        List<Event> eventHistory = history(
+
+        Message message = messageFor(
                 new MessagePublished(messageId, CONTENT, AUTHOR_ID)
         );
-
-        Message message = new Message(eventHistory);
 
         // When
         message.republish(AUTHOR_ID, eventPublisher, AUTHOR_ID, CONTENT);
@@ -76,12 +79,10 @@ public class MessageTest extends AggregateTest {
     public void whenAMessageIsRepublishedTwiceByTheSameUserThenItShouldNotSendMessageRepublishedEvent() {
         // Given
         MessageId messageId = new MessageId();
-        List<Event> eventHistory = history(
+        Message message = messageFor(
                 new MessagePublished(messageId, CONTENT, AUTHOR_ID),
                 new MessageRepublished(messageId, USER_ID, AUTHOR_ID, CONTENT)
         );
-
-        Message message = new Message(eventHistory);
 
         // When
         message.republish(USER_ID, eventPublisher, AUTHOR_ID, CONTENT);
@@ -129,12 +130,10 @@ public class MessageTest extends AggregateTest {
     public void whenAMessageIsDeletedTwiceThenItShouldNotSendMessageDeletedEvent() {
         // Given
         MessageId messageId = new MessageId();
-        List<Event> eventHistory = history(
+        Message message = messageFor(
                 new MessagePublished(messageId, CONTENT, AUTHOR_ID),
                 new MessageDeleted(messageId)
         );
-
-        Message message = new Message(eventHistory);
 
         // When
         message.delete(AUTHOR_ID, eventPublisher);
@@ -147,18 +146,69 @@ public class MessageTest extends AggregateTest {
     public void whenADeletedMessageIsRepublishedThenItShouldNotSendMessageRepublishedEvent() {
         // Given
         MessageId messageId = new MessageId();
-        List<Event> eventHistory = history(
+        Message message = messageFor(
                 new MessagePublished(messageId, CONTENT, AUTHOR_ID),
                 new MessageDeleted(messageId)
         );
-
-        Message message = new Message(eventHistory);
 
         // When
         message.republish(new UserId(), eventPublisher, AUTHOR_ID, CONTENT);
 
         // Then
         assertThat(eventPublisher.publishedEvents).isEmpty();
+    }
+
+    @Test
+    public void WhenReplyThenRaiseReplyMessagePublished() {
+        MessageId originalMessageId = new MessageId();
+        Message message = messageFor(
+                new MessagePublished(originalMessageId, CONTENT, AUTHOR_ID)
+        );
+
+        // When
+        message.reply(REPLIER_ID, originalMessageId, AUTHOR_ID, REPLY_CONTENT, eventPublisher);
+
+        //Then
+        assertThat(eventPublisher.publishedEvents).extracting("originalMessageId").containsExactly(originalMessageId);
+        assertThat(eventPublisher.publishedEvents).extracting("authorId").containsExactly(AUTHOR_ID);
+        assertThat(eventPublisher.publishedEvents).extracting("replierId").containsExactly(REPLIER_ID);
+        assertThat(eventPublisher.publishedEvents).extracting("message").containsExactly(REPLY_CONTENT);
+    }
+
+    @Test
+    public void GivenReplyMessageWhenGetIdHasReplyMessageId() {
+        //Given
+        MessageId originalMessageId = new MessageId();
+        MessageId replyMessageId = new MessageId();
+        Message message = messageFor(
+                new MessageReplied(AUTHOR_ID, REPLIER_ID, REPLY_CONTENT, originalMessageId, replyMessageId)
+        );
+
+        // When
+        MessageId id = message.getId();
+
+        // Then
+        assertThat(id).isEqualTo(replyMessageId);
+    }
+
+    @Test
+    public void GivenADeletedMessageWhenReplyThenDoNotRaiseMessageDeleted() {
+        // Given
+        MessageId originalMessageId = new MessageId();
+        Message message = messageFor(
+                new MessagePublished(originalMessageId, CONTENT, AUTHOR_ID),
+                new MessageDeleted(originalMessageId)
+        );
+
+        // When
+        message.reply(REPLIER_ID, originalMessageId, AUTHOR_ID, REPLY_CONTENT, eventPublisher);
+
+        //Then
+        assertThat(eventPublisher.publishedEvents).isEmpty();
+    }
+
+    private Message messageFor(Event... events) {
+        return new Message(history(events));
     }
 }
 
