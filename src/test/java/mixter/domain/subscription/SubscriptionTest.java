@@ -2,6 +2,7 @@ package mixter.domain.subscription;
 
 import mixter.AggregateTest;
 import mixter.UserId;
+import mixter.domain.subscription.events.UserFollowed;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

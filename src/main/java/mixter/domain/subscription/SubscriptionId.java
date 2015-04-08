@@ -2,7 +2,7 @@ package mixter.domain.subscription;
 
 import mixter.UserId;
 
-class SubscriptionId {
+public class SubscriptionId {
     private final UserId follower;
     private final UserId followee;
 
