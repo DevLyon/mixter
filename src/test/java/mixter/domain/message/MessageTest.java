@@ -35,17 +35,18 @@ public class MessageTest extends AggregateTest {
         // Given
         MessageId messageId = new MessageId();
         UserId authorId = new UserId();
-        List<Event> eventHistory = history(new MessagePublished(messageId, "hello", authorId));
+        String content = "hello";
+        List<Event> eventHistory = history(new MessagePublished(messageId, content, authorId));
         Message message = new Message(eventHistory);
         UserId userId = new UserId();
 
         SpyEventPublisher eventPublisher = new SpyEventPublisher();
 
         // When
-        message.republish(userId, eventPublisher);
+        message.republish(userId, eventPublisher, authorId, content);
 
         // Then
-        MessageRepublished expectedEvent = new MessageRepublished(messageId, userId);
+        MessageRepublished expectedEvent = new MessageRepublished(messageId, userId, authorId, content);
         assertThat(eventPublisher.publishedEvents).extracting("messageId").containsExactly(expectedEvent.getMessageId());
         assertThat(eventPublisher.publishedEvents).extracting("userId").containsExactly(expectedEvent.getUserId());
     }
@@ -55,15 +56,16 @@ public class MessageTest extends AggregateTest {
         // Given
         MessageId messageId = new MessageId();
         UserId authorId = new UserId();
+        String content = "hello";
         List<Event> eventHistory = history(
-                new MessagePublished(messageId, "hello", authorId)
+                new MessagePublished(messageId, content, authorId)
         );
 
         Message message = new Message(eventHistory);
         SpyEventPublisher eventPublisher = new SpyEventPublisher();
 
         // When
-        message.republish(authorId, eventPublisher);
+        message.republish(authorId, eventPublisher, authorId, content);
 
         // Then
         assertThat(eventPublisher.publishedEvents).isEmpty();
@@ -75,16 +77,17 @@ public class MessageTest extends AggregateTest {
         MessageId messageId = new MessageId();
         UserId userId = new UserId();
         UserId authorId = new UserId();
+        String content = "hello";
         List<Event> eventHistory = history(
-                new MessagePublished(messageId, "hello", authorId),
-                new MessageRepublished(messageId, userId)
+                new MessagePublished(messageId, content, authorId),
+                new MessageRepublished(messageId, userId, authorId, content)
         );
 
         Message message = new Message(eventHistory);
         SpyEventPublisher eventPublisher = new SpyEventPublisher();
 
         // When
-        message.republish(userId, eventPublisher);
+        message.republish(userId, eventPublisher, authorId, content);
 
         // Then
         assertThat(eventPublisher.publishedEvents).isEmpty();
@@ -94,8 +97,9 @@ public class MessageTest extends AggregateTest {
     public void whenAMessageIsDeletedByItsAuthorThenItShouldSendMessageDeletedEvent() {
         MessageId messageId = new MessageId();
         UserId authorId = new UserId();
+        String content = "hello";
         List<Event> eventHistory = history(
-                new MessagePublished(messageId, "hello", authorId)
+                new MessagePublished(messageId, content, authorId)
         );
 
         Message message = new Message(eventHistory);
@@ -150,8 +154,9 @@ public class MessageTest extends AggregateTest {
     public void whenADeletedMessageIsRepublishedThenItShouldNotSendMessageRepublishedEvent() {
         MessageId messageId = new MessageId();
         UserId authorId = new UserId();
+        String content = "hello";
         List<Event> eventHistory = history(
-                new MessagePublished(messageId, "hello", authorId),
+                new MessagePublished(messageId, content, authorId),
                 new MessageDeleted(messageId)
         );
 
@@ -159,7 +164,7 @@ public class MessageTest extends AggregateTest {
         SpyEventPublisher eventPublisher = new SpyEventPublisher();
 
         // When
-        message.republish(new UserId(), eventPublisher);
+        message.republish(new UserId(), eventPublisher, authorId, content);
 
         // Then
         assertThat(eventPublisher.publishedEvents).isEmpty();

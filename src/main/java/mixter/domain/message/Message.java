@@ -22,11 +22,11 @@ class Message {
         eventPublisher.publish(new MessagePublished(messageId, publishMessage.getMessage(), publishMessage.getAuthorId()));
     }
 
-    public void republish(UserId userId, EventPublisher eventPublisher) {
+    public void republish(UserId userId, EventPublisher eventPublisher, UserId authorId, String content) {
         if (projection.publishers.contains(userId) || projection.isDeleted()) {
             return;
         }
-        MessageRepublished event = new MessageRepublished(projection.getId(), userId);
+        MessageRepublished event = new MessageRepublished(projection.getId(), userId, authorId, content);
         eventPublisher.publish(event);
         projection.apply(event);
     }

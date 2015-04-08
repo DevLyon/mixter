@@ -27,7 +27,7 @@ public class UpdateTimelineTest {
         MessagePublished messagePublished = new MessagePublished(messageId, content, author);
         TimelineRepositoryFake repository = new TimelineRepositoryFake();
         EventStore eventStore = new FakeEventStore();
-        UpdateTimeline handler = new UpdateTimeline(repository, eventStore);
+        UpdateTimeline handler = new UpdateTimeline(repository);
         // When
         handler.apply(messagePublished);
         // Then
@@ -37,19 +37,19 @@ public class UpdateTimelineTest {
     @Test
     public void WhenUpdateTimelineAppliesAMessageRepublishedEventThenATimelineMessageIsCreated() {
         // Given
-        UserId author = new UserId();
+        UserId authorId = new UserId();
         UserId userId = new UserId();
         String content = "hello world";
         MessageId messageId = new MessageId();
-        MessageRepublished messageRepublished = new MessageRepublished(messageId, userId);
-        MessagePublished messagePublished = new MessagePublished(messageId, content, author);
+        MessageRepublished messageRepublished = new MessageRepublished(messageId, userId, authorId, content);
+        MessagePublished messagePublished = new MessagePublished(messageId, content, authorId);
         TimelineRepositoryFake repository = new TimelineRepositoryFake();
         EventStore eventStore = new FakeEventStore(messagePublished);
-        UpdateTimeline handler = new UpdateTimeline(repository, eventStore);
+        UpdateTimeline handler = new UpdateTimeline(repository);
         // When
         handler.apply(messageRepublished);
         // Then
-        assertThat(repository.getMessages()).containsExactly(new TimelineMessage(userId, author, content, messageId));
+        assertThat(repository.getMessages()).containsExactly(new TimelineMessage(userId, authorId, content, messageId));
     }
 
     class FakeEventStore implements EventStore {
