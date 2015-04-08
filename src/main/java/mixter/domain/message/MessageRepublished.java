@@ -3,7 +3,7 @@ package mixter.domain.message;
 import mixter.Event;
 import mixter.UserId;
 
-class MessageRepublished implements Event {
+public class MessageRepublished implements Event {
     private MessageId messageId;
     private UserId userId;
 
