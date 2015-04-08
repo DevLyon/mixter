@@ -30,7 +30,7 @@ namespace Mixter.Domain.Core.Messages
 
         public void Republish(IEventPublisher eventPublisher, UserId republisher)
         {
-            if (!_projection.Publishers.Contains(republisher))
+            if (!_projection.Publishers.Contains(republisher) && !_projection.IsDeleted)
             {
                 var evt = new MessageRepublished(GetId(), republisher);
                 PublishEvent(eventPublisher, evt);
