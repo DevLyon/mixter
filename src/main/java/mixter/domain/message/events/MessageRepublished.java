@@ -1,7 +1,8 @@
-package mixter.domain.message;
+package mixter.domain.message.events;
 
 import mixter.Event;
 import mixter.UserId;
+import mixter.domain.message.MessageId;
 
 public class MessageRepublished implements Event {
     private MessageId messageId;

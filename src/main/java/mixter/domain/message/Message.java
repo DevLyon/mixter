@@ -3,6 +3,9 @@ package mixter.domain.message;
 import mixter.Event;
 import mixter.EventPublisher;
 import mixter.UserId;
+import mixter.domain.message.events.MessageDeleted;
+import mixter.domain.message.events.MessagePublished;
+import mixter.domain.message.events.MessageRepublished;
 
 import java.util.*;
 import java.util.function.Consumer;

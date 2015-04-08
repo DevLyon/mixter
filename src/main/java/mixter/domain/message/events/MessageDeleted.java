@@ -1,8 +1,9 @@
-package mixter.domain.message;
+package mixter.domain.message.events;
 
 import mixter.Event;
+import mixter.domain.message.MessageId;
 
-class MessageDeleted implements Event {
+public class MessageDeleted implements Event {
     private MessageId messageId;
 
     public MessageDeleted(MessageId messageId) {

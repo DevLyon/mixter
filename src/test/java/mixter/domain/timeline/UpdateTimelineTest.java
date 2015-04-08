@@ -4,8 +4,11 @@ import mixter.Event;
 import mixter.UserId;
 import mixter.domain.EventStore;
 import mixter.domain.message.MessageId;
-import mixter.domain.message.MessagePublished;
-import mixter.domain.message.MessageRepublished;
+import mixter.domain.message.TimelineMessage;
+import mixter.domain.message.TimelineRepository;
+import mixter.domain.message.events.MessagePublished;
+import mixter.domain.message.events.MessageRepublished;
+import mixter.domain.message.handlers.UpdateTimeline;
 import org.junit.Test;
 
 import java.util.ArrayList;

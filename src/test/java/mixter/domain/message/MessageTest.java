@@ -3,6 +3,9 @@ package mixter.domain.message;
 import mixter.AggregateTest;
 import mixter.Event;
 import mixter.UserId;
+import mixter.domain.message.events.MessageDeleted;
+import mixter.domain.message.events.MessagePublished;
+import mixter.domain.message.events.MessageRepublished;
 import org.junit.Test;
 
 import java.util.List;

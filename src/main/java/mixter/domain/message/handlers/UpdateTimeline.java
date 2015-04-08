@@ -1,9 +1,11 @@
-package mixter.domain.timeline;
+package mixter.domain.message.handlers;
 
 import mixter.Event;
 import mixter.domain.EventStore;
-import mixter.domain.message.MessagePublished;
-import mixter.domain.message.MessageRepublished;
+import mixter.domain.message.TimelineMessage;
+import mixter.domain.message.TimelineRepository;
+import mixter.domain.message.events.MessagePublished;
+import mixter.domain.message.events.MessageRepublished;
 
 public class UpdateTimeline {
 

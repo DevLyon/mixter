@@ -1,7 +1,6 @@
-package mixter.domain.timeline;
+package mixter.domain.message;
 
 import mixter.UserId;
-import mixter.domain.message.MessageId;
 
 public class TimelineMessage {
     private final UserId ownerId;
