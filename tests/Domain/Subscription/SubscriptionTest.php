@@ -63,4 +63,19 @@ class SubscriptionTest extends \PHPUnit_Framework_TestCase
         \Assert\that($followeeMessagePublished->getMessageId())->eq($messageId);
         \Assert\that($followeeMessagePublished->getSubscriptionId())->eq($userFollowed->getSubscriptionId());
     }
+
+    public function testGivenSubscriptionHaveBeenUnfollowed_WhenNotifyFollower_ThenNothingHappen()
+    {
+        $fakeEventPublisher = new FakeEventPublisher();
+        $followeeId = new UserId('clem@mix-it.fr');
+        $followerId = new UserId('jean@mix-it.fr');
+        $userFollowed = new UserFollowed(new SubscriptionId($followerId, $followeeId));
+        $userUnfollowed = new UserUnfollowed(new SubscriptionId($followerId, $followeeId));
+        $subscription = new Subscription(array($userFollowed, $userUnfollowed));
+        $messageId = MessageId::generate();
+
+        $subscription->notifyFollower($fakeEventPublisher, $messageId);
+
+        \Assert\that($fakeEventPublisher->events)->count(0);
+    }
 }
