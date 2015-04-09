@@ -3,6 +3,7 @@
 namespace App\Domain\Timeline;
 
 use App\Domain\Messages\MessagePublished;
+use App\Domain\Messages\MessageRepublished;
 use App\Domain\Messages\ReplyMessagePublished;
 
 class UpdateTimeline
@@ -29,5 +30,11 @@ class UpdateTimeline
         $this->timelineMessageRepository->save(
             new TimelineMessage($replyMessagePublished->getReplyId(), $replyMessagePublished->getReplyContent(), $replyMessagePublished->getReplierId())
         );
+    }
+
+    public function handleMessageRepublished(MessageRepublished $messageRepublished)
+    {
+        $timelineMessage = $this->timelineMessageRepository->getByMessageId($messageRepublished->getMessageId());
+        $timelineMessage->incrementNbRepublish();
     }
 }

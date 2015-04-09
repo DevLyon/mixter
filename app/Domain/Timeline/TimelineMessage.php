@@ -20,6 +20,9 @@ class TimelineMessage
      */
     private $ownerId;
 
+    /** @var int */
+    private $nbRepublish = 0;
+
     public function __construct(MessageId $messageId, $content, UserId $ownerId)
     {
         $this->messageId = $messageId;
@@ -49,5 +52,18 @@ class TimelineMessage
     public function getOwnerId()
     {
         return $this->ownerId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNbRepublish()
+    {
+        return $this->nbRepublish;
+    }
+
+    public function incrementNbRepublish()
+    {
+        $this->nbRepublish++;
     }
 }
