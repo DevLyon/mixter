@@ -8,6 +8,7 @@ use App\Domain\Subscriptions\FolloweeMessageQuacked;
 use App\Domain\Subscriptions\Subscription;
 use App\Domain\Subscriptions\SubscriptionId;
 use App\Domain\Subscriptions\UserFollowed;
+use App\Domain\Subscriptions\UserUnfollowed;
 use Tests\Domain\FakeEventPublisher;
 
 class SubscriptionTest extends \PHPUnit_Framework_TestCase
@@ -61,5 +62,20 @@ class SubscriptionTest extends \PHPUnit_Framework_TestCase
         \Assert\that($followeeMessageQuacked)->isInstanceOf('App\Domain\Subscriptions\FolloweeMessageQuacked');
         \Assert\that($followeeMessageQuacked->getMessageId())->eq($messageId);
         \Assert\that($followeeMessageQuacked->getSubscriptionId())->eq($userFollowed->getSubscriptionId());
+    }
+
+    public function testGivenSubscriptionHaveBeenUnfollowed_WhenNotifyFollower_ThenNothingHappen()
+    {
+        $fakeEventPublisher = new FakeEventPublisher();
+        $followeeId = new UserId('clem@mix-it.fr');
+        $followerId = new UserId('jean@mix-it.fr');
+        $userFollowed = new UserFollowed(new SubscriptionId($followerId, $followeeId));
+        $userUnfollowed = new UserUnfollowed(new SubscriptionId($followerId, $followeeId));
+        $subscription = new Subscription(array($userFollowed, $userUnfollowed));
+        $messageId = MessageId::generate();
+
+        $subscription->notifyFollower($fakeEventPublisher, $messageId);
+
+        \Assert\that($fakeEventPublisher->events)->count(0);
     }
 }
