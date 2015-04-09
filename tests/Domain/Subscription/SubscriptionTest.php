@@ -1,0 +1,25 @@
+<?php
+
+namespace Tests\Domain\Subscription;
+
+use App\Domain\Identity\UserId;
+use Symfony\Component\Security\Core\User\User;
+use Tests\Domain\FakeEventPublisher;
+
+class SubscriptionTest extends \PHPUnit_Framework_TestCase
+{
+    public function testWhenFollowAnotherUser_ThenUserFollowedIsRaised()
+    {
+        $fakeEventPublisher = new FakeEventPublisher();
+        $followeeId = new UserId('clem@mix-it.fr');
+        $followerId = new UserId('jean@mix-it.fr');
+
+        Subscription::followUser($fakeEventPublisher, $followerId, $followeeId);
+
+        \Assert\that($fakeEventPublisher->events)->count(1);
+        /** @var UserFollowed $userFollowed */
+        $userFollowed = $fakeEventPublisher->events[0];
+        \Assert\that($userFollowed->getSubscriptionId()->getFollowerId())->eq($followerId);
+        \Assert\that($userFollowed->getSubscriptionId()->getFolloweeId())->eq($followeeId);
+    }
+}
