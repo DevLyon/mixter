@@ -42,4 +42,35 @@ class TimelineMessageRepositoryTest extends \PHPUnit_Framework_TestCase
         $storedMessage = $projectionStore->get($timelineMessage->getMessageId()->getId(), get_class($timelineMessage));
         \Assert\that($storedMessage)->eq($timelineMessage);
     }
+
+    public function testGiven3ExistingTimelineMessages_WhenGetAll_ThenReturnThe3TimelineMessages()
+    {
+        $timelineMessage1 = new TimelineMessage(MessageId::generate(), 'hello', new UserId('clem@mix-it.fr'));
+        $timelineMessage2 = new TimelineMessage(MessageId::generate(), 'hello', new UserId('clem@mix-it.fr'));
+        $timelineMessage3 = new TimelineMessage(MessageId::generate(), 'hello', new UserId('clem@mix-it.fr'));
+        $projectionStore = new InMemoryProjectionStore(
+            array(
+                $timelineMessage1->getMessageId()->getId() => $timelineMessage1,
+                $timelineMessage2->getMessageId()->getId() => $timelineMessage2,
+                $timelineMessage3->getMessageId()->getId() => $timelineMessage3));
+        $timelineMessageRepository = new TimelineMessageRepository($projectionStore);
+
+        \Assert\that($timelineMessageRepository->getAll())->count(3);
+    }
+
+    public function testGiven3ExistingTimelineMessages_WhenGetByOwnerId_ThenReturnOnlyThe2CorrespondingTimelineMessages()
+    {
+        $ownerId = new UserId('clem@mix-it.fr');
+        $timelineMessage1 = new TimelineMessage(MessageId::generate(), 'hello', $ownerId);
+        $timelineMessage2 = new TimelineMessage(MessageId::generate(), 'hello', new UserId('jean@mix-it.fr'));
+        $timelineMessage3 = new TimelineMessage(MessageId::generate(), 'hello', $ownerId);
+        $projectionStore = new InMemoryProjectionStore(
+            array(
+                $timelineMessage1->getMessageId()->getId() => $timelineMessage1,
+                $timelineMessage2->getMessageId()->getId() => $timelineMessage2,
+                $timelineMessage3->getMessageId()->getId() => $timelineMessage3));
+        $timelineMessageRepository = new TimelineMessageRepository($projectionStore);
+
+        \Assert\that($timelineMessageRepository->getByOwnerId($ownerId))->count(2);
+    }
 }
