@@ -37,7 +37,8 @@ namespace App\Domain\Messages {
 
         public function delete(IEventPublisher $eventPublisher, UserId $deleterId)
         {
-            if($deleterId != $this->decisionProjection->getAuthorId()) {
+            if($this->decisionProjection->isDeleted()
+                || $deleterId != $this->decisionProjection->getAuthorId()) {
                 return;
             }
             $eventPublisher->publish(
@@ -50,6 +51,7 @@ namespace App\Domain\Messages\Message {
 
     use App\Domain\DecisionProjectionBase;
     use App\Domain\Identity\UserId;
+    use App\Domain\Messages\MessageDeleted;
     use App\Domain\Messages\MessageId;
     use App\Domain\Messages\MessagePublished;
     use App\Domain\Messages\MessageRepublished;
@@ -66,11 +68,15 @@ namespace App\Domain\Messages\Message {
         /** @var array */
         private $republishers = array();
 
+        /** @var bool */
+        private $deleted = false;
+
         public function __construct($events)
         {
             $this->registerMessagePublished();
             $this->registerMessageRepublished();
             $this->registerReplyMessagePublished();
+            $this->registerMessageDeleted();
             parent::__construct($events);
         }
 
@@ -98,6 +104,14 @@ namespace App\Domain\Messages\Message {
             return $this->republishers;
         }
 
+        /**
+         * @return boolean
+         */
+        public function isDeleted()
+        {
+            return $this->deleted;
+        }
+
         private function registerMessagePublished()
         {
             $this->register('App\Domain\Messages\MessagePublished', function (MessagePublished $event) {
@@ -118,6 +132,13 @@ namespace App\Domain\Messages\Message {
             $this->register('App\Domain\Messages\ReplyMessagePublished', function (ReplyMessagePublished $event) {
                 $this->messageId = $event->getReplyId();
                 $this->authorId = $event->getReplierId();
+            });
+        }
+
+        private function registerMessageDeleted()
+        {
+            $this->register('App\Domain\Messages\MessageDeleted', function (MessageDeleted $event){
+                $this->deleted = true;
             });
         }
     }
