@@ -30,4 +30,16 @@ class TimelineMessageRepository implements ITimelineMessageRepository
     {
         $this->projectionStore->store($timelineMessage->getMessageId()->getId(), $timelineMessage);
     }
+
+    public function getAll()
+    {
+        return $this->projectionStore->getAll(self::PROJECTION_TYPE);
+    }
+
+    public function getByOwnerId($ownerId)
+    {
+        return array_filter($this->getAll(), function(TimelineMessage $timelineMessage) use($ownerId) {
+            return $timelineMessage->getOwnerId() == $ownerId;
+        });
+    }
 }
