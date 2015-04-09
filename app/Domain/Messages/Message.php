@@ -27,6 +27,12 @@ namespace App\Domain\Messages {
             $eventPublisher->publish(
                 new MessageRequacked($this->decisionProjection->getMessageId(), $requackerId));
         }
+
+        public function delete(IEventPublisher $eventPublisher, UserId $deleterId)
+        {
+            $eventPublisher->publish(
+                new MessageDeleted($this->decisionProjection->getMessageId(), $deleterId));
+        }
     }
 }
 
