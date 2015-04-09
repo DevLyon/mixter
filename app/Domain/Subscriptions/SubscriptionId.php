@@ -38,4 +38,12 @@ class SubscriptionId
     {
         return $this->followeeId;
     }
+
+    /**
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->getFolloweeId()->getId().'_'.$this->getFollowerId()->getId();
+    }
 }
