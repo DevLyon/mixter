@@ -20,8 +20,10 @@ namespace App\Domain\Messages {
 
         public function republish(IEventPublisher $eventPublisher, UserId $republisherId)
         {
-            if($republisherId == $this->decisionProjection->getAuthorId()
-                || in_array($republisherId, $this->decisionProjection->getRepublishers())) {
+            if ($this->decisionProjection->isDeleted()
+                || $republisherId == $this->decisionProjection->getAuthorId()
+                || in_array($republisherId, $this->decisionProjection->getRepublishers())
+            ) {
                 return;
             }
             $eventPublisher->publish(
@@ -30,7 +32,7 @@ namespace App\Domain\Messages {
 
         public function reply(IEventPublisher $eventPublisher, $replyContent, UserId $replier)
         {
-            if($this->decisionProjection->isDeleted()) {
+            if ($this->decisionProjection->isDeleted()) {
                 return;
             }
             $replyId = MessageId::generate();
@@ -40,8 +42,9 @@ namespace App\Domain\Messages {
 
         public function delete(IEventPublisher $eventPublisher, UserId $deleterId)
         {
-            if($this->decisionProjection->isDeleted()
-                || $deleterId != $this->decisionProjection->getAuthorId()) {
+            if ($this->decisionProjection->isDeleted()
+                || $deleterId != $this->decisionProjection->getAuthorId()
+            ) {
                 return;
             }
             $eventPublisher->publish(
@@ -140,7 +143,7 @@ namespace App\Domain\Messages\Message {
 
         private function registerMessageDeleted()
         {
-            $this->register('App\Domain\Messages\MessageDeleted', function (MessageDeleted $event){
+            $this->register('App\Domain\Messages\MessageDeleted', function (MessageDeleted $event) {
                 $this->deleted = true;
             });
         }
