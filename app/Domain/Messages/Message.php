@@ -20,7 +20,8 @@ namespace App\Domain\Messages {
 
         public function requack(IEventPublisher $eventPublisher, UserId $requackerId)
         {
-            if($requackerId == $this->decisionProjection->getAuthorId()
+            if($this->decisionProjection->isDeleted()
+                || $requackerId == $this->decisionProjection->getAuthorId()
                 || in_array($requackerId, $this->decisionProjection->getRequackers())) {
                 return;
             }
@@ -30,8 +31,9 @@ namespace App\Domain\Messages {
 
         public function delete(IEventPublisher $eventPublisher, UserId $deleterId)
         {
-            if($this->decisionProjection->isDeleted()
-                || $deleterId != $this->decisionProjection->getAuthorId()) {
+            if ($this->decisionProjection->isDeleted()
+                || $deleterId != $this->decisionProjection->getAuthorId()
+            ) {
                 return;
             }
             $eventPublisher->publish(
@@ -120,7 +122,7 @@ namespace App\Domain\Messages\Message {
 
         private function registerMessageDeleted()
         {
-            $this->register('App\Domain\Messages\MessageDeleted', function (MessageDeleted $event){
+            $this->register('App\Domain\Messages\MessageDeleted', function (MessageDeleted $event) {
                 $this->deleted = true;
             });
         }
