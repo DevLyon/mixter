@@ -4,10 +4,15 @@ namespace Tests\Infrastructure;
 
 use App\Infrastructure\IProjectionStore;
 
-class InMemoryProjectionStore implements IProjectionStore {
-
+class InMemoryProjectionStore implements IProjectionStore
+{
     /** @var array */
     private $projections = array();
+
+    public function __construct($projections = array())
+    {
+        $this->projections = $projections;
+    }
 
     public function get($id, $projectionType)
     {
