@@ -7,6 +7,7 @@ use App\Domain\Messages\MessageId;
 use App\Domain\Messages\MessagePublished;
 use App\Domain\Messages\MessageRepublished;
 use App\Domain\Messages\ReplyMessagePublished;
+use Symfony\Component\Security\Core\User\User;
 use Tests\Domain\FakeEventPublisher;
 
 class MessageTest extends \PHPUnit_Framework_TestCase
@@ -187,6 +188,20 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         $message = new Message(array($messagePublished, $messageDeleted));
 
         $message->reply($fakeEventPublisher, 'Hello too!', $authorId);
+
+        \Assert\that($fakeEventPublisher->events)->count(0);
+    }
+
+    public function testGivenAMessageHaveBeenDeleted_WhenRepublishMessage_ThenNothingHappens()
+    {
+        $fakeEventPublisher = new FakeEventPublisher();
+        $authorId = new UserId('clem@mix-it.fr');
+        $messagePublished = new MessagePublished(MessageId::generate(), 'Hello', $authorId);
+        $messageDeleted = new MessageDeleted($messagePublished->getMessageId(), $authorId);
+        $message = new Message(array($messagePublished, $messageDeleted));
+        $republisher = new UserId('florent@mix-it.fr');
+
+        $message->republish($fakeEventPublisher, $republisher);
 
         \Assert\that($fakeEventPublisher->events)->count(0);
     }
