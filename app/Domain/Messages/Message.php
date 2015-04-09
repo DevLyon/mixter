@@ -30,6 +30,9 @@ namespace App\Domain\Messages {
 
         public function delete(IEventPublisher $eventPublisher, UserId $deleterId)
         {
+            if($deleterId != $this->decisionProjection->getAuthorId()) {
+                return;
+            }
             $eventPublisher->publish(
                 new MessageDeleted($this->decisionProjection->getMessageId(), $deleterId));
         }
