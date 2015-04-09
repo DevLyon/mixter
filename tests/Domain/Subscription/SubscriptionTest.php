@@ -3,6 +3,8 @@
 namespace Tests\Domain\Subscription;
 
 use App\Domain\Identity\UserId;
+use App\Domain\Messages\MessageId;
+use App\Domain\Subscriptions\FolloweeMessagePublished;
 use App\Domain\Subscriptions\Subscription;
 use App\Domain\Subscriptions\SubscriptionId;
 use App\Domain\Subscriptions\UserFollowed;
@@ -41,5 +43,24 @@ class SubscriptionTest extends \PHPUnit_Framework_TestCase
         $userUnfollowed = $fakeEventPublisher->events[0];
         \Assert\that($userUnfollowed)->isInstanceOf('App\Domain\Subscriptions\UserUnfollowed');
         \Assert\that($userUnfollowed->getSubscriptionId())->eq($userFollowed->getSubscriptionId());
+    }
+
+    public function testWhenNotifyFollower_ThenFolloweeMessagePublished()
+    {
+        $fakeEventPublisher = new FakeEventPublisher();
+        $followeeId = new UserId('clem@mix-it.fr');
+        $followerId = new UserId('jean@mix-it.fr');
+        $userFollowed = new UserFollowed(new SubscriptionId($followerId, $followeeId));
+        $subscription = new Subscription(array($userFollowed));
+        $messageId = MessageId::generate();
+
+        $subscription->notifyFollower($fakeEventPublisher, $messageId);
+
+        \Assert\that($fakeEventPublisher->events)->count(1);
+        /** @var FolloweeMessagePublished $followeeMessagePublished */
+        $followeeMessagePublished = $fakeEventPublisher->events[0];
+        \Assert\that($followeeMessagePublished)->isInstanceOf('App\Domain\Subscriptions\FolloweeMessagePublished');
+        \Assert\that($followeeMessagePublished->getMessageId())->eq($messageId);
+        \Assert\that($followeeMessagePublished->getSubscriptionId())->eq($userFollowed->getSubscriptionId());
     }
 }
