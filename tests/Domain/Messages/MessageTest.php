@@ -2,6 +2,7 @@
 
 use App\Domain\Identity\UserId;
 use App\Domain\Messages\Message;
+use App\Domain\Messages\MessageDeleted;
 use App\Domain\Messages\MessageId;
 use App\Domain\Messages\MessagePublished;
 use App\Domain\Messages\MessageRepublished;
@@ -133,5 +134,21 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         $message->republish($fakeEventPublisher, $replierId);
 
         \Assert\that($fakeEventPublisher->events)->count(0);
+    }
+
+    public function testWhenAuthorDeleteMessage_ThenMessageDeletedIsRaised()
+    {
+        $fakeEventPublisher = new FakeEventPublisher();
+        $authorId = new UserId('clem@mix-it.fr');
+        $messagePublished = new MessagePublished(MessageId::generate(), 'Hello', $authorId);
+        $message = new Message(array($messagePublished));
+
+        $message->delete($fakeEventPublisher, $authorId);
+
+        \Assert\that($fakeEventPublisher->events)->count(1);
+        /** @var MessageDeleted $messageRepublished */
+        $messageRepublished = $fakeEventPublisher->events[0];
+        \Assert\that($messageRepublished->getMessageId())->eq($messagePublished->getMessageId());
+        \Assert\that($messageRepublished->getDeleterId())->eq($authorId);
     }
 }
