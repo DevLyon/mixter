@@ -32,7 +32,9 @@ namespace App\Domain\Subscriptions {
 
         public function notifyFollower(IEventPublisher $eventPublisher, MessageId $messageId)
         {
-            $eventPublisher->publish(new FolloweeMessageQuacked($messageId, $this->decisionProjection->getSubscriptionId()));
+            if($this->decisionProjection->isActive()) {
+                $eventPublisher->publish(new FolloweeMessageQuacked($messageId, $this->decisionProjection->getSubscriptionId()));
+            }
         }
     }
 }
@@ -42,11 +44,15 @@ namespace App\Domain\Subscriptions\Subscription {
     use App\Domain\DecisionProjectionBase;
     use App\Domain\Subscriptions\SubscriptionId;
     use App\Domain\Subscriptions\UserFollowed;
+    use App\Domain\Subscriptions\UserUnfollowed;
 
     class DecisionProjection extends DecisionProjectionBase
     {
         /** @var SubscriptionId */
         private $subscriptionId;
+
+        /** @var bool */
+        private $active = false;
 
         /**
          * @param array $events
@@ -54,6 +60,7 @@ namespace App\Domain\Subscriptions\Subscription {
         public function __construct($events)
         {
             $this->registerUserFollowed();
+            $this->registerUserUnfollowed();
             parent::__construct($events);
         }
 
@@ -69,7 +76,23 @@ namespace App\Domain\Subscriptions\Subscription {
         {
             $this->register('App\Domain\Subscriptions\UserFollowed', function (UserFollowed $event) {
                 $this->subscriptionId = $event->getSubscriptionId();
+                $this->active = true;
             });
+        }
+
+        private function registerUserUnfollowed()
+        {
+            $this->register('App\Domain\Subscriptions\UserUnfollowed', function (UserUnfollowed $event) {
+                $this->active = false;
+            });
+        }
+
+        /**
+         * @return boolean
+         */
+        public function isActive()
+        {
+            return $this->active;
         }
     }
 }
