@@ -34,6 +34,12 @@ namespace App\Domain\Messages {
             $eventPublisher->publish(
                 new ReplyMessagePublished($replyId, $replyContent, $replier, $this->decisionProjection->getMessageId()));
         }
+
+        public function delete(IEventPublisher $eventPublisher, UserId $deleterId)
+        {
+            $eventPublisher->publish(
+                new MessageDeleted($this->decisionProjection->getMessageId(), $deleterId));
+        }
     }
 }
 
