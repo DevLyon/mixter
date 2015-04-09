@@ -30,6 +30,9 @@ namespace App\Domain\Messages {
 
         public function reply(IEventPublisher $eventPublisher, $replyContent, UserId $replier)
         {
+            if($this->decisionProjection->isDeleted()) {
+                return;
+            }
             $replyId = MessageId::generate();
             $eventPublisher->publish(
                 new ReplyMessagePublished($replyId, $replyContent, $replier, $this->decisionProjection->getMessageId()));
