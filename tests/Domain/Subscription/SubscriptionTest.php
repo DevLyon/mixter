@@ -4,7 +4,7 @@ namespace Tests\Domain\Subscription;
 
 use App\Domain\Identity\UserId;
 use App\Domain\Messages\MessageId;
-use App\Domain\Subscriptions\FolloweeMessagePublished;
+use App\Domain\Subscriptions\FolloweeMessageQuacked;
 use App\Domain\Subscriptions\Subscription;
 use App\Domain\Subscriptions\SubscriptionId;
 use App\Domain\Subscriptions\UserFollowed;

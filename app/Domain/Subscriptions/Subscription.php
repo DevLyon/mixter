@@ -4,6 +4,7 @@ namespace App\Domain\Subscriptions {
 
     use App\Domain\Identity\UserId;
     use App\Domain\IEventPublisher;
+    use App\Domain\Messages\MessageId;
     use App\Domain\Subscriptions\Subscription\DecisionProjection;
 
     class Subscription
@@ -27,6 +28,11 @@ namespace App\Domain\Subscriptions {
         public function unfollow(IEventPublisher $eventPublisher)
         {
             $eventPublisher->publish(new UserUnfollowed($this->decisionProjection->getSubscriptionId()));
+        }
+
+        public function notifyFollower(IEventPublisher $eventPublisher, MessageId $messageId)
+        {
+            $eventPublisher->publish(new FolloweeMessageQuacked($messageId, $this->decisionProjection->getSubscriptionId()));
         }
     }
 }
