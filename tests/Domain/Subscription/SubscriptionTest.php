@@ -4,7 +4,9 @@ namespace Tests\Domain\Subscription;
 
 use App\Domain\Identity\UserId;
 use App\Domain\Subscriptions\Subscription;
+use App\Domain\Subscriptions\SubscriptionId;
 use App\Domain\Subscriptions\UserFollowed;
+use App\Domain\Subscriptions\UserUnfollowed;
 use Tests\Domain\FakeEventPublisher;
 
 class SubscriptionTest extends \PHPUnit_Framework_TestCase
@@ -38,6 +40,6 @@ class SubscriptionTest extends \PHPUnit_Framework_TestCase
         /** @var UserUnfollowed $userUnfollowed */
         $userUnfollowed = $fakeEventPublisher->events[0];
         \Assert\that($userUnfollowed)->isInstanceOf('App\Domain\Subscriptions\UserUnfollowed');
-        \Assert\that($userUnfollowed->getSubscriptionId())->eq($userFollowed->getSubscription());
+        \Assert\that($userUnfollowed->getSubscriptionId())->eq($userFollowed->getSubscriptionId());
     }
 }
