@@ -100,4 +100,17 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         \Assert\that($messageDeleted->getMessageId())->eq($messageQuacked->getMessageId());
         \Assert\that($messageDeleted->getDeleterId())->eq($authorId);
     }
+
+    public function testWhenSomeoneElseThanAuthorDeleteMessage_ThenNothingHappens()
+    {
+        $fakeEventPublisher = new FakeEventPublisher();
+        $authorId = new UserId('clem@mix-it.fr');
+        $messageQuacked = new MessageQuacked(MessageId::generate(), 'Hello', $authorId);
+        $message = new Message(array($messageQuacked));
+        $deleterid = new UserId('jean@mixt-it.fr');
+
+        $message->delete($fakeEventPublisher, $deleterid);
+
+        \Assert\that($fakeEventPublisher->events)->count(0);
+    }
 }
