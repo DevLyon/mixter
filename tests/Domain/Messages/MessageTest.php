@@ -126,4 +126,18 @@ class MessageTest extends \PHPUnit_Framework_TestCase
 
         \Assert\that($fakeEventPublisher->events)->count(0);
     }
+
+    public function testGivenAMessageHaveBeenDeleted_WhenRepublishMessage_ThenNothingHappens()
+    {
+        $fakeEventPublisher = new FakeEventPublisher();
+        $authorId = new UserId('clem@mix-it.fr');
+        $messageQuacked = new MessageQuacked(MessageId::generate(), 'Hello', $authorId);
+        $messageDeleted = new MessageDeleted($messageQuacked->getMessageId(), $authorId);
+        $message = new Message(array($messageQuacked, $messageDeleted));
+        $requacker = new UserId('florent@mix-it.fr');
+
+        $message->requack($fakeEventPublisher, $requacker);
+
+        \Assert\that($fakeEventPublisher->events)->count(0);
+    }
 }
