@@ -44,4 +44,19 @@ class MessageController extends Controller
             return response('Message to requack does not exist', 401);
         }
     }
+
+    public function delete(IMessageRepository $messageRepository)
+    {
+        // DEBT : should be found through session -> later
+        $replierId = new UserId(Input::get('userId'));
+
+        $messageToReplyId = new MessageId(Input::get('messageId'));
+        try {
+            $message = $messageRepository->get($messageToReplyId);
+            $message->delete($this->eventPublisher, $replierId);
+            return response('Message '.$messageToReplyId->getId().' deleted', 200);
+        } catch (UnknownAggregate $unknownAggregate) {
+            return response('Message to republish does not exist', 401);
+        }
+    }
 }
