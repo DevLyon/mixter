@@ -4,7 +4,7 @@ namespace App\Domain\Subscriptions;
 
 use App\Domain\IDomainEvent;
 
-class UserFollowed implements IDomainEvent
+class UserUnfollowed implements IDomainEvent
 {
     /**
      * @var SubscriptionId
