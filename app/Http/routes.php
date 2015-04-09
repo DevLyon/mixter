@@ -19,3 +19,5 @@ Route::get('/api/user/session', 'IdentityController@getSessions');
 Route::post('/api/message/quack', 'MessageController@quack');
 Route::post('/api/message/requack', 'MessageController@requack');
 Route::post('/api/message/delete', 'MessageController@delete');
+Route::get('/api/timeline/all', 'TimelineController@getAllMessages');
+Route::get('/api/timeline/{userId}', 'TimelineController@getUserMessages');

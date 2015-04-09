@@ -19,6 +19,12 @@ class EventServiceProvider extends ServiceProvider {
         ],
         'App\Domain\Identity\UserDisconnected' => [
             'App\Domain\Identity\SessionHandler@handleUserDisconnected'
+        ],
+        'App\Domain\Messages\MessageQuacked' => [
+            'App\Domain\Timeline\UpdateTimeline@handleMessageQuacked'
+        ],
+        'App\Domain\Messages\MessageRequacked' => [
+            'App\Domain\Timeline\UpdateTimeline@handleMessageRequacked'
         ]
 	];
 
