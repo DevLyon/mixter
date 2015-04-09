@@ -19,3 +19,4 @@ Route::get('/api/user/session', 'IdentityController@getSessions');
 Route::post('/api/message/publish', 'MessageController@publish');
 Route::post('/api/message/republish', 'MessageController@republish');
 Route::post('/api/message/reply', 'MessageController@reply');
+Route::post('/api/message/delete', 'MessageController@delete');
