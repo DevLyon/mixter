@@ -72,6 +72,6 @@ class ReplyMessagePublished implements IDomainEvent
      */
     public function getAggregateId()
     {
-        return $this->getReplyId();
+        return $this->getReplyId()->getId();
     }
 }

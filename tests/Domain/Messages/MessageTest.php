@@ -104,7 +104,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         \Assert\that($replyMessagePublished->getReplyContent())->eq($replyContent);
         \Assert\that($replyMessagePublished->getParentMessageId())->eq($messagePublished->getMessageId());
         \Assert\that($replyMessagePublished->getReplyId())->notNull()->notEq($messagePublished->getMessageId());
-        \Assert\that($replyMessagePublished->getAggregateId())->eq($replyMessagePublished->getReplyId());
+        \Assert\that($replyMessagePublished->getAggregateId())->eq($replyMessagePublished->getReplyId()->getId());
     }
 
     public function testWhenReplyMessageIsRepublished_ThenMessageRepublishedIdIsReplyId()

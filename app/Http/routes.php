@@ -17,3 +17,5 @@ Route::post('/api/user/logIn', 'IdentityController@logIn');
 Route::post('/api/user/logOut', 'IdentityController@logOut');
 Route::get('/api/user/session', 'IdentityController@getSessions');
 Route::post('/api/message/publish', 'MessageController@publish');
+Route::post('/api/message/republish', 'MessageController@republish');
+Route::post('/api/message/reply', 'MessageController@reply');
