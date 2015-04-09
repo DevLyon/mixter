@@ -54,6 +54,6 @@ class UpdateTimelineTest extends \PHPUnit_Framework_TestCase
         $timelineMessage = $this->projectionStore->get($replyMessagePublished->getReplyId()->getId(), 'App\Domain\Timeline\TimelineMessage');
         \Assert\that($timelineMessage->getMessageId())->eq($replyMessagePublished->getReplyId());
         \Assert\that($timelineMessage->getOwnerId())->eq($replyMessagePublished->getReplierId());
-        \Assert\that($timelineMessage->getContent())->eq($replyMessagePublished->getContent());
+        \Assert\that($timelineMessage->getContent())->eq($replyMessagePublished->getReplyContent());
     }
 }
