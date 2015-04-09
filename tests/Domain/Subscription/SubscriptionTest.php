@@ -3,7 +3,8 @@
 namespace Tests\Domain\Subscription;
 
 use App\Domain\Identity\UserId;
-use Symfony\Component\Security\Core\User\User;
+use App\Domain\Subscriptions\Subscription;
+use App\Domain\Subscriptions\UserFollowed;
 use Tests\Domain\FakeEventPublisher;
 
 class SubscriptionTest extends \PHPUnit_Framework_TestCase
