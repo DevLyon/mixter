@@ -5,6 +5,7 @@ namespace Tests\Domain\Timeline;
 use App\Domain\Identity\UserId;
 use App\Domain\Messages\MessageId;
 use App\Domain\Messages\MessagePublished;
+use App\Domain\Messages\MessageRepublished;
 use App\Domain\Messages\ReplyMessagePublished;
 use App\Domain\Timeline\ITimelineMessageRepository;
 use App\Domain\Timeline\TimelineMessage;
@@ -55,5 +56,18 @@ class UpdateTimelineTest extends \PHPUnit_Framework_TestCase
         \Assert\that($timelineMessage->getMessageId())->eq($replyMessagePublished->getReplyId());
         \Assert\that($timelineMessage->getOwnerId())->eq($replyMessagePublished->getReplierId());
         \Assert\that($timelineMessage->getContent())->eq($replyMessagePublished->getReplyContent());
+    }
+
+    public function testWhenHandleMessageRepublished_ThenTimelineMessageNbRepublishIsUpdated()
+    {
+        $existingTimelineMessage = new TimelineMessage(MessageId::generate(), 'hello', new UserId('clem@mix-it.fr'));
+        $this->projectionStore->store($existingTimelineMessage->getMessageId()->getId(), $existingTimelineMessage);
+        $messageRepublished = new MessageRepublished($existingTimelineMessage->getMessageId(), new UserId('clem@mix-it.fr'));
+
+        $this->updateTimeline->handleMessageRepublished($messageRepublished);
+
+        /** @var TimelineMessage $timelineMessage */
+        $timelineMessage = $this->projectionStore->get($messageRepublished->getMessageId()->getId(), 'App\Domain\Timeline\TimelineMessage');
+        \Assert\that($timelineMessage->getNbRepublish())->eq(1);
     }
 }
