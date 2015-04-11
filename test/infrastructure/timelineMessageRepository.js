@@ -37,4 +37,14 @@ describe('TimelineMessage Repository', function() {
         expect(messages).to.have.length(1);
         expect(messages).to.contains(message);
     });
+
+    it('When save two same messages Then only one is saved', function() {
+        var message = timelineMessageProjection.create(ownerId, authorId, messageContent, messageId);
+        repository.save(message);
+        repository.save(message);
+
+        var messages = repository.getMessageOfUser(ownerId);
+
+        expect(messages).to.have.length(1);
+    });
 });
