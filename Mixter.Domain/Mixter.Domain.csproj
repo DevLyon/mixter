@@ -43,6 +43,7 @@
     <Compile Include="Core\Messages\Events\MessagePublished.cs" />
     <Compile Include="Core\Messages\Events\MessageRepublished.cs" />
     <Compile Include="Core\Messages\Events\ReplyMessagePublished.cs" />
+    <Compile Include="Core\Messages\Handlers\UpdateTimeline.cs" />
     <Compile Include="Core\Messages\MessageDescription.cs" />
     <Compile Include="Core\Messages\IMessagesRepository.cs" />
     <Compile Include="Core\Messages\ITimelineMessagesRepository.cs" />
@@ -50,6 +51,12 @@
     <Compile Include="Core\Messages\MessageId.cs" />
     <Compile Include="Core\Messages\TimelineMessageId.cs" />
     <Compile Include="Core\Messages\TimelineMessageProjection.cs" />
+    <Compile Include="Core\Subscriptions\Events\FolloweeMessagePublished.cs" />
+    <Compile Include="Core\Subscriptions\Events\UserFollowed.cs" />
+    <Compile Include="Core\Subscriptions\Events\UserUnfollowed.cs" />
+    <Compile Include="Core\Subscriptions\ISubscriptionsRepository.cs" />
+    <Compile Include="Core\Subscriptions\Subscription.cs" />
+    <Compile Include="Core\Subscriptions\SubscriptionId.cs" />
     <Compile Include="DecisionProjectionBase.cs" />
     <Compile Include="Identity\UserEmailCannotBeEmpty.cs" />
     <Compile Include="Identity\UserId.cs" />

@@ -43,6 +43,7 @@
     <Compile Include="EventPublisherWithStorage.cs" />
     <Compile Include="EventsStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TimelineMessagesRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mixter.Domain\Mixter.Domain.csproj">
