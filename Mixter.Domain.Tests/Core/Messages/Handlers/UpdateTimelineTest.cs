@@ -34,5 +34,16 @@ namespace Mixter.Domain.Tests.Core.Messages.Handlers
             Check.That(_repository.GetMessagesOfUser(Author))
                  .ContainsExactly(new TimelineMessageProjection(Author, Author, Content, MessageId));
         }
+
+        [TestMethod]
+        public void WhenHandleMessageRepliedThenSaveTimelineMessageProjectionForReplier()
+        {
+            var parentMessageId = MessageId.Generate();
+            var replier = new UserId("author@mixit.fr");
+            _handler.Handle(new ReplyMessagePublished(MessageId, replier, Content, parentMessageId));
+
+            Check.That(_repository.GetMessagesOfUser(replier))
+                 .ContainsExactly(new TimelineMessageProjection(replier, replier, Content, MessageId));
+        }
     }
 }
