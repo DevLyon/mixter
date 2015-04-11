@@ -2,7 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mixter.Domain;
 using NFluent;
 
-namespace Mixter.Infrastructure.Tests.Infrastructure
+namespace Mixter.Infrastructure.Tests
 {
     [TestClass]
     public class EventPublisherWithStorageTest

@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mixter.Domain.Core.Messages;
 using Mixter.Domain.Core.Messages.Events;
 using Mixter.Domain.Identity;
-using Mixter.Infrastructure.Tests.Infrastructure;
+using Mixter.Infrastructure.Tests;
 using NFluent;
 
 namespace Mixter.Domain.Tests.Core.Messages
