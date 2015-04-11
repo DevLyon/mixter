@@ -41,6 +41,17 @@ namespace Mixter.Domain.Tests.Core.Subscriptions
             Check.That(_eventPublisher.Events).Contains(new UserUnfollowed(SubscriptionId));
         }
 
+        [TestMethod]
+        public void WhenNotifyFollowerThenFolloweeMessagePublished()
+        {
+            var subscription = Create(new UserFollowed(SubscriptionId));
+
+            var messageId = MessageId.Generate();
+            subscription.NotifyFollower(_eventPublisher, messageId);
+
+            Check.That(_eventPublisher.Events).Contains(new FolloweeMessagePublished(SubscriptionId, messageId));
+        }
+
         private Subscription Create(params IDomainEvent[] events)
         {
             return new Subscription(events);
