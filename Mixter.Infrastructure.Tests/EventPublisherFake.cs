@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Mixter.Domain;
 
-namespace Mixter.Infrastructure.Tests.Infrastructure
+namespace Mixter.Infrastructure.Tests
 {
     public class EventPublisherFake : IEventPublisher
     {
