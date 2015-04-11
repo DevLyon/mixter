@@ -24,6 +24,12 @@ namespace Mixter.Domain.Core.Messages.Handlers
 
         public void Handle(ReplyMessagePublished evt)
         {
+            var ownerId = evt.Replier;
+            var authorId = evt.Replier;
+            var content = evt.ReplyContent;
+            var messageId = evt.ReplyId;
+
+            Save(ownerId, authorId, content, messageId);
         }
 
         private void Save(UserId ownerId, UserId authorId, string content, MessageId messageId)
