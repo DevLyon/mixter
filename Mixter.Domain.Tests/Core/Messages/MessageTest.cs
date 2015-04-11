@@ -1,9 +1,10 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mixter.Domain.Core.Messages;
 using Mixter.Domain.Core.Messages.Events;
 using Mixter.Domain.Identity;
-using Mixter.Infrastructure;
 using Mixter.Infrastructure.Tests.Infrastructure;
 using NFluent;
 
@@ -17,6 +18,7 @@ namespace Mixter.Domain.Tests.Core.Messages
 
         private static readonly UserId Author = new UserId("pierre@mixit.fr");
         private static readonly UserId Republisher = new UserId("alfred@mixit.fr");
+        private static readonly MessageId MessageId = MessageId.Generate();
         private static readonly UserId Replier = new UserId("jean@mixit.fr");
 
         private EventPublisherFake _eventPublisher;
@@ -39,82 +41,169 @@ namespace Mixter.Domain.Tests.Core.Messages
         [TestMethod]
         public void WhenRepublishMessageThenRaiseMessageRepublished()
         {
-            var message = Message.Publish(new EventPublisher(), Author, MessageContent);
-            message.Republish(_eventPublisher, Republisher);
-            Check.That(_eventPublisher.Events).ContainsExactly(new MessageRepublished(message.GetId(), Republisher));
+            Given(new MessagePublished(MessageId, Author, MessageContent))
+            .When(o => o.Republish(_eventPublisher, Republisher))
+            .ThenHas(new MessageRepublished(MessageId, Republisher));
         }
 
         [TestMethod]
         public void WhenRepublishMyOwnMessageThenDoNotRaiseMessageRepublished()
         {
-            var message = Message.Publish(new EventPublisher(), Author, MessageContent);
-            message.Republish(_eventPublisher, Author);
-            Check.That(_eventPublisher.Events).IsEmpty();
+            Given(new MessagePublished(MessageId, Author, MessageContent))
+            .When(o => o.Republish(_eventPublisher, Author))
+            .ThenNothing();
         }
 
         [TestMethod]
         public void WhenRepublishTwoTimesSameMessageThenDoNotRaiseMessageRepublished()
         {
-            var message = Message.Publish(new EventPublisher(), Author, MessageContent);
-            message.Republish(_eventPublisher, Republisher);
-            message.Republish(_eventPublisher, Republisher);
-            Check.That(_eventPublisher.Events).ContainsExactly(new MessageRepublished(message.GetId(), Republisher));
+            Given(new MessagePublished(MessageId, Author, MessageContent))
+                .And(new MessageRepublished(MessageId, Republisher))
+            .When(o => o.Republish(_eventPublisher, Republisher))
+            .ThenNothing();
         }
 
         [TestMethod]
         public void WhenReplyThenRaiseReplyMessagePublished()
         {
-            var message = Message.Publish(_eventPublisher, Author, MessageContent);
-            message.Reply(_eventPublisher, Replier, ReplyContent);
-            var replyEvent = _eventPublisher.Events.OfType<ReplyMessagePublished>().First();
-            Check.That(replyEvent.ParentId).IsEqualTo(message.GetId());
-            Check.That(replyEvent.ReplyContent).IsEqualTo(ReplyContent);
-            Check.That(replyEvent.Replier).IsEqualTo(Replier);
-            Check.That(replyEvent.ReplyId).IsNotEqualTo(message.GetId());
+            Given(new MessagePublished(MessageId, Author, MessageContent))
+            .When(o => o.Reply(_eventPublisher, Replier, ReplyContent))
+            .ThenHasEvent<ReplyMessagePublished>(evt =>
+            {
+                Check.That(evt.ParentId).IsEqualTo(MessageId);
+                Check.That(evt.ReplyContent).IsEqualTo(ReplyContent);
+                Check.That(evt.Replier).IsEqualTo(Replier);
+                Check.That(evt.ReplyId).IsNotEqualTo(MessageId);
+            });
         }
-        
+
         [TestMethod]
         public void WhenDeleteThenRaiseMessageDeleted()
         {
-            var message = Message.Publish(new EventPublisher(), Author, MessageContent);
-            message.Delete(_eventPublisher, Author);
-            Check.That(_eventPublisher.Events).ContainsExactly(new MessageDeleted(message.GetId()));
+            Given(new MessagePublished(MessageId, Author, MessageContent))
+            .When(o => o.Delete(_eventPublisher, Author))
+            .ThenHasOnly(new MessageDeleted(MessageId));
         }
 
         [TestMethod]
         public void WhenDeleteBySomeoneElseThanAuthorThenDoNotRaiseMessageDeleted()
         {
-            var semeoneElseThanAuthor = new UserId("someone@mixit.fr");
-            var message = Message.Publish(new EventPublisher(), Author, MessageContent);
-            message.Delete(_eventPublisher, semeoneElseThanAuthor);
-            Check.That(_eventPublisher.Events).IsEmpty();
+            Given(new MessagePublished(MessageId, Author, MessageContent))
+            .When(o => o.Delete(_eventPublisher, new UserId("clement@mix-it.fr")))
+            .ThenNothing();
         }
 
         [TestMethod]
-        public void GivenDeletedMessageWhenDeleteThenNothing()
+        public void GivenIsRepublishedWhenDeleteByRepublisherThenDoNotRaiseMessageDeleted()
         {
-            var message = Message.Publish(new EventPublisher(), Author, MessageContent);
-            message.Delete(new EventPublisher(), Author);
-            message.Delete(_eventPublisher, Author);
-            Check.That(_eventPublisher.Events).IsEmpty();
+            Given(new MessagePublished(MessageId, Author, MessageContent))
+                .And(new MessageRepublished(MessageId, Republisher))
+            .When(o => o.Delete(_eventPublisher, Republisher))
+            .ThenNothing();
         }
 
         [TestMethod]
-        public void GivenADeletedMessageWhenReplyThenNothing()
+        public void GiveDeletedMessageWhenDeleteThenNothing()
         {
-            var message = Message.Publish(new EventPublisher(), Author, MessageContent);
-            message.Delete(new EventPublisher(), Author);
-            message.Reply(_eventPublisher, Replier, ReplyContent);
-            Check.That(_eventPublisher.Events).IsEmpty();
+            Given(new MessagePublished(MessageId, Author, MessageContent))
+                .And(new MessageDeleted(MessageId))
+            .When(o => o.Delete(_eventPublisher, Author))
+            .ThenNothing();
         }
 
         [TestMethod]
-        public void GivenDeletedMessageWhenRepublishThenNothing()
+        public void GivenReplyMessageWhenGetIdHasReplayMessageId()
         {
-            var message = Message.Publish(new EventPublisher(), Author, MessageContent);
-            message.Delete(new EventPublisher(), Author);
-            message.Republish(_eventPublisher, Republisher);
-            Check.That(_eventPublisher.Events).IsEmpty();
+            var replyMessageId = MessageId.Generate();
+            var message = CreateMessage(new ReplyMessagePublished(replyMessageId, Replier, ReplyContent, MessageId));
+
+            Check.That(message.GetId()).IsEqualTo(replyMessageId);
+        }
+
+        [TestMethod]
+        public void GivenADeletedMessageWhenReplyThenDoNotRaiseMessageDeleted()
+        {
+            Given(new MessagePublished(MessageId, Author, MessageContent))
+                .And(new MessageDeleted(MessageId))
+            .When(o => o.Reply(_eventPublisher, Replier, ReplyContent))
+            .ThenNothing();
+        }
+
+        [TestMethod]
+        public void GivenDeletedMessageWhenRepublishThenDoNotRaiseMessageRepublished()
+        {
+            Given(new MessagePublished(MessageId, Author, MessageContent))
+                .And(new MessageDeleted(MessageId))
+            .When(o => o.Republish(_eventPublisher, Republisher))
+            .ThenNothing();
+        }
+
+        private Message CreateMessage(params IDomainEvent[] events)
+        {
+            return new Message(events);
+        }
+
+        private GivenFactory Given(IDomainEvent evt)
+        {
+            return new GivenFactory(evt, _eventPublisher);
+        }
+
+        private class GivenFactory
+        {
+            private readonly IList<IDomainEvent> _events = new List<IDomainEvent>();
+            private readonly EventPublisherFake _eventPublisherFake;
+
+            public GivenFactory(IDomainEvent evt, EventPublisherFake eventPublisherFake)
+            {
+                _events.Add(evt);
+                _eventPublisherFake = eventPublisherFake;
+            }
+
+            public GivenFactory And(IDomainEvent evt)
+            {
+                _events.Add(evt);
+
+                return this;
+            }
+
+            public ThenFactory When(Action<Message> when)
+            {
+                var message = new Message(_events);
+                when(message);
+
+                return new ThenFactory(_eventPublisherFake);
+            }
+
+            public class ThenFactory
+            {
+                private readonly EventPublisherFake _eventPublisherFake;
+
+                public ThenFactory(EventPublisherFake eventPublisherFake)
+                {
+                    _eventPublisherFake = eventPublisherFake;
+                }
+
+                public void ThenHas(IDomainEvent domainEvent)
+                {
+                    Check.That(_eventPublisherFake.Events).Contains(domainEvent);
+                }
+
+                public void ThenNothing()
+                {
+                    Check.That(_eventPublisherFake.Events).IsEmpty();
+                }
+
+                public void ThenHasEvent<TEvent>(Action<TEvent> then)
+                {
+                    var evt = _eventPublisherFake.Events.OfType<TEvent>().First();
+                    then(evt);
+                }
+
+                public void ThenHasOnly(IDomainEvent domainEvent)
+                {
+                    Check.That(_eventPublisherFake.Events).ContainsExactly(domainEvent);
+                }
+            }
         }
     }
 }
