@@ -12,6 +12,8 @@ var UpdateTimeline = function UpdateTimeline(timelineMessageRepository){
     self.register = function(eventPublisher) {
         eventPublisher.on(Message.MessagePublished, function(event){
             saveProjection(event.author, event.author, event.content, event.messageId);
+        }).on(Message.ReplyMessagePublished, function(event){
+            saveProjection(event.replier, event.replier, event.replyContent, event.replyId);
         });
     };
 };
