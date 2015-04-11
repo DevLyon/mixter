@@ -29,4 +29,16 @@ describe('UpdateTimeline Handler', function() {
         var expectedProjection = TimelineMessageProjection.create(author, author, messageContent, messageId);
         expect(repository.getMessageOfUser(author)).to.contains(expectedProjection);
     });
+
+    it('When handle ReplyMessagePublished Then save TimelineMessageProjection for replier', function() {
+        var replier = new UserId('replier@mix-it.fr');
+        var replyContent = 'Reply Hello';
+        var replyId = new Message.MessageId('R1');
+        var replyMessagePublished = new Message.ReplyMessagePublished(replyId, replier, replyContent, messageId);
+
+        eventPublisher.publish(replyMessagePublished);
+
+        var expectedProjection = TimelineMessageProjection.create(replier, replier, replyContent, replyId);
+        expect(repository.getMessageOfUser(replier)).to.contains(expectedProjection);
+    });
 });
