@@ -14,6 +14,8 @@ var NotifyFollowerOfFolloweeMessage = function NotifyFollowerOfFolloweeMessage(s
             notifyFollowers(eventPublisher, event.author, event.messageId);
         }).on(Message.ReplyMessagePublished, function(event){
             notifyFollowers(eventPublisher, event.replier, event.replyId);
+        }).on(Message.MessageRepublished, function(event){
+            notifyFollowers(eventPublisher, event.republisher, event.messageId);
         });
     };
 };
