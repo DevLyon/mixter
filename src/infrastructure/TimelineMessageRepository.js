@@ -5,7 +5,16 @@ var TimelineMessageRepository = function TimelineMessageRepository(){
 
     var projections = [];
 
+    var remove = function(ownerId, messageId){
+        _.remove(projections, {
+            ownerId: ownerId,
+            messageId: messageId
+        });
+    };
+
     self.save = function(projection){
+        remove(projection.ownerId, projection.messageId);
+
         projections.push(projection);
     };
 
