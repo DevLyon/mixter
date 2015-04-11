@@ -44,5 +44,10 @@ namespace Mixter.Domain.Core.Subscriptions
                 Id = evt.SubscriptionId;
             }
         }
+
+        public void NotifyFollower(IEventPublisher eventPublisher, MessageId messageId)
+        {
+            eventPublisher.Publish(new FolloweeMessagePublished(_projection.Id, messageId));
+        }
     }
 }
