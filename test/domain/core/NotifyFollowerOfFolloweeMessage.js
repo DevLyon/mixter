@@ -15,8 +15,10 @@ describe('NotifyFollowerOfFolloweeMessage Handler', function() {
     var subscriptionId = new SubscriptionId(new UserId('follower@mix-it.fr'), new UserId('followee@mix-it.fr'));
 
     var eventPublisher;
-    var events = [];
+    var events;
     beforeEach(function(){
+        events = [];
+
         var eventsStore = EventsStore.create();
         var followersRepository = FollowersRepository.create();
         var subscriptionsRepository = SubscriptionsRepository.create(eventsStore, followersRepository);
@@ -49,6 +51,15 @@ describe('NotifyFollowerOfFolloweeMessage Handler', function() {
             eventPublisher.publish(replyMessagePublished);
 
             var expectedEvent = new Subscription.FolloweeMessagePublished(subscriptionId, replyMessagePublished.replyId);
+            expect(events).to.contains(expectedEvent);
+        });
+
+        it('When MessageRepublished by followee Then raise FolloweeMessagePublished', function() {
+            var messageRepublished = new Message.MessageRepublished(new MessageId('M1'), subscriptionId.followee);
+
+            eventPublisher.publish(messageRepublished);
+
+            var expectedEvent = new Subscription.FolloweeMessagePublished(subscriptionId, messageRepublished.messageId);
             expect(events).to.contains(expectedEvent);
         });
     });
