@@ -13,7 +13,7 @@ namespace Mixter.Domain.Tests.Core.Messages
     [TestClass]
     public class MessageTest
     {
-        private const string MessageContent = "Hello";
+        private const string MessageContent = "Hello miixit";
         private const string ReplyContent = "ReplyContent";
 
         private static readonly UserId Author = new UserId("pierre@mixit.fr");
