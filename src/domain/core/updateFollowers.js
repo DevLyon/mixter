@@ -7,6 +7,8 @@ var UpdateFollowers = function UpdateFollowers(followersRepository){
     self.register = function register(eventPublisher) {
         eventPublisher.on(subscription.UserFollowed, function(event){
             followersRepository.save(followerProjection.create(event.subscriptionId.followee, event.subscriptionId.follower));
+        }).on(subscription.UserUnfollowed, function(event){
+            followersRepository.remove(followerProjection.create(event.subscriptionId.followee, event.subscriptionId.follower));
         });
     };
 };
