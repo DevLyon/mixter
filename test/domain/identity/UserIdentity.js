@@ -40,4 +40,14 @@ describe('User Identity Aggregate', function() {
         expect(event.connectedAt - new Date()).to.within(-1, 1);
         expect(event.sessionId).not.to.be.empty;
     });
+
+    it('When log in Then return sessionId', function(){
+        var id = new UserIdentity.UserIdentityId(email);
+        var userIdentity = UserIdentity.create([ new UserIdentity.UserRegistered(id) ]);
+
+        var result = userIdentity.logIn(publishEvent);
+
+        var event = eventsRaised[0];
+        expect(result).to.equal(eventsRaised[0].sessionId);
+    });
 });

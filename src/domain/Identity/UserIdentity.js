@@ -25,7 +25,7 @@ var UserIdentity = function UserIdentity(events){
     }).apply(events);
 
     self.logIn = function logIn(publishEvent){
-        Session.logIn(publishEvent, projection.id);
+        return Session.logIn(publishEvent, projection.id);
     };
 };
 
