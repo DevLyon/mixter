@@ -32,6 +32,16 @@ MessageRequacked.prototype.getAggregateId = function getAggregateId(){
     return this.messageId;
 };
 
+var MessageDeleted = exports.MessageDeleted = function MessageDeleted(messageId){
+    this.messageId = messageId;
+
+    Object.freeze(this);
+};
+
+MessageDeleted.prototype.getAggregateId = function getAggregateId(){
+    return this.messageId;
+};
+
 var Message = function Message(events){
     var self = this;
 
