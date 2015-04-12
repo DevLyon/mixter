@@ -5,6 +5,7 @@ var expect = require('chai').expect;
 describe('Message Aggregate', function() {
     var author = new UserId('author@mix-it.fr');
     var messageContent = 'Hello';
+    var messageId = new message.MessageId('MessageA');
 
     var eventsRaised = [];
     var publishEvent = function publishEvent(evt) {
@@ -47,6 +48,22 @@ describe('Message Aggregate', function() {
 
     it('When create MessageQuacked Then getAggregateId return messageId', function() {
         var event = new message.MessageQuacked(new message.MessageId('M1'), author, messageContent);
+
+        expect(event.getAggregateId()).to.equal(event.messageId);
+    });
+
+    it('When requack message Then raise MessageRequacked', function () {
+        var userMessage = message.create(new message.MessageQuacked(messageId, author, messageContent));
+        var requacker = new UserId('requacker@mix-it.fr');
+
+        userMessage.requack(publishEvent, requacker);
+
+        var expectedEvent = new message.MessageRequacked(messageId, requacker);
+        expect(eventsRaised).to.contains(expectedEvent);
+    });
+
+    it('When create MessageQuacked Then aggregateId is messageId', function() {
+        var event = new message.MessageQuacked(messageId, author);
 
         expect(event.getAggregateId()).to.equal(event.messageId);
     });
