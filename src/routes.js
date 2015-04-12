@@ -1,7 +1,7 @@
 var UserIdentity = require('./domain/identity/UserIdentity');
+var UserId = require('./domain/UserId').UserId;
 var SessionHandler = require('./domain/identity/SessionHandler');
 var EventPublisher = require('./infrastructure/EventPublisher');
-var UserIdentityId = require('./domain/Identity/UserIdentity').UserIdentityId;
 
 var eventsStore = require('./infrastructure/EventsStore').create();
 
@@ -21,7 +21,7 @@ var registerUser = function registerUser(req, res) {
     UserIdentity.register(publishEvent, email);
 
     res.status(201).send({
-        id: new UserIdentityId(email),
+        id: new UserId(email),
         url: '/api/identity/userIdentities/' + encodeURIComponent(email),
         logIn: '/api/identity/userIdentities/' + encodeURIComponent(email) + '/logIn'
     });

@@ -3,11 +3,12 @@ var EventPublisher = require('../../../src/infrastructure/EventPublisher');
 var SessionHandler = require('../../../src/domain/identity/SessionHandler');
 var Session = require('../../../src/domain/identity/Session');
 var UserIdentity = require('../../../src/domain/identity/UserIdentity');
+var UserId = require('../../../src/domain/UserId').UserId;
 var expect = require('chai').expect;
 
 describe('Session Handler', function() {
     var sessionId = new Session.SessionId('SessionA');
-    var userId = new UserIdentity.UserIdentityId('user1@mix-it.fr');
+    var userId = new UserId('user1@mix-it.fr');
 
     var repository;
     var handler;

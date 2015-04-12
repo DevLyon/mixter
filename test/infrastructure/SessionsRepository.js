@@ -1,12 +1,12 @@
 var SessionsRepository = require('../../src/infrastructure/SessionsRepository');
 var SessionProjection = require('../../src/domain/Identity/SessionProjection');
 var Session = require('../../src/domain/Identity/Session');
-var UserIdentity = require('../../src/domain/Identity/UserIdentity');
+var UserId = require('../../src/domain/UserId').UserId;
 var expect = require('chai').expect;
 
 describe('Sessions Repository', function() {
     var sessionId = new Session.SessionId('SessionA');
-    var userId = new UserIdentity.UserIdentityId('user1@mix-it.fr');
+    var userId = new UserId('user1@mix-it.fr');
 
     var repository;
     beforeEach(function(){
@@ -23,7 +23,7 @@ describe('Sessions Repository', function() {
         repository.save(new SessionProjection.create(sessionId, userId, SessionProjection.SessionEnabled));
         repository.save(new SessionProjection.create(
             new Session.SessionId('SessionB'),
-            new UserIdentity.UserIdentityId('user2@mix-it.fr'),
+            new UserId('user2@mix-it.fr'),
             SessionProjection.SessionEnabled));
 
         expect(repository.getUserIdOfSession(sessionId)).to.eql(userId);
