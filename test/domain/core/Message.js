@@ -189,4 +189,15 @@ describe('Message Aggregate', function() {
 
         expect(eventsRaised).to.be.empty;
     });
+
+    it('Given deleted message When republish Then do not raise MessageRepublished', function () {
+        var message = Message.create([
+            new Message.MessagePublished(messageId, author, messageContent),
+            new Message.MessageDeleted(messageId)
+        ]);
+
+        message.republish(publishEvent, new UserId('republisher@mix-it.fr'));
+
+        expect(eventsRaised).to.be.empty;
+    });
 });
