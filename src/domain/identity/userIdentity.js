@@ -1,15 +1,12 @@
 var decisionProjection = require('../decisionProjection');
+var valueType = require('../../valueType');
 var session = require('./session');
 
-var UserIdentityId = exports.UserIdentityId = function UserIdentity(email){
+var UserIdentityId = exports.UserIdentityId = valueType.extends(function UserIdentityId(email){
     this.email = email;
-
-    Object.freeze(this);
-};
-
-UserIdentityId.prototype.toString = function toString(){
+}, function toString(){
     return 'UserIdentity:' + this.email;
-};
+});
 
 var UserRegistered = exports.UserRegistered = function UserRegistered(userIdentityId){
     this.userIdentityId = userIdentityId;

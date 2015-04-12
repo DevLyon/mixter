@@ -1,15 +1,12 @@
 var idGenerator = require('../../idGenerator');
+var valueType = require('../../valueType');
 var decisionProjection = require('../decisionProjection');
 
-var SessionId = exports.SessionId = function SessionId(id){
+var SessionId = exports.SessionId = valueType.extends(function SessionId(id){
     this.id = id;
-
-    Object.freeze(this);
-};
-
-SessionId.prototype.toString = function toString(){
+}, function toString() {
     return 'Session:' + this.id;
-};
+});
 
 var UserConnected = exports.UserConnected = function UserConnected(sessionId, userIdentityId, connectedAt){
     this.sessionId = sessionId;
