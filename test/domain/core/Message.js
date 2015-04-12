@@ -5,6 +5,7 @@ var expect = require('chai').expect;
 describe('Message Aggregate', function() {
     var author = new UserId('author@mix-it.fr');
     var messageContent = 'Hello';
+    var messageId = new Message.MessageId('MessageA');
 
     var eventsRaised = [];
     var publishEvent = function publishEvent(evt) {
@@ -47,6 +48,22 @@ describe('Message Aggregate', function() {
 
     it('When create MessagePublished Then getAggregateId return messageId', function() {
         var event = new Message.MessagePublished(new Message.MessageId('M1'), author, messageContent);
+
+        expect(event.getAggregateId()).to.equal(event.messageId);
+    });
+
+    it('When republish message Then raise MessageRepublished', function () {
+        var message = Message.create(new Message.MessagePublished(messageId, author, messageContent));
+        var republisher = new UserId('republisher@mix-it.fr');
+
+        message.republish(publishEvent, republisher);
+
+        var expectedEvent = new Message.MessageRepublished(messageId, republisher);
+        expect(eventsRaised).to.contains(expectedEvent);
+    });
+
+    it('When create MessagePublished Then aggregateId is messageId', function() {
+        var event = new Message.MessagePublished(messageId, author);
 
         expect(event.getAggregateId()).to.equal(event.messageId);
     });
