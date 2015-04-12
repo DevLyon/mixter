@@ -1,8 +1,17 @@
 var message = require('../domain/core/message');
 
+var UnknownMessage = exports.UnknownMessage = function UnknownMessage(messageId){
+    this.messageId = messageId;
+};
+
 var MessageRepository = function MessagesRepository(eventsStore){
     var getAllEvents = function getAllEvents(messageId){
-        return eventsStore.getEventsOfAggregate(messageId);
+        var events = eventsStore.getEventsOfAggregate(messageId);
+        if(!events.length){
+            throw new UnknownMessage(messageId);
+        }
+
+        return events;
     };
 
     this.getMessage = function getMessage(messageId){
