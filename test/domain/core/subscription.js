@@ -25,4 +25,10 @@ describe('Subscription Aggregate', function() {
 
         expect(event.getAggregateId()).to.equal(subscriptionId);
     });
+
+    it('When create UserUnfollowed Then aggregateId is subscriptionId', function() {
+        var event = new subscription.UserUnfollowed(subscriptionId);
+
+        expect(event.getAggregateId()).to.equal(subscriptionId);
+    });
 });
