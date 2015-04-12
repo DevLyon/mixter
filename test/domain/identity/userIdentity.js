@@ -1,4 +1,5 @@
 var userIdentity = require('../../../src/domain/identity/userIdentity');
+var UserEmailCannotBeEmpty = require('../../../src/domain/identity/userIdentity').UserEmailCannotBeEmpty;
 var session = require('../../../src/domain/identity/session');
 var expect = require('chai').expect;
 
@@ -56,5 +57,11 @@ describe('User Identity Aggregate', function() {
         var event = new userIdentity.UserRegistered(id);
 
         expect(event.getAggregateId()).to.equal(id);
+    });
+
+    it('When register user with empty email Then throw UserEmailCannotBeEmpty exception', function() {
+        expect(function() {
+            userIdentity.register(publishEvent, "");
+        }).to.throw(UserEmailCannotBeEmpty.caller);
     });
 });
