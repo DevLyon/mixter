@@ -40,6 +40,8 @@ var Session = exports.Session = function Session(events){
 exports.logIn = function logIn(publishEvent, userIdentityId){
     var sessionId = new SessionId(idGenerator.generate());
     publishEvent(new UserConnected(sessionId, userIdentityId, new Date()));
+
+    return sessionId;
 };
 
 exports.create = function create(events) {
