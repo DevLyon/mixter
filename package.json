@@ -2,12 +2,14 @@
   "name": "Mixter",
   "version": "1.0.0",
   "description": "Mix-IT : Eventsourcing & CQRS workshop",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
     "test": "mocha --recursive"
   },
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.12.2",
+    "express": "^4.12.3",
     "lodash": "^3.6.0",
     "node-uuid": "^1.4.3"
   },
