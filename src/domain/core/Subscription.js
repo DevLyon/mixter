@@ -46,6 +46,9 @@ var Subscription = exports.Subscription = function Subscription(events){
 
     var projection = DecisionProjection.create().register(UserFollowed, function(event) {
         this.subscriptionId = event.subscriptionId;
+        this.isActive = true;
+    }).register(UserUnfollowed, function(event) {
+        this.isActive = false;
     }).apply(events);
 
     self.unfollow = function unfollow(publishEvent) {
@@ -53,6 +56,10 @@ var Subscription = exports.Subscription = function Subscription(events){
     };
 
     self.notifyFollower = function notifyFollower(publishEvent, messageId) {
+        if(!projection.isActive){
+            return;
+        }
+
         publishEvent(new FolloweeMessagePublished(projection.subscriptionId, messageId));
     };
 };
