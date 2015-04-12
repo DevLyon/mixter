@@ -43,7 +43,7 @@ describe('valueType', function() {
     it('When extends Then return type', function () {
         var EventC = function EventC(){ };
 
-        var result = valueType.extends(EventC, function() { return 'A'});
+        var result = valueType.extends(EventC, function() { return 'A'; });
 
         expect(result).to.be.equal(EventC);
     });

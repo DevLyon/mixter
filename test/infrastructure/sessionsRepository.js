@@ -26,7 +26,7 @@ describe('Sessions Repository', function() {
             new userIdentity.UserIdentityId('user2@mix-it.fr'),
             sessionProjection.SessionEnabled));
 
-        expect(repository.getUserIdOfSession(sessionId)).to.equal(userId);
+        expect(repository.getUserIdOfSession(sessionId)).to.eql(userId);
     });
 
     it('Given user disconnected When getUserIdOfSession Then return empty', function() {
