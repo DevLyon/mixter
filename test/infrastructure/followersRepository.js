@@ -39,4 +39,13 @@ describe('Followers Repository', function() {
 
         expect(followers).to.empty;
     });
+
+    it('When save several times same follower Then getFollowers return only 1 follower', function() {
+        repository.save(followerProjection.create(followee, follower));
+        repository.save(followerProjection.create(followee, follower));
+
+        var followers = repository.getFollowers(followee);
+
+        expect(followers).to.eql([follower]);
+    });
 });
