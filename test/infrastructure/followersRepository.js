@@ -29,4 +29,14 @@ describe('Followers Repository', function() {
 
         expect(followers).to.eql([follower]);
     });
+
+    it('When remove follower Then getFollowers return empty', function() {
+        var projection = followerProjection.create(followee, follower);
+        repository.save(projection);
+        repository.remove(projection);
+
+        var followers = repository.getFollowers(followee);
+
+        expect(followers).to.empty;
+    });
 });
