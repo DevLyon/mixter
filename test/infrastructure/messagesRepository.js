@@ -34,4 +34,10 @@ describe('Messages Repository', function() {
 
         expect(description).to.eql(new message.MessageDescription(messageQuacked.author, messageQuacked.content));
     });
+
+    it('Given no events When GetMessage Then throw UnknownMessage', function() {
+        expect(function () {
+            repository.getMessage(new MessageId('BadId'));
+        }).to.throw(messagesRepository.UnknownMessage);
+    });
 });
