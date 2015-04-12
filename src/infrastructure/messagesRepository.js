@@ -1,12 +1,23 @@
-var Message = require('../domain/core/message');
+var message = require('../domain/core/message');
 
 var MessageRepository = function MessagesRepository(eventsStore){
-    this.getMessage = function(messageId){
-        var events = eventsStore.getEventsOfAggregate(messageId);
-        return Message.create(events);
+    var getAllEvents = function getAllEvents(messageId){
+        return eventsStore.getEventsOfAggregate(messageId);
+    };
+
+    this.getMessage = function getMessage(messageId){
+        var events = getAllEvents(messageId);
+        return message.create(events);
+    };
+
+    this.getDescription = function getDescription(messageId){
+        var events = getAllEvents(messageId);
+        var messageQuacked = events[0];
+
+        return new message.MessageDescription(messageQuacked.author, messageQuacked.content);
     };
 };
 
-exports.create = function(eventsStore){
+exports.create = function create(eventsStore){
     return new MessageRepository(eventsStore);
 };
