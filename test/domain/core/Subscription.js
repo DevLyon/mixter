@@ -54,4 +54,14 @@ describe('Subscription Aggregate', function() {
         var expectedEvent = new Subscription.UserUnfollowed(subscriptionId);
         expect(eventsRaised).to.contain(expectedEvent);
     });
+
+    it('When notify follower Then FollowerMessagePublished is raised', function () {
+        var subscription = Subscription.create(new Subscription.UserFollowed(subscriptionId));
+        var messageId = new MessageId('M1');
+
+        subscription.notifyFollower(publishEvent, messageId);
+
+        var expectedEvent = new Subscription.FolloweeMessagePublished(subscriptionId, messageId);
+        expect(eventsRaised).to.contain(expectedEvent);
+    });
 });
