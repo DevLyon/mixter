@@ -1,6 +1,7 @@
 var idGenerator = require('../../idGenerator');
 var valueType = require('../../valueType');
 var decisionProjection = require('../decisionProjection');
+var _ = require('lodash');
 
 var MessageId = exports.MessageId = valueType.extends(function MessageId(id){
     this.id = id;
@@ -37,10 +38,16 @@ var Message = function Message(events){
     var projection = decisionProjection.create().register(MessageQuacked, function(event) {
         this.messageId = event.messageId;
         this.author = event.author;
+    }).register(MessageRequacked, function(event) {
+        if(!this.requackers){
+            this.requackers = [];
+        }
+
+        this.requackers.push(event.requacker);
     }).apply(events);
 
     self.requack = function requack(publishEvent, requacker) {
-        if(projection.author.equals(requacker)){
+        if(projection.author.equals(requacker) || _.includes(projection.requackers, requacker)){
             return;
         }
 

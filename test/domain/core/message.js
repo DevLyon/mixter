@@ -75,4 +75,16 @@ describe('Message Aggregate', function() {
 
         expect(eventsRaised).to.be.empty;
     });
+
+    it('When requack two times same message Then do not raise MessageRequacked', function () {
+        var requacker = new UserId('requacker@mix-it.fr');
+        var userMessage = message.create([
+            new message.MessageQuacked(messageId, author, messageContent),
+            new message.MessageRequacked(messageId, requacker)
+        ]);
+
+        userMessage.requack(publishEvent, requacker);
+
+        expect(eventsRaised).to.be.empty;
+    });
 });
