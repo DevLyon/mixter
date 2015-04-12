@@ -16,11 +16,19 @@ var UserConnected = exports.UserConnected = function UserConnected(sessionId, us
     Object.freeze(this);
 };
 
+UserConnected.prototype.getAggregateId = function getAggregateId(){
+    return this.sessionId;
+};
+
 var UserDisconnected = exports.UserDisconnected = function UserDisconnected(sessionId, userIdentityId){
     this.sessionId = sessionId;
     this.userIdentityId = userIdentityId;
 
     Object.freeze(this);
+};
+
+UserDisconnected.prototype.getAggregateId = function getAggregateId(){
+    return this.sessionId;
 };
 
 var Session = exports.Session = function Session(events){
