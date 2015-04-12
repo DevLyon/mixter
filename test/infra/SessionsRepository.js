@@ -5,24 +5,33 @@ var UserIdentity = require('../../src/domain/Identity/UserIdentity');
 var expect = require('chai').expect;
 
 describe('Sessions Repository', function() {
-    it('Given no projections When getUserIdOfSession Then return empty', function() {
-        var repository = SessionsRepository.create();
+    var sessionId = new Session.SessionId('SessionA');
+    var userId = new UserIdentity.UserIdentityId('user1@mix-it.fr');
 
-        var userId = repository.getUserIdOfSession("SessionA");
+    var repository;
+    beforeEach(function(){
+        repository = SessionsRepository.create();
+    });
+
+    it('Given no projections When getUserIdOfSession Then return empty', function() {
+        var userId = repository.getUserIdOfSession(sessionId);
 
         expect(userId).to.be.null;
     });
 
     it('Given several user connected When getUserIdOfSession Then userId of this session', function() {
-        var repository = SessionsRepository.create();
-        var sessionId = new Session.SessionId('SessionA');
-        var userId = new UserIdentity.UserIdentityId('user1@mix-it.fr');
-        repository.save(new SessionProjection.create(sessionId, userId, SessionsRepository.SessionEnabled));
+        repository.save(new SessionProjection.create(sessionId, userId, SessionProjection.SessionEnabled));
         repository.save(new SessionProjection.create(
             new Session.SessionId('SessionB'),
             new UserIdentity.UserIdentityId('user2@mix-it.fr'),
-            SessionsRepository.SessionEnabled));
+            SessionProjection.SessionEnabled));
 
         expect(repository.getUserIdOfSession(sessionId)).to.equal(userId);
+    });
+
+    it('Given user disconnected When getUserIdOfSession Then return empty', function() {
+        repository.save(new SessionProjection.create(sessionId, userId, SessionProjection.SessionDisabled));
+
+        expect(repository.getUserIdOfSession(sessionId)).to.be.null;
     });
 });
