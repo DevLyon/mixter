@@ -138,4 +138,10 @@ describe('Message Aggregate', function() {
 
         expect(eventsRaised).to.be.empty;
     });
+    
+    it('When create MessageDeleted Then aggregateId is messageId', function() {
+        var event = new Message.MessageDeleted(messageId);
+
+        expect(event.getAggregateId()).to.equal(event.messageId);
+    });
 });
