@@ -1,4 +1,5 @@
 var idGenerator = require('../../idGenerator');
+var decisionProjection = require('../decisionProjection');
 
 var UserIdentityId = exports.UserIdentityId = function UserIdentity(email){
     this.email = email;
@@ -24,20 +25,12 @@ var UserConnected = exports.UserConnected = function UserConnected(sessionId, us
     Object.freeze(this);
 };
 
-var DecisionProjection = function DecisionProjection(events){
-    var self = this;
-
-    events.forEach(function(event) {
-        if(event instanceof UserRegistered){
-            self.id = event.userIdentityId;
-        }
-    });
-};
-
 var UserIdentity = function UserIdentity(events){
     var self = this;
 
-    var projection = new DecisionProjection(events);
+    var projection = decisionProjection.create().register(UserRegistered, function(event) {
+        this.id = event.userIdentityId;
+    }).apply(events);
 
     self.logIn = function logIn(publishEvent){
         publishEvent(new UserConnected(idGenerator.generate(), projection.id, new Date()));
