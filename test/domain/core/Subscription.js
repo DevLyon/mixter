@@ -1,5 +1,6 @@
 var Subscription = require('../../../src/domain/core/Subscription');
 var UserId = require('../../../src/domain/UserId').UserId;
+var MessageId = require('../../../src/domain/core/Message').MessageId;
 var expect = require('chai').expect;
 
 describe('Subscription Aggregate', function() {
@@ -28,6 +29,12 @@ describe('Subscription Aggregate', function() {
 
     it('When create UserUnfollowed Then aggregateId is subscriptionId', function() {
         var event = new Subscription.UserUnfollowed(subscriptionId);
+
+        expect(event.getAggregateId()).to.equal(subscriptionId);
+    });
+
+    it('When create FolloweeMessagePublished Then aggregateId is subscriptionId', function () {
+        var event = new Subscription.FolloweeMessagePublished(subscriptionId, new MessageId('M1'));
 
         expect(event.getAggregateId()).to.equal(subscriptionId);
     });
