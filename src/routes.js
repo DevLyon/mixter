@@ -1,5 +1,6 @@
 var UserIdentity = require('./domain/identity/UserIdentity');
 var Session = require('./domain/identity/Session');
+var Message = require('./domain/core/Message');
 var UserId = require('./domain/UserId').UserId;
 var SessionHandler = require('./domain/identity/SessionHandler');
 var EventPublisher = require('./infrastructure/EventPublisher');
@@ -53,6 +54,18 @@ var logOutUser = function logOutUser(req, res){
     res.status(200).send('User disconnected');
 };
 
+var publishMessage = function publishMessage(req, res){
+    var author = new UserId(req.body.author);
+    var content = req.body.content;
+
+    var messageId = Message.publish(publishEvent, author, content);
+
+    res.status(201).send({
+        id: messageId,
+        url: '/api/core/messages/' + encodeURIComponent(messageId.id)
+    });
+};
+
 var manageError = function manageError(action){
     return function(req, res){
         try {
@@ -81,4 +94,6 @@ exports.registerRoutes = function registerRoutes(app){
     app.post('/api/identity/userIdentities/register', manageError(registerUser));
     app.post('/api/identity/userIdentities/:id/logIn', manageError(logInUser));
     app.delete('/api/identity/sessions/:id', manageError(logOutUser));
+
+    app.post('/api/core/messages/publish', manageError(publishMessage));
 };
