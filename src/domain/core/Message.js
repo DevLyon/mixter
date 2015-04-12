@@ -27,4 +27,6 @@ exports.publish = function publish(publishEvent, author, content){
     var messageId = new MessageId(idGenerator.generate());
 
     publishEvent(new MessagePublished(messageId, author, content));
+
+    return messageId;
 };

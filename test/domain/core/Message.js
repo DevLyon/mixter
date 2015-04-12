@@ -39,6 +39,12 @@ describe('Message Aggregate', function() {
         expect(eventsRaised[0].messageId).not.to.equal(eventsRaised[1].messageId);
     });
 
+    it('When publish message Then return messageId', function () {
+        var result = Message.publish(publishEvent, author, messageContent);
+
+        expect(result).to.equal(eventsRaised[0].messageId);
+    });
+
     it('When create MessagePublished Then getAggregateId return messageId', function() {
         var event = new Message.MessagePublished(new Message.MessageId('M1'), author, messageContent);
 
