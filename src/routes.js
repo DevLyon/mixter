@@ -4,11 +4,13 @@ var SessionHandler = require('./domain/identity/SessionHandler');
 var EventPublisher = require('./infrastructure/EventPublisher');
 
 var eventsStore = require('./infrastructure/EventsStore').create();
+var userIdentitiesRepository = require('./infrastructure/UserIdentitiesRepository').create(eventsStore);
+var sessionsRepository = require('./infrastructure/SessionsRepository').create();
 
 var createPublishEvent = function createPublishEvent(eventsStore) {
     var eventPublisher = EventPublisher.create();
     eventPublisher.onAny(eventsStore.store);
-    SessionHandler.create().register(eventPublisher);
+    SessionHandler.create(sessionsRepository).register(eventPublisher);
 
     return eventPublisher.publish;
 };
@@ -24,6 +26,19 @@ var registerUser = function registerUser(req, res) {
         id: new UserId(email),
         url: '/api/identity/userIdentities/' + encodeURIComponent(email),
         logIn: '/api/identity/userIdentities/' + encodeURIComponent(email) + '/logIn'
+    });
+};
+
+var logInUser = function logInUser(req, res){
+    var userId = new UserId(req.params.id);
+
+    var userIdentity = userIdentitiesRepository.getUserIdentity(userId);
+
+    var sessionId = userIdentity.logIn(publishEvent);
+
+    res.status(201).send({
+        id: sessionId,
+        logOut: '/api/identity/sessions/' + encodeURIComponent(sessionId.id) + '/logOut'
     });
 };
 
@@ -53,4 +68,5 @@ var manageError = function manageError(action){
 
 exports.registerRoutes = function registerRoutes(app){
     app.post('/api/identity/userIdentities/register', manageError(registerUser));
+    app.post('/api/identity/userIdentities/:id/logIn', manageError(logInUser));
 };
