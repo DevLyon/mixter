@@ -1,6 +1,7 @@
 var idGenerator = require('../../idGenerator');
 var valueType = require('../../valueType');
 var DecisionProjection = require('../DecisionProjection');
+var _ = require('lodash');
 
 var MessageId = exports.MessageId = valueType.extends(function MessageId(id){
     this.id = id;
@@ -37,14 +38,20 @@ var Message = function Message(events){
     var projection = DecisionProjection.create().register(MessagePublished, function(event) {
         this.messageId = event.messageId;
         this.author = event.author;
+    }).register(MessageRepublished, function(event) {
+        if(!this.republishers){
+            this.republishers = [];
+        }
+
+        this.republishers.push(event.republisher);
     }).apply(events);
 
     self.republish = function republish(publishEvent, republisher) {
-        if(projection.author.equals(republisher)){
+        if(projection.author.equals(republisher) || _.includes(projection.republishers, republisher)){
             return;
         }
 
-        publishEvent(new MessageRepublished(projection.messageId, republisher))
+        publishEvent(new MessageRepublished(projection.messageId, republisher));
     };
 };
 

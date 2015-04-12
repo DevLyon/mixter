@@ -75,4 +75,16 @@ describe('Message Aggregate', function() {
 
         expect(eventsRaised).to.be.empty;
     });
+
+    it('When republish two times same message Then do not raise MessageRepublished', function () {
+        var republisher = new UserId('republisher@mix-it.fr');
+        var message = Message.create([
+            new Message.MessagePublished(messageId, author, messageContent),
+            new Message.MessageRepublished(messageId, republisher)
+        ]);
+
+        message.republish(publishEvent, republisher);
+
+        expect(eventsRaised).to.be.empty;
+    });
 });
