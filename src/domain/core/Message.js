@@ -70,6 +70,8 @@ var Message = function Message(events){
         }
 
         this.republishers.push(event.republisher);
+    }).register(MessageDeleted, function(event) {
+        this.isDeleted = true;
     }).apply(events);
 
     self.republish = function republish(publishEvent, republisher) {
@@ -86,7 +88,7 @@ var Message = function Message(events){
     };
 
     self.delete = function(publishEvent, deleter){
-        if(!deleter.equals(projection.author)){
+        if(!deleter.equals(projection.author) || projection.isDeleted){
             return;
         }
 
