@@ -18,3 +18,13 @@ var UserFollowed = exports.UserFollowed = function UserFollowed(subscriptionId){
 UserFollowed.prototype.getAggregateId = function getAggregateId(){
     return this.subscriptionId;
 };
+
+var UserUnfollowed = exports.UserUnfollowed = function UserUnfollowed(subscriptionId){
+    this.subscriptionId = subscriptionId;
+
+    Object.freeze(this);
+};
+
+UserUnfollowed.prototype.getAggregateId = function getAggregateId(){
+    return this.subscriptionId;
+};
