@@ -30,9 +30,15 @@ var Session = exports.Session = function Session(events){
     var projection = decisionProjection.create().register(UserConnected, function(event){
         this.userIdentityId = event.userIdentityId;
         this.sessionId = event.sessionId;
+    }).register(UserDisconnected, function(event){
+        this.isDisconnected = true;
     }).apply(events);
 
     this.logOut = function logOut(publishEvent){
+        if(projection.isDisconnected){
+            return;
+        }
+
         publishEvent(new UserDisconnected(projection.sessionId, projection.userIdentityId));
     };
 };
