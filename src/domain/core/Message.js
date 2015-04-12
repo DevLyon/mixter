@@ -75,6 +75,10 @@ var Message = function Message(events){
     }).apply(events);
 
     self.republish = function republish(publishEvent, republisher) {
+        if(projection.isDeleted){
+            return;
+        }
+
         if(projection.author.equals(republisher) || _.includes(projection.republishers, republisher)){
             return;
         }
