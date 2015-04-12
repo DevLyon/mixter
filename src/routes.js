@@ -1,5 +1,6 @@
 var userIdentity = require('./domain/identity/userIdentity');
 var Session = require('./domain/identity/session');
+var message = require('./domain/core/message');
 var UserId = require('./domain/userId').UserId;
 var sessionHandler = require('./domain/identity/sessionHandler');
 var eventPublisherModule = require('./infrastructure/eventPublisher');
@@ -53,6 +54,18 @@ var logOutUser = function logOutUser(req, res){
     res.status(200).send('User disconnected');
 };
 
+var quackMessage = function quackMessage(req, res){
+    var author = new UserId(req.body.author);
+    var content = req.body.content;
+
+    var messageId = message.quack(publishEvent, author, content);
+
+    res.status(201).send({
+        id: messageId,
+        url: '/api/core/messages/' + encodeURIComponent(messageId.id)
+    });
+};
+
 var manageError = function manageError(action){
     return function(req, res){
         try {
@@ -81,4 +94,6 @@ exports.registerRoutes = function registerRoutes(app){
     app.post('/api/identity/userIdentities/register', manageError(registerUser));
     app.post('/api/identity/userIdentities/:id/logIn', manageError(logInUser));
     app.delete('/api/identity/sessions/:id', manageError(logOutUser));
+
+    app.post('/api/core/messages/quack', manageError(quackMessage));
 };
