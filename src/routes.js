@@ -3,16 +3,19 @@ var Session = require('./domain/identity/Session');
 var Message = require('./domain/core/Message');
 var UserId = require('./domain/UserId').UserId;
 var SessionHandler = require('./domain/identity/SessionHandler');
+var UpdateTimeline = require('./domain/core/UpdateTimeline');
 var EventPublisher = require('./infrastructure/EventPublisher');
 
 var eventsStore = require('./infrastructure/EventsStore').create();
 var userIdentitiesRepository = require('./infrastructure/UserIdentitiesRepository').create(eventsStore);
 var sessionsRepository = require('./infrastructure/SessionsRepository').create(eventsStore);
+var timelineMessagesRepository = require('./infrastructure/TimelineMessageRepository').create();
 
 var createPublishEvent = function createPublishEvent(eventsStore) {
     var eventPublisher = EventPublisher.create();
     eventPublisher.onAny(eventsStore.store);
     SessionHandler.create(sessionsRepository).register(eventPublisher);
+    UpdateTimeline.create(timelineMessagesRepository).register(eventPublisher);
 
     return eventPublisher.publish;
 };
@@ -66,6 +69,14 @@ var publishMessage = function publishMessage(req, res){
     });
 };
 
+var getTimelineMessages = function getTimelineMessages(req, res) {
+    var owner = new UserId(req.params.owner);
+
+    var messages = timelineMessagesRepository.getMessageOfUser(owner);
+
+    res.status(200).send(messages);
+};
+
 var manageError = function manageError(action){
     return function(req, res){
         try {
@@ -96,4 +107,5 @@ exports.registerRoutes = function registerRoutes(app){
     app.delete('/api/identity/sessions/:id', manageError(logOutUser));
 
     app.post('/api/core/messages/publish', manageError(publishMessage));
+    app.get('/api/core/timelineMessages/:owner', manageError(getTimelineMessages));
 };
