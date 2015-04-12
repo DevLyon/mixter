@@ -1,17 +1,21 @@
 var UserIdentity = require('./domain/identity/UserIdentity');
 var Session = require('./domain/identity/Session');
+var Message = require('./domain/core/Message');
 var UserId = require('./domain/UserId').UserId;
 var SessionHandler = require('./domain/identity/SessionHandler');
+var UpdateTimeline = require('./domain/core/UpdateTimeline');
 var EventPublisher = require('./infrastructure/EventPublisher');
 
 var eventsStore = require('./infrastructure/EventsStore').create();
 var userIdentitiesRepository = require('./infrastructure/UserIdentitiesRepository').create(eventsStore);
 var sessionsRepository = require('./infrastructure/SessionsRepository').create(eventsStore);
+var timelineMessagesRepository = require('./infrastructure/TimelineMessageRepository').create();
 
 var createPublishEvent = function createPublishEvent(eventsStore) {
     var eventPublisher = EventPublisher.create();
     eventPublisher.onAny(eventsStore.store);
     SessionHandler.create(sessionsRepository).register(eventPublisher);
+    UpdateTimeline.create(timelineMessagesRepository).register(eventPublisher);
 
     return eventPublisher.publish;
 };
@@ -53,6 +57,26 @@ var logOutUser = function logOutUser(req, res){
     res.status(200).send('User disconnected');
 };
 
+var publishMessage = function publishMessage(req, res){
+    var author = new UserId(req.body.author);
+    var content = req.body.content;
+
+    var messageId = Message.publish(publishEvent, author, content);
+
+    res.status(201).send({
+        id: messageId,
+        url: '/api/core/messages/' + encodeURIComponent(messageId.id)
+    });
+};
+
+var getTimelineMessages = function getTimelineMessages(req, res) {
+    var owner = new UserId(req.params.owner);
+
+    var messages = timelineMessagesRepository.getMessageOfUser(owner);
+
+    res.status(200).send(messages);
+};
+
 var manageError = function manageError(action){
     return function(req, res){
         try {
@@ -81,4 +105,7 @@ exports.registerRoutes = function registerRoutes(app){
     app.post('/api/identity/userIdentities/register', manageError(registerUser));
     app.post('/api/identity/userIdentities/:id/logIn', manageError(logInUser));
     app.delete('/api/identity/sessions/:id', manageError(logOutUser));
+
+    app.post('/api/core/messages/publish', manageError(publishMessage));
+    app.get('/api/core/timelineMessages/:owner', manageError(getTimelineMessages));
 };
