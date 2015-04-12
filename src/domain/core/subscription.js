@@ -28,3 +28,14 @@ var UserUnfollowed = exports.UserUnfollowed = function UserUnfollowed(subscripti
 UserUnfollowed.prototype.getAggregateId = function getAggregateId(){
     return this.subscriptionId;
 };
+
+var FolloweeMessageQuacked = exports.FolloweeMessageQuacked = function FolloweeMessageQuacked(subscriptionId, messageId){
+    this.subscriptionId = subscriptionId;
+    this.messageId = messageId;
+
+    Object.freeze(this);
+};
+
+FolloweeMessageQuacked.prototype.getAggregateId = function getAggregateId(){
+    return this.subscriptionId;
+};
