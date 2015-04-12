@@ -1,11 +1,12 @@
 var UserIdentity = require('./domain/identity/UserIdentity');
+var Session = require('./domain/identity/Session');
 var UserId = require('./domain/UserId').UserId;
 var SessionHandler = require('./domain/identity/SessionHandler');
 var EventPublisher = require('./infrastructure/EventPublisher');
 
 var eventsStore = require('./infrastructure/EventsStore').create();
 var userIdentitiesRepository = require('./infrastructure/UserIdentitiesRepository').create(eventsStore);
-var sessionsRepository = require('./infrastructure/SessionsRepository').create();
+var sessionsRepository = require('./infrastructure/SessionsRepository').create(eventsStore);
 
 var createPublishEvent = function createPublishEvent(eventsStore) {
     var eventPublisher = EventPublisher.create();
@@ -38,8 +39,18 @@ var logInUser = function logInUser(req, res){
 
     res.status(201).send({
         id: sessionId,
-        logOut: '/api/identity/sessions/' + encodeURIComponent(sessionId.id) + '/logOut'
+        url: '/api/identity/sessions/' + encodeURIComponent(sessionId.id)
     });
+};
+
+var logOutUser = function logOutUser(req, res){
+    var sessionId = new Session.SessionId(req.params.id);
+
+    var session = sessionsRepository.getSession(sessionId);
+
+    session.logOut(publishEvent);
+
+    res.status(200).send('User disconnected');
 };
 
 var manageError = function manageError(action){
@@ -69,4 +80,5 @@ var manageError = function manageError(action){
 exports.registerRoutes = function registerRoutes(app){
     app.post('/api/identity/userIdentities/register', manageError(registerUser));
     app.post('/api/identity/userIdentities/:id/logIn', manageError(logInUser));
+    app.delete('/api/identity/sessions/:id', manageError(logOutUser));
 };
