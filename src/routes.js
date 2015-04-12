@@ -10,6 +10,7 @@ var eventsStore = require('./infrastructure/EventsStore').create();
 var userIdentitiesRepository = require('./infrastructure/UserIdentitiesRepository').create(eventsStore);
 var sessionsRepository = require('./infrastructure/SessionsRepository').create(eventsStore);
 var timelineMessagesRepository = require('./infrastructure/TimelineMessageRepository').create();
+var messagesRepository = require('./infrastructure/MessagesRepository').create(eventsStore);
 
 var createPublishEvent = function createPublishEvent(eventsStore) {
     var eventPublisher = EventPublisher.create();
@@ -69,6 +70,23 @@ var publishMessage = function publishMessage(req, res){
     });
 };
 
+var deleteMessage = function deleteMessage(req, res){
+    var sessionId = new Session.SessionId(req.body.sessionId);
+
+    var deleter = sessionsRepository.getUserIdOfSession(sessionId);
+    if(!deleter){
+        res.status(403).send('Invalid session');
+        return;
+    }
+
+    var messageId = new Message.MessageId(req.params.id);
+    var message = messagesRepository.getMessage(messageId);
+
+    message.delete(publishEvent, deleter);
+
+    res.status(200).send('Message deleted');
+};
+
 var getTimelineMessages = function getTimelineMessages(req, res) {
     var owner = new UserId(req.params.owner);
 
@@ -107,5 +125,6 @@ exports.registerRoutes = function registerRoutes(app){
     app.delete('/api/identity/sessions/:id', manageError(logOutUser));
 
     app.post('/api/core/messages/publish', manageError(publishMessage));
+    app.delete('/api/core/messages/:id', manageError(deleteMessage));
     app.get('/api/core/timelineMessages/:owner', manageError(getTimelineMessages));
 };
