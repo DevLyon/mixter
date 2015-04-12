@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 var TimelineMessageRepository = function TimelineMessageRepository(){
     var self = this;
 
@@ -8,7 +10,9 @@ var TimelineMessageRepository = function TimelineMessageRepository(){
     };
 
     self.getMessageOfUser = function(userId) {
-        return projections;
+        return _.filter(projections, function(projection){
+            return projection.ownerId.equals(userId);
+        });
     };
 };
 

@@ -22,4 +22,19 @@ describe('TimelineMessage Repository', function() {
 
         expect(repository.getMessageOfUser(ownerId)).to.contains(message);
     });
+
+    it('When save two messages of different owners Then GetMessagesOfUser return only messages of user', function() {
+        var message = timelineMessageProjection.create(ownerId, authorId, messageContent, messageId);
+        repository.save(message);
+        repository.save(timelineMessageProjection.create(
+            new UserId('owner2@mix-it.fr'),
+            authorId,
+            messageContent,
+            new MessageId('M2')));
+
+        var messages = repository.getMessageOfUser(ownerId);
+
+        expect(messages).to.have.length(1);
+        expect(messages).to.contains(message);
+    });
 });
