@@ -14,6 +14,10 @@ var UserRegistered = exports.UserRegistered = function UserRegistered(userIdenti
     Object.freeze(this);
 };
 
+UserRegistered.prototype.getAggregateId = function getAggregateId(){
+    return this.userIdentityId;
+};
+
 var UserIdentity = function UserIdentity(events){
     var self = this;
 

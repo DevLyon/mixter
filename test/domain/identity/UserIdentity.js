@@ -50,4 +50,11 @@ describe('User Identity Aggregate', function() {
         var event = eventsRaised[0];
         expect(result).to.equal(eventsRaised[0].sessionId);
     });
+
+    it('When create UserRegistered Then aggregateId is userId', function() {
+        var id = new UserIdentity.UserIdentityId(email);
+        var event = new UserIdentity.UserRegistered(id);
+
+        expect(event.getAggregateId()).to.equal(id);
+    });
 });
