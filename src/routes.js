@@ -1,18 +1,19 @@
 var userIdentity = require('./domain/identity/userIdentity');
-var Session = require('./domain/identity/session');
+var SessionId = require('./domain/identity/session').SessionId;
 var message = require('./domain/core/message');
 var UserId = require('./domain/userId').UserId;
 var sessionHandler = require('./domain/identity/sessionHandler');
 var updateTimeline = require('./domain/core/updateTimeline');
-var eventPublisherModule = require('./infrastructure/eventPublisher');
+var createEventPublisher = require('./infrastructure/eventPublisher').create;
 
 var eventsStore = require('./infrastructure/eventsStore').create();
 var userIdentitiesRepository = require('./infrastructure/userIdentitiesRepository').create(eventsStore);
 var sessionsRepository = require('./infrastructure/sessionsRepository').create(eventsStore);
 var timelineMessagesRepository = require('./infrastructure/timelineMessageRepository').create();
+var messagesRepository = require('./infrastructure/messagesRepository').create(eventsStore);
 
 var createPublishEvent = function createPublishEvent(eventsStore) {
-    var eventPublisher = eventPublisherModule.create();
+    var eventPublisher = createEventPublisher();
     eventPublisher.onAny(eventsStore.store);
     sessionHandler.create(sessionsRepository).register(eventPublisher);
     updateTimeline.create(timelineMessagesRepository).register(eventPublisher);
@@ -48,7 +49,7 @@ var logInUser = function logInUser(req, res){
 };
 
 var logOutUser = function logOutUser(req, res){
-    var sessionId = new Session.SessionId(req.params.id);
+    var sessionId = new SessionId(req.params.id);
 
     var session = sessionsRepository.getSession(sessionId);
 
@@ -67,6 +68,23 @@ var quackMessage = function quackMessage(req, res){
         id: messageId,
         url: '/api/core/messages/' + encodeURIComponent(messageId.id)
     });
+};
+
+var deleteMessage = function deleteMessage(req, res){
+    var sessionId = new SessionId(req.body.sessionId);
+
+    var deleter = sessionsRepository.getUserIdOfSession(sessionId);
+    if(!deleter){
+        res.status(403).send('Invalid session');
+        return;
+    }
+
+    var messageId = new message.MessageId(req.params.id);
+    var messageToDeleted = messagesRepository.getMessage(messageId);
+
+    messageToDeleted.delete(publishEvent, deleter);
+
+    res.status(200).send('Message deleted');
 };
 
 var getTimelineMessages = function getTimelineMessages(req, res) {
@@ -107,5 +125,6 @@ exports.registerRoutes = function registerRoutes(app){
     app.delete('/api/identity/sessions/:id', manageError(logOutUser));
 
     app.post('/api/core/messages/quack', manageError(quackMessage));
+    app.delete('/api/core/messages/:id', manageError(deleteMessage));
     app.get('/api/core/timelineMessages/:owner', manageError(getTimelineMessages));
 };
