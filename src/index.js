@@ -1,8 +1,9 @@
 var express = require('express');
 var http = require('http');
 var bodyParser = require('body-parser');
+var routes = require('./routes');
 
-var createExpressMiddleware = function(port){
+var createExpressMiddleware = function createExpressMiddleware(port){
     var app = express();
     app.set('port', port);
 
@@ -14,13 +15,7 @@ var createExpressMiddleware = function(port){
     return app;
 };
 
-var registerRoutes = function(app){
-    app.get('/api/ping', function(req, res){
-        res.status(200).send('pong');
-    });
-};
-
-var startServer = function(app){
+var startServer = function startServer(app){
     var server = http.createServer(app);
     server.listen(app.get('port'), function(){
         console.log('Express server listening on port ' + app.get('port'));
@@ -30,7 +25,7 @@ var startServer = function(app){
 exports.run = function run(port){
     var app = createExpressMiddleware(port);
 
-    registerRoutes(app);
+    routes.registerRoutes(app);
 
     startServer(app);
 };
