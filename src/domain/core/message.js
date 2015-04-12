@@ -59,6 +59,10 @@ var Message = function Message(events){
     }).apply(events);
 
     self.requack = function requack(publishEvent, requacker) {
+        if(projection.isDeleted){
+            return;
+        }
+
         if(projection.author.equals(requacker) || _.includes(projection.requackers, requacker)){
             return;
         }
