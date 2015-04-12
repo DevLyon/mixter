@@ -38,4 +38,11 @@ describe('Subscription Aggregate', function() {
 
         expect(event.getAggregateId()).to.equal(subscriptionId);
     });
+
+    it('When Follow Then UserFollowed is raised', function () {
+        subscription.followUser(publishEvent, follower, followee);
+
+        var expectedEvent = new subscription.UserFollowed(new subscription.SubscriptionId(follower, followee));
+        expect(eventsRaised).to.contain(expectedEvent);
+    });
 });
