@@ -1,4 +1,5 @@
 var SessionsRepository = require('../../../src/infrastructure/SessionsRepository');
+var EventPublisher = require('../../../src/infrastructure/EventPublisher');
 var SessionHandler = require('../../../src/domain/identity/SessionHandler');
 var Session = require('../../../src/domain/identity/Session');
 var UserIdentity = require('../../../src/domain/identity/UserIdentity');
@@ -10,23 +11,26 @@ describe('Session Handler', function() {
 
     var repository;
     var handler;
+    var eventPublisher;
     beforeEach(function(){
         repository = SessionsRepository.create();
         handler = SessionHandler.create(repository);
+        eventPublisher = EventPublisher.create();
+        handler.register(eventPublisher);
     });
 
     it('When UserConnected Then store SessionProjection', function() {
         var userConnected = new Session.UserConnected(sessionId, userId, new Date());
 
-        handler.handleUserConnected(userConnected);
+        eventPublisher.publish(userConnected);
 
         expect(repository.getUserIdOfSession(sessionId)).to.equal(userId);
     });
 
     it('When UserDiconnected Then update SessionProjection and enable disconnected flag', function() {
-        handler.handleUserConnected(new Session.UserConnected(sessionId, userId, new Date()));
+        eventPublisher.publish(new Session.UserConnected(sessionId, userId, new Date()));
 
-        handler.handleUserDisconnected(new Session.UserDisconnected(sessionId, userId));
+        eventPublisher.publish(new Session.UserDisconnected(sessionId, userId));
 
         expect(repository.getUserIdOfSession(sessionId)).to.be.null;
     });

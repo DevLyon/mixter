@@ -1,4 +1,5 @@
 var SessionProjection = require('./SessionProjection');
+var Session = require('./Session');
 
 var SessionHandler = function SessionHandler(sessionsRepository){
     var saveProjection = function saveProjection(event, isEnabled){
@@ -6,12 +7,12 @@ var SessionHandler = function SessionHandler(sessionsRepository){
         sessionsRepository.save(projection);
     };
 
-    this.handleUserConnected = function(event){
-        saveProjection(event, SessionProjection.SessionEnabled);
-    };
-
-    this.handleUserDisconnected = function(event){
-        saveProjection(event, SessionProjection.SessionDisabled);
+    this.register = function register(eventPublisher) {
+        eventPublisher.on(Session.UserConnected, function(event){
+            saveProjection(event, SessionProjection.SessionEnabled);
+        }).on(Session.UserDisconnected, function(event){
+            saveProjection(event, SessionProjection.SessionDisabled);
+        });
     };
 };
 
