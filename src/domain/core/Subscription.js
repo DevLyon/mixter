@@ -48,8 +48,12 @@ var Subscription = exports.Subscription = function Subscription(events){
         this.subscriptionId = event.subscriptionId;
     }).apply(events);
 
-    self.unfollow = function(publishEvent) {
+    self.unfollow = function unfollow(publishEvent) {
         publishEvent(new UserUnfollowed(projection.subscriptionId));
+    };
+
+    self.notifyFollower = function notifyFollower(publishEvent, messageId) {
+        publishEvent(new FolloweeMessagePublished(projection.subscriptionId, messageId));
     };
 };
 
