@@ -83,6 +83,10 @@ var Message = function Message(events){
     };
 
     self.reply = function reply(publishEvent, replier, replyContent){
+        if(projection.isDeleted){
+            return;
+        }
+
         var replyId = new MessageId(idGenerator.generate());
         publishEvent(new ReplyMessagePublished(replyId, replier, replyContent, projection.messageId));
     };
