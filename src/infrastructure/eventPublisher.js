@@ -7,9 +7,19 @@ var EventPublisher = function EventPublisher(){
 
     self.on = function on(eventType, action){
         eventEmitter.on(eventType.name, action);
+
+        return self;
+    };
+
+    self.onAny = function onAny(action){
+        eventEmitter.on('*', action);
+
+        return self;
     };
 
     self.publish = function publish(event){
+        eventEmitter.emit('*', event);
+
         var eventName = event.constructor.name;
         eventEmitter.emit(eventName, event);
     };
