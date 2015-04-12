@@ -7,7 +7,7 @@ var SessionsRepository = function SessionsRepository(){
 
     self.getUserIdOfSession = function getUserIdOfSession(sessionId){
         var projection = _.find(projections, function(projection) {
-            return projection.sessionId === sessionId;
+            return projection.sessionId === sessionId && projection.isEnabled;
         });
 
         return projection ? projection.userId : null;
