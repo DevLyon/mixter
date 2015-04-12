@@ -29,13 +29,27 @@ describe('NotifyFollowerOfFolloweeMessage Handler', function() {
         NotifyFollowerOfFolloweeMessage.create(subscriptionsRepository).register(eventPublisher);
     });
 
-    it('Given follower When MessagePublished by followee Then raise FolloweeMessagePublished', function() {
-        eventPublisher.publish(new Subscription.UserFollowed(subscriptionId));
-        var messagePublished = new Message.MessagePublished(new MessageId('M1'), subscriptionId.followee, 'Hello');
+    describe('Given follower', function(){
+        beforeEach(function(){
+            eventPublisher.publish(new Subscription.UserFollowed(subscriptionId));
+        });
 
-        eventPublisher.publish(messagePublished);
+        it('When MessagePublished by followee Then raise FolloweeMessagePublished', function() {
+            var messagePublished = new Message.MessagePublished(new MessageId('M1'), subscriptionId.followee, 'Hello');
 
-        var expectedEvent = new Subscription.FolloweeMessagePublished(subscriptionId, messagePublished.messageId);
-        expect(events).to.contains(expectedEvent);
+            eventPublisher.publish(messagePublished);
+
+            var expectedEvent = new Subscription.FolloweeMessagePublished(subscriptionId, messagePublished.messageId);
+            expect(events).to.contains(expectedEvent);
+        });
+
+        it('When ReplyMessagePublished by followee Then raise FolloweeMessagePublished', function() {
+            var replyMessagePublished = new Message.ReplyMessagePublished(new MessageId('R1'), subscriptionId.followee, 'Reply Hello', new MessageId('M1'));
+
+            eventPublisher.publish(replyMessagePublished);
+
+            var expectedEvent = new Subscription.FolloweeMessagePublished(subscriptionId, replyMessagePublished.replyId);
+            expect(events).to.contains(expectedEvent);
+        });
     });
 });
