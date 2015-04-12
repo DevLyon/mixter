@@ -7,6 +7,10 @@ var FollowersRepository = function FollowersRepository(){
         projections.push(projection);
     };
 
+    this.remove = function(projection){
+        _.remove(projections, projection);
+    };
+
     this.getFollowers = function getFollowers(userId){
         return _.chain(projections).filter(function(projection){
             return projection.followee.equals(userId);
