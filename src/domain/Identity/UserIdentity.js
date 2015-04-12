@@ -2,7 +2,13 @@ var DecisionProjection = require('../DecisionProjection');
 var valueType = require('../../valueType');
 var Session = require('./Session');
 
+var UserEmailCannotBeEmpty = exports.UserEmailCannotBeEmpty = function UserEmailCannotBeEmpty(){};
+
 var UserIdentityId = exports.UserIdentityId = valueType.extends(function UserIdentityId(email){
+    if(!email){
+        throw new UserEmailCannotBeEmpty();
+    }
+
     this.email = email;
 }, function toString(){
     return 'UserIdentity:' + this.email;
