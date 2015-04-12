@@ -3,16 +3,19 @@ var Session = require('./domain/identity/session');
 var message = require('./domain/core/message');
 var UserId = require('./domain/userId').UserId;
 var sessionHandler = require('./domain/identity/sessionHandler');
+var updateTimeline = require('./domain/core/updateTimeline');
 var eventPublisherModule = require('./infrastructure/eventPublisher');
 
 var eventsStore = require('./infrastructure/eventsStore').create();
 var userIdentitiesRepository = require('./infrastructure/userIdentitiesRepository').create(eventsStore);
 var sessionsRepository = require('./infrastructure/sessionsRepository').create(eventsStore);
+var timelineMessagesRepository = require('./infrastructure/timelineMessageRepository').create();
 
 var createPublishEvent = function createPublishEvent(eventsStore) {
     var eventPublisher = eventPublisherModule.create();
     eventPublisher.onAny(eventsStore.store);
     sessionHandler.create(sessionsRepository).register(eventPublisher);
+    updateTimeline.create(timelineMessagesRepository).register(eventPublisher);
 
     return eventPublisher.publish;
 };
@@ -66,6 +69,14 @@ var quackMessage = function quackMessage(req, res){
     });
 };
 
+var getTimelineMessages = function getTimelineMessages(req, res) {
+    var owner = new UserId(req.params.owner);
+
+    var messages = timelineMessagesRepository.getMessageOfUser(owner);
+
+    res.status(200).send(messages);
+};
+
 var manageError = function manageError(action){
     return function(req, res){
         try {
@@ -96,4 +107,5 @@ exports.registerRoutes = function registerRoutes(app){
     app.delete('/api/identity/sessions/:id', manageError(logOutUser));
 
     app.post('/api/core/messages/quack', manageError(quackMessage));
+    app.get('/api/core/timelineMessages/:owner', manageError(getTimelineMessages));
 };
