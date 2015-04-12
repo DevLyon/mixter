@@ -39,3 +39,7 @@ var FolloweeMessagePublished = exports.FolloweeMessagePublished = function Follo
 FolloweeMessagePublished.prototype.getAggregateId = function getAggregateId(){
     return this.subscriptionId;
 };
+
+exports.followUser = function followUser(publishEvent, follower, followee){
+    publishEvent(new UserFollowed(new SubscriptionId(follower, followee)));
+};
