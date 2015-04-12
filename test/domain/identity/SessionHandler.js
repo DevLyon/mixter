@@ -1,4 +1,4 @@
-var SessionsRepository = require('../../../src/infra/SessionsRepository');
+var SessionsRepository = require('../../../src/infrastructure/SessionsRepository');
 var SessionHandler = require('../../../src/domain/identity/SessionHandler');
 var Session = require('../../../src/domain/identity/Session');
 var UserIdentity = require('../../../src/domain/identity/UserIdentity');
