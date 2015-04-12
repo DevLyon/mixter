@@ -32,6 +32,19 @@ MessageRepublished.prototype.getAggregateId = function getAggregateId(){
     return this.messageId;
 };
 
+var ReplyMessagePublished = exports.ReplyMessagePublished = function ReplyMessagePublished(replyId, replier, replyContent, parentId){
+    this.replyId = replyId;
+    this.replier = replier;
+    this.replyContent = replyContent;
+    this.parentId = parentId;
+
+    Object.freeze(this);
+};
+
+ReplyMessagePublished.prototype.getAggregateId = function getAggregateId(){
+    return this.replyId;
+};
+
 var Message = function Message(events){
     var self = this;
 
@@ -52,6 +65,11 @@ var Message = function Message(events){
         }
 
         publishEvent(new MessageRepublished(projection.messageId, republisher));
+    };
+
+    self.reply = function reply(publishEvent, replier, replyContent){
+        var replyId = new MessageId(idGenerator.generate());
+        publishEvent(new ReplyMessagePublished(replyId, replier, replyContent, projection.messageId));
     };
 };
 

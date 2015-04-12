@@ -87,4 +87,33 @@ describe('Message Aggregate', function() {
 
         expect(eventsRaised).to.be.empty;
     });
+
+    it('When reply Then raise ReplyMessagePublished', function () {
+        var message = Message.create([
+            new Message.MessagePublished(messageId, author, messageContent)
+        ]);
+        var replier = new UserId('replier@mix-it.fr');
+        var replyContent = 'Hi';
+
+        message.reply(publishEvent, replier, replyContent);
+
+        expect(eventsRaised).to.have.length(1);
+        var event = eventsRaised[0];
+        expect(event).to.be.an.instanceof(Message.ReplyMessagePublished);
+        expect(event.parentId).to.equal(messageId);
+        expect(event.replyContent).to.equal(replyContent);
+        expect(event.replier).to.equal(replier);
+        expect(event.replyId).not.to.be.empty;
+        expect(event.replyId).not.to.equal(messageId);
+    });
+
+    it('When create ReplyMessagePublished Then aggregateId is replyId', function() {
+        var event = new Message.ReplyMessagePublished(
+            new Message.MessageId('RA'),
+            new UserId('replier@mix-it.fr'),
+            'replyContent',
+            messageId);
+
+        expect(event.getAggregateId()).to.equal(event.replyId);
+    });
 });
