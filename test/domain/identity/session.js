@@ -38,4 +38,16 @@ describe('Session Aggregate', function() {
 
         expect(eventsRaised).to.be.empty;
     });
+
+    it('When create UserConnected Then aggregateId is sessionId', function() {
+        var event = new session.UserConnected(sessionId, userIdentityId, new Date());
+
+        expect(event.getAggregateId()).to.equal(sessionId);
+    });
+
+    it('When create UserDisconnected Then aggregateId is sessionId', function() {
+        var event = new session.UserDisconnected(sessionId, userIdentityId, new Date());
+
+        expect(event.getAggregateId()).to.equal(sessionId);
+    });
 });
