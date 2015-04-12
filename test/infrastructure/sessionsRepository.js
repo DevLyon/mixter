@@ -34,4 +34,12 @@ describe('Sessions Repository', function() {
 
         expect(repository.getUserIdOfSession(sessionId)).to.be.null;
     });
+
+    it('Given already projection When save same projection Then update projection', function() {
+        repository.save(new sessionProjection.create(sessionId, userId, sessionProjection.SessionEnabled));
+
+        repository.save(new sessionProjection.create(sessionId, userId, sessionProjection.SessionDisabled));
+
+        expect(repository.getUserIdOfSession(sessionId)).to.be.null;
+    });
 });
