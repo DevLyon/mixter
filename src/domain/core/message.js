@@ -42,6 +42,13 @@ MessageDeleted.prototype.getAggregateId = function getAggregateId(){
     return this.messageId;
 };
 
+var MessageDescription = exports.MessageDescription = function MessageDescription(author, content){
+    this.author = author;
+    this.content = content;
+
+    Object.freeze(this);
+};
+
 var Message = function Message(events){
     var self = this;
 
