@@ -36,9 +36,14 @@ var Message = function Message(events){
 
     var projection = decisionProjection.create().register(MessageQuacked, function(event) {
         this.messageId = event.messageId;
+        this.author = event.author;
     }).apply(events);
 
     self.requack = function requack(publishEvent, requacker) {
+        if(projection.author.equals(requacker)){
+            return;
+        }
+
         publishEvent(new MessageRequacked(projection.messageId, requacker));
     };
 };

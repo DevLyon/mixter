@@ -67,4 +67,12 @@ describe('Message Aggregate', function() {
 
         expect(event.getAggregateId()).to.equal(event.messageId);
     });
+
+    it('When requack my own message Then do not raise MessageRequacked', function () {
+        var userMessage = message.create(new message.MessageQuacked(messageId, author, messageContent));
+
+        userMessage.requack(publishEvent, author);
+
+        expect(eventsRaised).to.be.empty;
+    });
 });
