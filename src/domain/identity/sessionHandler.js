@@ -3,7 +3,7 @@ var session = require('./session');
 
 var SessionHandler = function SessionHandler(sessionsRepository){
     var saveProjection = function saveProjection(event, isEnabled){
-        var projection = new sessionProjection.create(event.sessionId, event.userIdentityId, isEnabled);
+        var projection = new sessionProjection.create(event.sessionId, event.userId, isEnabled);
         sessionsRepository.save(projection);
     };
 

@@ -1,34 +1,22 @@
 var decisionProjection = require('../decisionProjection');
-var valueType = require('../../valueType');
+var UserId = require('../userId').UserId;
 var session = require('./session');
 
-var UserEmailCannotBeEmpty = exports.UserEmailCannotBeEmpty = function UserEmailCannotBeEmpty(){};
-
-var UserIdentityId = exports.UserIdentityId = valueType.extends(function UserIdentityId(email){
-    if(!email){
-        throw new UserEmailCannotBeEmpty();
-    }
-
-    this.email = email;
-}, function toString(){
-    return 'UserIdentity:' + this.email;
-});
-
-var UserRegistered = exports.UserRegistered = function UserRegistered(userIdentityId){
-    this.userIdentityId = userIdentityId;
+var UserRegistered = exports.UserRegistered = function UserRegistered(userId){
+    this.userId = userId;
 
     Object.freeze(this);
 };
 
 UserRegistered.prototype.getAggregateId = function getAggregateId(){
-    return this.userIdentityId;
+    return this.userId;
 };
 
 var UserIdentity = function UserIdentity(events){
     var self = this;
 
     var projection = decisionProjection.create().register(UserRegistered, function(event) {
-        this.id = event.userIdentityId;
+        this.id = event.userId;
     }).apply(events);
 
     self.logIn = function logIn(publishEvent){
@@ -37,7 +25,7 @@ var UserIdentity = function UserIdentity(events){
 };
 
 exports.register = function register(publishEvent, email){
-    var id = new UserIdentityId(email);
+    var id = new UserId(email);
     publishEvent(new UserRegistered(id));
 };
 
