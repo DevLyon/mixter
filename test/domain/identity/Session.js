@@ -27,4 +27,15 @@ describe('Session Aggregate', function() {
         var expectedEvent = new Session.UserDisconnected(sessionId, userIdentityId);
         expect(eventsRaised).to.contains(expectedEvent);
     });
+
+    it('Given user disconnected When user log out Then nothing', function() {
+        var session = Session.create([
+            new Session.UserConnected(sessionId, userIdentityId, new Date()),
+            new Session.UserDisconnected(sessionId, userIdentityId)
+        ]);
+
+        session.logOut(publishEvent);
+
+        expect(eventsRaised).to.be.empty;
+    });
 });
