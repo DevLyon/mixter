@@ -62,9 +62,17 @@ describe('Message Aggregate', function() {
         expect(eventsRaised).to.contains(expectedEvent);
     });
 
-    it('When create MessagePublished Then aggregateId is messageId', function() {
-        var event = new Message.MessagePublished(messageId, author);
+    it('When create MessageRepublished Then aggregateId is messageId', function() {
+        var event = new Message.MessageRepublished(messageId, author);
 
         expect(event.getAggregateId()).to.equal(event.messageId);
+    });
+
+    it('When republish my own message Then do not raise MessageRepublished', function () {
+        var message = Message.create(new Message.MessagePublished(messageId, author, messageContent));
+
+        message.republish(publishEvent, author);
+
+        expect(eventsRaised).to.be.empty;
     });
 });

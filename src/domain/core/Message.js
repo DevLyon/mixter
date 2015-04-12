@@ -36,10 +36,15 @@ var Message = function Message(events){
 
     var projection = DecisionProjection.create().register(MessagePublished, function(event) {
         this.messageId = event.messageId;
+        this.author = event.author;
     }).apply(events);
 
     self.republish = function republish(publishEvent, republisher) {
-        publishEvent(new MessageRepublished(projection.messageId, republisher));
+        if(projection.author.equals(republisher)){
+            return;
+        }
+
+        publishEvent(new MessageRepublished(projection.messageId, republisher))
     };
 };
 
