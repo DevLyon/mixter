@@ -57,4 +57,10 @@ describe('User Identity Aggregate', function() {
 
         expect(event.getAggregateId()).to.equal(id);
     });
+
+    it('When register user with empty email Then throw UserEmailCannotBeEmpty exception', function() {
+        expect(function() {
+            userIdentity.register(publishEvent, "");
+        }).to.throw(userIdentity.UserEmailCannotBeEmpty);
+    });
 });
