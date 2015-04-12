@@ -34,4 +34,17 @@ describe('Messages Repository', function() {
 
         expect(description).to.eql(new Message.MessageDescription(messagePublished.author, messagePublished.content));
     });
+
+    it('Given ReplyMessagePublished Then getDescription Then return MessageDescription', function() {
+        var replyMessagePublished = new Message.ReplyMessagePublished(
+            new MessageId('R1'),
+            new UserId('replier@mix-it.fr'),
+            'Reply Hello',
+            new MessageId('M1'));
+        eventsStore.store(replyMessagePublished);
+
+        var description = repository.getDescription(replyMessagePublished.replyId);
+
+        expect(description).to.eql(new Message.MessageDescription(replyMessagePublished.replier, replyMessagePublished.replyContent));
+    });
 });

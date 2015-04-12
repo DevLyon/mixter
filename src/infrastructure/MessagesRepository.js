@@ -12,9 +12,15 @@ var MessageRepository = function MessagesRepository(eventsStore){
 
     this.getDescription = function getDescription(messageId){
         var events = getAllEvents(messageId);
-        var messagePublished = events[0];
+        var creationEvent = events[0];
 
-        return new Message.MessageDescription(messagePublished.author, messagePublished.content);
+        if(creationEvent instanceof Message.MessagePublished){
+            return new Message.MessageDescription(creationEvent.author, creationEvent.content);
+        } else if(creationEvent instanceof Message.ReplyMessagePublished){
+            return new Message.MessageDescription(creationEvent.replier, creationEvent.replyContent);
+        } else {
+            throw new Error('Unknown creation event of message ' + messageId);
+        }
     };
 };
 
