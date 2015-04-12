@@ -8,6 +8,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "lodash": "^3.6.0",
     "node-uuid": "^1.4.3"
   },
   "devDependencies": {
