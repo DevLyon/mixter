@@ -1,3 +1,4 @@
+var createEventsStore = require('../../src/infrastructure/eventsStore').create;
 var sessionsRepository = require('../../src/infrastructure/sessionsRepository');
 var sessionProjection = require('../../src/domain/identity/sessionProjection');
 var session = require('../../src/domain/identity/session');
@@ -8,9 +9,11 @@ describe('Sessions Repository', function() {
     var sessionId = new session.SessionId('SessionA');
     var userId = new UserId('user1@mix-it.fr');
 
+    var eventsStore;
     var repository;
     beforeEach(function(){
-        repository = sessionsRepository.create();
+        eventsStore = createEventsStore();
+        repository = sessionsRepository.create(eventsStore);
     });
 
     it('Given no projections When getUserIdOfSession Then return empty', function() {
@@ -41,5 +44,20 @@ describe('Sessions Repository', function() {
         repository.save(new sessionProjection.create(sessionId, userId, sessionProjection.SessionDisabled));
 
         expect(repository.getUserIdOfSession(sessionId)).to.be.null;
+    });
+
+    it('Given UserConnected When getSession Then return Session aggregate', function() {
+        var userConnected = new session.UserConnected(sessionId, userId, new Date());
+        eventsStore.store(userConnected);
+
+        var userSession = repository.getSession(userConnected.sessionId);
+
+        expect(userSession).not.to.empty;
+    });
+
+    it('Given no events When getSession Then throw UnknownSession', function() {
+        expect(function () {
+            repository.getSession(sessionId);
+        }).to.throw(sessionsRepository.UnknownSession);
     });
 });
