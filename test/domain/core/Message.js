@@ -178,4 +178,15 @@ describe('Message Aggregate', function() {
 
         expect(eventsRaised).to.be.empty;
     });
+
+    it('Given a deleted message When reply Then do not raise MessageDeleted', function () {
+        var message = Message.create([
+            new Message.MessagePublished(messageId, author, messageContent),
+            new Message.MessageDeleted(messageId)
+        ]);
+
+        message.reply(publishEvent, new UserId('replier@mix-it.fr'), 'reply content');
+
+        expect(eventsRaised).to.be.empty;
+    });
 });
