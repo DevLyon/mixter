@@ -20,4 +20,13 @@ describe('Followers Repository', function() {
 
         expect(followers).to.eql([follower]);
     });
+
+    it('When save several followers but not same followee Then getFollowers return only followers of followee', function() {
+        repository.save(followerProjection.create(followee, follower));
+        repository.save(followerProjection.create(new UserId('otherFollowee@mix-it.fr'), new UserId('follower2@mix-it.fr')));
+
+        var followers = repository.getFollowers(followee);
+
+        expect(followers).to.eql([follower]);
+    });
 });
