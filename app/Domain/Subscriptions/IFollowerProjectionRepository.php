@@ -3,6 +3,7 @@
 namespace App\Domain\Subscriptions;
 
 use App\Domain\Identity\UserId;
+use App\Infrastructure\Subscriptions\FollowerProjectionRepository;
 
 interface IFollowerProjectionRepository
 {
@@ -13,4 +14,6 @@ interface IFollowerProjectionRepository
     public function getFollowersOf(UserId $followeeId);
 
     public function save(FollowerProjection $followerProjection);
+
+    public function remove(FollowerProjection $followerProjection);
 }
