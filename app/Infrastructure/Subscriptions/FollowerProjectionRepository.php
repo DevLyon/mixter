@@ -27,4 +27,9 @@ class FollowerProjectionRepository implements IFollowerProjectionRepository
                 return $item->getFolloweeId() == $followeeId;
             });
     }
+
+    public function save(FollowerProjection $followerProjection)
+    {
+        $this->projectionStore->store($followerProjection->getFolloweeId()->getId(), $followerProjection);
+    }
 }
