@@ -5,6 +5,7 @@ namespace Tests\Domain\Subscriptions;
 use App\Domain\Identity\UserId;
 use App\Domain\Messages\MessageId;
 use App\Domain\Messages\MessageQuacked;
+use App\Domain\Messages\MessageRequacked;
 use App\Domain\Subscriptions\FolloweeMessageQuacked;
 use App\Domain\Subscriptions\FollowerProjection;
 use App\Domain\Subscriptions\NotifyFollowersOfFolloweeMessage;
@@ -17,28 +18,63 @@ use Tests\Infrastructure\InMemoryProjectionStore;
 
 class NotifyFollowersOfFolloweeMessageTest extends \PHPUnit_Framework_TestCase
 {
-    public function testGivenSeveralFollowers_WhenHandleMessageQuacked_ThenNotifyFollowers()
+    /** @var NotifyFollowersOfFolloweeMessage */
+    private $notifyFollowers;
+
+    /** @var FakeEventPublisher */
+    private $eventPublisher;
+
+    /** @var FollowerProjection */
+    private $follower;
+
+    /** @var FollowerProjection */
+    private $anotherFollower;
+
+    /** @var UserId */
+    private $followeeId;
+
+    public function setUp()
     {
-        $eventPublisher = new FakeEventPublisher();
-        $followeeId = new UserId('florent@mix-it.fr');
-        $follower = new FollowerProjection(new UserId('clem@mix-it.fr'), $followeeId);
-        $anotherFollower = new FollowerProjection(new UserId('emilien@mix-it.fr'), $followeeId);
+        $this->eventPublisher = new FakeEventPublisher();
+        $this->followeeId = new UserId('florent@mix-it.fr');
+        $this->follower = new FollowerProjection(new UserId('clem@mix-it.fr'), $this->followeeId);
+        $this->anotherFollower = new FollowerProjection(new UserId('emilien@mix-it.fr'), $this->followeeId);
 
-        $followerProjectionRepository = $this->getFollowerProjectionRepository($follower, $anotherFollower);
-        $subscriptionRepository = $this->getSubscriptionRepository($follower, $anotherFollower);
-        $notifyFollowers = new NotifyFollowersOfFolloweeMessage($eventPublisher, $followerProjectionRepository, $subscriptionRepository);
-        $messageQuacked = new MessageQuacked(MessageId::generate(), 'Hello', $followeeId);
+        $followerProjectionRepository = $this->getFollowerProjectionRepository($this->follower, $this->anotherFollower);
+        $subscriptionRepository = $this->getSubscriptionRepository($this->follower, $this->anotherFollower);
+        $this->notifyFollowers = new NotifyFollowersOfFolloweeMessage($this->eventPublisher, $followerProjectionRepository, $subscriptionRepository);
+    }
 
-        $notifyFollowers->handleMessageQuacked($messageQuacked);
+    public function testGivenSeveralFollowers_WhenHandleMessageQuacked_ThenNotifyFollowersOfAuthor()
+    {
+        $messageQuacked = new MessageQuacked(MessageId::generate(), 'Hello', $this->followeeId);
 
-        \Assert\that($eventPublisher->events)->count(2);
+        $this->notifyFollowers->handleMessageQuacked($messageQuacked);
+
+        \Assert\that($this->eventPublisher->events)->count(2);
         /** @var FolloweeMessageQuacked $followeeMessageQuacked */
-        $followeeMessageQuacked = $eventPublisher->events[0];
+        $followeeMessageQuacked = $this->eventPublisher->events[0];
         \Assert\that($followeeMessageQuacked)->isInstanceOf('App\Domain\Subscriptions\FolloweeMessageQuacked');
-        \Assert\that($followeeMessageQuacked->getSubscriptionId()->getFollowerId())->eq($follower->getFollowerId());
-        $followeeMessageQuacked = $eventPublisher->events[1];
+        \Assert\that($followeeMessageQuacked->getSubscriptionId()->getFollowerId())->eq($this->follower->getFollowerId());
+        $followeeMessageQuacked = $this->eventPublisher->events[1];
         \Assert\that($followeeMessageQuacked)->isInstanceOf('App\Domain\Subscriptions\FolloweeMessageQuacked');
-        \Assert\that($followeeMessageQuacked->getSubscriptionId()->getFollowerId())->eq($anotherFollower->getFollowerId());
+        \Assert\that($followeeMessageQuacked->getSubscriptionId()->getFollowerId())->eq($this->anotherFollower->getFollowerId());
+    }
+
+    public function testGivenSeveralFollowers_WhenHandleMessageRequacked_ThenNotifyFollowersOfRequacker()
+    {
+        $messageRequacked = new MessageRequacked(MessageId::generate(), $this->followeeId);
+
+        $this->notifyFollowers->handleMessageRequacked($messageRequacked);
+
+        \Assert\that($this->eventPublisher->events)->count(2);
+        /** @var FolloweeMessageQuacked $followeeMessageQuacked */
+        $followeeMessageQuacked = $this->eventPublisher->events[0];
+        \Assert\that($followeeMessageQuacked)->isInstanceOf('App\Domain\Subscriptions\FolloweeMessageQuacked');
+        \Assert\that($followeeMessageQuacked->getSubscriptionId()->getFollowerId())->eq($this->follower->getFollowerId());
+        $followeeMessageQuacked = $this->eventPublisher->events[1];
+        \Assert\that($followeeMessageQuacked)->isInstanceOf('App\Domain\Subscriptions\FolloweeMessageQuacked');
+        \Assert\that($followeeMessageQuacked->getSubscriptionId()->getFollowerId())->eq($this->anotherFollower->getFollowerId());
     }
 
     /**
