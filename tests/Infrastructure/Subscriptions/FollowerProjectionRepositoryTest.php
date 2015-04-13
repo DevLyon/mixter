@@ -17,8 +17,8 @@ class FollowerProjectionRepositoryTest extends \PHPUnit_Framework_TestCase
         $otherFollower = new FollowerProjection($followerId, new UserId('someoneelse@mix-it.fr'));
         $projectionStore = new InMemoryProjectionStore(
             array(
-                $existingFollower->getFolloweeId()->getId() => $existingFollower,
-                $otherFollower->getFolloweeId()->getId() => $otherFollower));
+                $existingFollower->getSubscriptionId()->getId() => $existingFollower,
+                $otherFollower->getSubscriptionId()->getId() => $otherFollower));
         $followerProjectionRepository = new FollowerProjectionRepository($projectionStore);
 
         $followers = $followerProjectionRepository->getFollowersOf($followeeId);
@@ -49,5 +49,19 @@ class FollowerProjectionRepositoryTest extends \PHPUnit_Framework_TestCase
         $followerProjectionRepository->save($followerProjection);
 
         \Assert\that($projectionStore->getAll('App\Domain\Subscriptions\FollowerProjection'))->count(1);
+    }
+
+    public function testWhenRemoveFollower_ThenRemoveFromStore()
+    {
+        $followeeId = new UserId("jean@mix-it.fr");
+        $followerId = new UserId("clem@mix-it.fr");
+        $existingFollower = new FollowerProjection($followerId, $followeeId);
+        $projectionStore = new InMemoryProjectionStore(array($existingFollower->getSubscriptionId()->getId() => $existingFollower));
+        $followerProjectionRepository = new FollowerProjectionRepository($projectionStore);
+        $followerProjection = new FollowerProjection($followerId, $followeeId);
+
+        $followerProjectionRepository->remove($followerProjection);
+
+        \Assert\that($projectionStore->getAll('App\Domain\Subscriptions\FollowerProjection'))->count(0);
     }
 }
