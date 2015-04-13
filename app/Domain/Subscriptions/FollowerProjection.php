@@ -36,4 +36,9 @@ class FollowerProjection
     {
         return $this->followeeId;
     }
+
+    public function getSubscriptionId()
+    {
+        return new SubscriptionId($this->followerId, $this->followeeId);
+    }
 }
