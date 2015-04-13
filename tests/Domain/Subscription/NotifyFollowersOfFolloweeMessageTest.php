@@ -6,6 +6,7 @@ use App\Domain\Identity\UserId;
 use App\Domain\Messages\MessageId;
 use App\Domain\Messages\MessagePublished;
 use App\Domain\Messages\MessageRepublished;
+use App\Domain\Messages\ReplyMessagePublished;
 use App\Domain\Subscriptions\FolloweeMessagePublished;
 use App\Domain\Subscriptions\FollowerProjection;
 use App\Domain\Subscriptions\NotifyFollowersOfFolloweeMessage;
@@ -75,6 +76,24 @@ class NotifyFollowersOfFolloweeMessageTest extends \PHPUnit_Framework_TestCase
         $followeeMessagePublished = $this->eventPublisher->events[1];
         \Assert\that($followeeMessagePublished)->isInstanceOf('App\Domain\Subscriptions\FolloweeMessagePublished');
         \Assert\that($followeeMessagePublished->getSubscriptionId()->getFollowerId())->eq($this->anotherFollower->getFollowerId());
+    }
+
+    public function testGivenSeveralFollowers_WhenHandleReplyMessagePublished_ThenNotifyFollowersOfRepublisher()
+    {
+        $replyMessagePublished = new ReplyMessagePublished(MessageId::generate(), 'Hello', $this->followeeId, MessageId::generate());
+
+        $this->notifyFollowers->handleReplyMessagePublished($replyMessagePublished);
+
+        \Assert\that($this->eventPublisher->events)->count(2);
+        /** @var FolloweeMessagePublished $followeeMessagePublished */
+        $followeeMessagePublished = $this->eventPublisher->events[0];
+        \Assert\that($followeeMessagePublished)->isInstanceOf('App\Domain\Subscriptions\FolloweeMessagePublished');
+        \Assert\that($followeeMessagePublished->getSubscriptionId()->getFollowerId())->eq($this->follower->getFollowerId());
+        \Assert\that($followeeMessagePublished->getMessageId())->eq($replyMessagePublished->getReplyId());
+        $followeeMessagePublished = $this->eventPublisher->events[1];
+        \Assert\that($followeeMessagePublished)->isInstanceOf('App\Domain\Subscriptions\FolloweeMessagePublished');
+        \Assert\that($followeeMessagePublished->getSubscriptionId()->getFollowerId())->eq($this->anotherFollower->getFollowerId());
+        \Assert\that($followeeMessagePublished->getMessageId())->eq($replyMessagePublished->getReplyId());
     }
 
     /**
