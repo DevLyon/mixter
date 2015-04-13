@@ -11,4 +11,6 @@ interface IFollowerProjectionRepository
      * @return array of FollowerProjection
      */
     public function getFollowersOf(UserId $followeeId);
+
+    public function save(FollowerProjection $followerProjection);
 }
