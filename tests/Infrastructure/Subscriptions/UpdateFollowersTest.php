@@ -4,7 +4,9 @@ namespace Tests\Infrastructure\Subscriptions;
 
 use App\Domain\Identity\UserId;
 use App\Domain\Subscriptions\SubscriptionId;
+use App\Domain\Subscriptions\UpdateFollowers;
 use App\Domain\Subscriptions\UserFollowed;
+use App\Infrastructure\Subscriptions\FollowerProjectionRepository;
 use Tests\Infrastructure\InMemoryProjectionStore;
 
 class UpdateFollowersTest extends \PHPUnit_Framework_TestCase
