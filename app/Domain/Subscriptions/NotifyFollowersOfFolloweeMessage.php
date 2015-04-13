@@ -7,6 +7,7 @@ use App\Domain\IEventPublisher;
 use App\Domain\Messages\MessageId;
 use App\Domain\Messages\MessagePublished;
 use App\Domain\Messages\MessageRepublished;
+use App\Domain\Messages\ReplyMessagePublished;
 
 class NotifyFollowersOfFolloweeMessage
 {
@@ -43,6 +44,11 @@ class NotifyFollowersOfFolloweeMessage
     public function handleMessageRepublished(MessageRepublished $messageRepublished)
     {
         $this->notifyFollowersOf($messageRepublished->getRepublisherId(), $messageRepublished->getMessageId());
+    }
+
+    public function handleReplyMessagePublished(ReplyMessagePublished $replyMessagePublished)
+    {
+        $this->notifyFollowersOf($replyMessagePublished->getReplierId(), $replyMessagePublished->getReplyId());
     }
 
     private function notifyFollowersOf(UserId $followeeId, MessageId $messageId)
