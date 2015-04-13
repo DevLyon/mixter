@@ -3,9 +3,9 @@
 namespace Tests\Domain\Subscriptions;
 
 use App\Domain\Identity\UserId;
-use App\Domain\IEventPublisher;
 use App\Domain\Messages\MessageId;
 use App\Domain\Messages\MessagePublished;
+use App\Domain\Messages\MessageRepublished;
 use App\Domain\Subscriptions\FolloweeMessagePublished;
 use App\Domain\Subscriptions\FollowerProjection;
 use App\Domain\Subscriptions\NotifyFollowersOfFolloweeMessage;
@@ -21,7 +21,7 @@ class NotifyFollowersOfFolloweeMessageTest extends \PHPUnit_Framework_TestCase
     /** @var NotifyFollowersOfFolloweeMessage */
     private $notifyFollowers;
 
-    /** @var IEventPublisher */
+    /** @var FakeEventPublisher */
     private $eventPublisher;
 
     /** @var FollowerProjection */
@@ -63,7 +63,7 @@ class NotifyFollowersOfFolloweeMessageTest extends \PHPUnit_Framework_TestCase
 
     public function testGivenSeveralFollowers_WhenHandleMessageRepublished_ThenNotifyFollowersOfRepublisher()
     {
-        $messagePublished = new MessagePublished(MessageId::generate(), 'Hello', $this->followeeId);
+        $messagePublished = new MessageRepublished(MessageId::generate(), $this->followeeId);
 
         $this->notifyFollowers->handleMessageRepublished($messagePublished);
 
