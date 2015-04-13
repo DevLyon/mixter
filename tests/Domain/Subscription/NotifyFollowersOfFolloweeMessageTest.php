@@ -3,6 +3,7 @@
 namespace Tests\Domain\Subscriptions;
 
 use App\Domain\Identity\UserId;
+use App\Domain\IEventPublisher;
 use App\Domain\Messages\MessageId;
 use App\Domain\Messages\MessagePublished;
 use App\Domain\Subscriptions\FolloweeMessagePublished;
@@ -17,28 +18,63 @@ use Tests\Infrastructure\InMemoryProjectionStore;
 
 class NotifyFollowersOfFolloweeMessageTest extends \PHPUnit_Framework_TestCase
 {
-    public function testGivenSeveralFollowers_WhenHandleMessagePublished_ThenNotifyFollowers()
+    /** @var NotifyFollowersOfFolloweeMessage */
+    private $notifyFollowers;
+
+    /** @var IEventPublisher */
+    private $eventPublisher;
+
+    /** @var FollowerProjection */
+    private $follower;
+
+    /** @var FollowerProjection */
+    private $anotherFollower;
+
+    /** @var UserId */
+    private $followeeId;
+
+    public function setUp()
     {
-        $eventPublisher = new FakeEventPublisher();
-        $followeeId = new UserId('florent@mix-it.fr');
-        $follower = new FollowerProjection(new UserId('clem@mix-it.fr'), $followeeId);
-        $anotherFollower = new FollowerProjection(new UserId('emilien@mix-it.fr'), $followeeId);
+        $this->eventPublisher = new FakeEventPublisher();
+        $this->followeeId = new UserId('florent@mix-it.fr');
+        $this->follower = new FollowerProjection(new UserId('clem@mix-it.fr'), $this->followeeId);
+        $this->anotherFollower = new FollowerProjection(new UserId('emilien@mix-it.fr'), $this->followeeId);
 
-        $followerProjectionRepository = $this->getFollowerProjectionRepository($follower, $anotherFollower);
-        $subscriptionRepository = $this->getSubscriptionRepository($follower, $anotherFollower);
-        $notifyFollowers = new NotifyFollowersOfFolloweeMessage($eventPublisher, $followerProjectionRepository, $subscriptionRepository);
-        $messagePublished = new MessagePublished(MessageId::generate(), 'Hello', $followeeId);
+        $followerProjectionRepository = $this->getFollowerProjectionRepository($this->follower, $this->anotherFollower);
+        $subscriptionRepository = $this->getSubscriptionRepository($this->follower, $this->anotherFollower);
+        $this->notifyFollowers = new NotifyFollowersOfFolloweeMessage($this->eventPublisher, $followerProjectionRepository, $subscriptionRepository);
+    }
 
-        $notifyFollowers->handleMessagePublished($messagePublished);
+    public function testGivenSeveralFollowers_WhenHandleMessagePublished_ThenNotifyFollowersOfAuthor()
+    {
+        $messagePublished = new MessagePublished(MessageId::generate(), 'Hello', $this->followeeId);
 
-        \Assert\that($eventPublisher->events)->count(2);
+        $this->notifyFollowers->handleMessagePublished($messagePublished);
+
+        \Assert\that($this->eventPublisher->events)->count(2);
         /** @var FolloweeMessagePublished $followeeMessagePublished */
-        $followeeMessagePublished = $eventPublisher->events[0];
+        $followeeMessagePublished = $this->eventPublisher->events[0];
         \Assert\that($followeeMessagePublished)->isInstanceOf('App\Domain\Subscriptions\FolloweeMessagePublished');
-        \Assert\that($followeeMessagePublished->getSubscriptionId()->getFollowerId())->eq($follower->getFollowerId());
-        $followeeMessagePublished = $eventPublisher->events[1];
+        \Assert\that($followeeMessagePublished->getSubscriptionId()->getFollowerId())->eq($this->follower->getFollowerId());
+        $followeeMessagePublished = $this->eventPublisher->events[1];
         \Assert\that($followeeMessagePublished)->isInstanceOf('App\Domain\Subscriptions\FolloweeMessagePublished');
-        \Assert\that($followeeMessagePublished->getSubscriptionId()->getFollowerId())->eq($anotherFollower->getFollowerId());
+        \Assert\that($followeeMessagePublished->getSubscriptionId()->getFollowerId())->eq($this->anotherFollower->getFollowerId());
+    }
+
+    public function testGivenSeveralFollowers_WhenHandleMessageRepublished_ThenNotifyFollowersOfRepublisher()
+    {
+        $messagePublished = new MessagePublished(MessageId::generate(), 'Hello', $this->followeeId);
+
+        $this->notifyFollowers->handleMessageRepublished($messagePublished);
+
+        \Assert\that($this->eventPublisher->events)->count(2);
+        /** @var FolloweeMessagePublished $followeeMessagePublished */
+        $followeeMessagePublished = $this->eventPublisher->events[0];
+        \Assert\that($followeeMessagePublished)->isInstanceOf('App\Domain\Subscriptions\FolloweeMessagePublished');
+        \Assert\that($followeeMessagePublished->getSubscriptionId()->getFollowerId())->eq($this->follower->getFollowerId());
+        $followeeMessagePublished = $this->eventPublisher->events[1];
+        \Assert\that($followeeMessagePublished)->isInstanceOf('App\Domain\Subscriptions\FolloweeMessagePublished');
+        \Assert\that($followeeMessagePublished->getSubscriptionId()->getFollowerId())->eq($this->anotherFollower->getFollowerId());
     }
 
     /**
