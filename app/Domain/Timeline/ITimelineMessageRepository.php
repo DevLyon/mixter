@@ -7,7 +7,7 @@ interface ITimelineMessageRepository
 {
     /**
      * @param MessageId $messageId
-     * @return TimelineMessage
+     * @return array of TimelineMessage
      */
     public function getByMessageId(MessageId $messageId);
 

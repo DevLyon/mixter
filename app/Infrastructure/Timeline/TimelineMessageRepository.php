@@ -5,6 +5,7 @@ namespace App\Infrastructure\Timeline;
 use App\Domain\Messages\MessageId;
 use App\Domain\Timeline\ITimelineMessageRepository;
 use App\Domain\Timeline\TimelineMessage;
+use App\Domain\Timeline\TimelineMessageId;
 use App\Infrastructure\IProjectionStore;
 
 class TimelineMessageRepository implements ITimelineMessageRepository
@@ -23,12 +24,15 @@ class TimelineMessageRepository implements ITimelineMessageRepository
 
     public function getByMessageId(MessageId $messageId)
     {
-        return $this->projectionStore->get($messageId->getId(), self::PROJECTION_TYPE);
+        return array_filter($this->getAll(), function(TimelineMessage $timelineMessage) use($messageId) {
+            return $timelineMessage->getMessageId() == $messageId;
+        });
     }
 
     public function save(TimelineMessage $timelineMessage)
     {
-        $this->projectionStore->store($timelineMessage->getMessageId()->getId(), $timelineMessage);
+        $timelineMessageId = new TimelineMessageId($timelineMessage->getMessageId(), $timelineMessage->getOwnerId());
+        $this->projectionStore->store($timelineMessageId->getId(), $timelineMessage);
     }
 
     public function getAll()

@@ -5,6 +5,7 @@ namespace Tests\Infrastructure\Timeline;
 use App\Domain\Identity\UserId;
 use App\Domain\Messages\MessageId;
 use App\Domain\Timeline\TimelineMessage;
+use App\Domain\Timeline\TimelineMessageId;
 use App\Infrastructure\Timeline\TimelineMessageRepository;
 use Tests\Infrastructure\InMemoryProjectionStore;
 
@@ -13,22 +14,23 @@ class TimelineMessageRepositoryTest extends \PHPUnit_Framework_TestCase
     public function testGivenExistingTimelineMessage_WhenGetByMessageId_ThenReturnsTimelineMessage()
     {
         $existingTimelineMessage = new TimelineMessage(MessageId::generate(), 'hello', new UserId('clem@mix-it.fr'));
-        $projectionStore = new InMemoryProjectionStore(array($existingTimelineMessage->getMessageId()->getId() => $existingTimelineMessage));
+        $timelineMessageId = new TimelineMessageId($existingTimelineMessage->getMessageId(), $existingTimelineMessage->getOwnerId());
+        $projectionStore = new InMemoryProjectionStore(array($timelineMessageId->getId() => $existingTimelineMessage));
         $timelineMessageRepository = new TimelineMessageRepository($projectionStore);
 
-        $timelineMessage = $timelineMessageRepository->getByMessageId($existingTimelineMessage->getMessageId());
+        $timelineMessages = $timelineMessageRepository->getByMessageId($existingTimelineMessage->getMessageId());
 
-        \Assert\that($timelineMessage)->eq($existingTimelineMessage);
+        \Assert\that($timelineMessages)->eq(array($existingTimelineMessage));
     }
 
-    public function testGivenTimelineMessageDoesNotExist_WhenGetByMessageId_ThenReturnsNull()
+    public function testGivenTimelineMessageDoesNotExist_WhenGetByMessageId_ThenReturnsEmptyArray()
     {
         $projectionStore = new InMemoryProjectionStore();
         $timelineMessageRepository = new TimelineMessageRepository($projectionStore);
 
-        $timelineMessage = $timelineMessageRepository->getByMessageId(MessageId::generate());
+        $timelineMessages = $timelineMessageRepository->getByMessageId(MessageId::generate());
 
-        \Assert\that(is_null($timelineMessage))->true();
+        \Assert\that($timelineMessages)->eq(array());
     }
 
     public function testWhenSaveTimelineMessage_ThenStoresIt()
@@ -39,7 +41,8 @@ class TimelineMessageRepositoryTest extends \PHPUnit_Framework_TestCase
         $timelineMessage = new TimelineMessage(MessageId::generate(), 'hello', new UserId('clem@mix-it.fr'));
         $timelineMessageRepository->save($timelineMessage);
 
-        $storedMessage = $projectionStore->get($timelineMessage->getMessageId()->getId(), get_class($timelineMessage));
+        $timelineMessageId = new TimelineMessageId($timelineMessage->getMessageId(), $timelineMessage->getOwnerId());
+        $storedMessage = $projectionStore->get($timelineMessageId->getId(), get_class($timelineMessage));
         \Assert\that($storedMessage)->eq($timelineMessage);
     }
 

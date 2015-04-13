@@ -34,7 +34,10 @@ class UpdateTimeline
 
     public function handleMessageRepublished(MessageRepublished $messageRepublished)
     {
-        $timelineMessage = $this->timelineMessageRepository->getByMessageId($messageRepublished->getMessageId());
-        $timelineMessage->incrementNbRepublish();
+        $timelineMessages = $this->timelineMessageRepository->getByMessageId($messageRepublished->getMessageId());
+        /** @var TimelineMessage $timelineMessage */
+        foreach($timelineMessages as $timelineMessage) {
+            $timelineMessage->incrementNbRepublish();
+        }
     }
 }
