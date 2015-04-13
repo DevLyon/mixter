@@ -7,6 +7,7 @@ use App\Domain\Subscriptions\FollowerProjection;
 use App\Domain\Subscriptions\SubscriptionId;
 use App\Domain\Subscriptions\UpdateFollowers;
 use App\Domain\Subscriptions\UserFollowed;
+use App\Domain\Subscriptions\UserUnfollowed;
 use App\Infrastructure\Subscriptions\FollowerProjectionRepository;
 use Tests\Infrastructure\InMemoryProjectionStore;
 
