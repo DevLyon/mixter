@@ -5,6 +5,7 @@ namespace Tests\Domain\Subscriptions;
 use App\Domain\Identity\UserId;
 use App\Domain\Messages\MessageId;
 use App\Domain\Messages\MessagePublished;
+use App\Domain\Subscriptions\FolloweeMessagePublished;
 use App\Domain\Subscriptions\FollowerProjection;
 use App\Domain\Subscriptions\NotifyFollowersOfFolloweeMessage;
 use App\Domain\Subscriptions\UserFollowed;
