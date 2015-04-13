@@ -29,4 +29,25 @@ class FollowerProjectionRepositoryTest extends \PHPUnit_Framework_TestCase
         \Assert\that($follower->getFollowerId())->eq($followerId);
         \Assert\that($follower->getFolloweeId())->eq($followeeId);
     }
+
+    public function testGivenNoFollowersExist_WhenGetByUserId_ThenReturnsEmptyArray()
+    {
+        $projectionStore = new InMemoryProjectionStore();
+        $followerProjectionRepository = new FollowerProjectionRepository($projectionStore);
+
+        $followers = $followerProjectionRepository->getFollowersOf(new UserId('clem@mix-it.fr'));
+
+        \Assert\that($followers)->count(0);
+    }
+
+    public function testWhenSaveFollower_ThenStoresIt()
+    {
+        $projectionStore = new InMemoryProjectionStore();
+        $followerProjectionRepository = new FollowerProjectionRepository($projectionStore);
+        $followerProjection = new FollowerProjection(new UserId('clem@mix-it.fr'), new UserId('florent@mix-it.fr'));
+
+        $followerProjectionRepository->save($followerProjection);
+
+        \Assert\that($projectionStore->getAll('App\Domain\Subscriptions\FollowerProjection'))->count(1);
+    }
 }
