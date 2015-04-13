@@ -2,9 +2,12 @@
 
 namespace App\Domain\Timeline;
 
+use App\Domain\Messages\IMessageProjectionRepository;
+use App\Domain\Messages\MessageProjection;
 use App\Domain\Messages\MessagePublished;
 use App\Domain\Messages\MessageRepublished;
 use App\Domain\Messages\ReplyMessagePublished;
+use App\Domain\Subscriptions\FolloweeMessagePublished;
 
 class UpdateTimeline
 {
@@ -13,9 +16,15 @@ class UpdateTimeline
      */
     private $timelineMessageRepository;
 
-    public function __construct(ITimelineMessageRepository $timelineMessageRepository)
+    /**
+     * @var IMessageProjectionRepository
+     */
+    private $messageProjectionRepository;
+
+    public function __construct(ITimelineMessageRepository $timelineMessageRepository, IMessageProjectionRepository $messageProjectionRepository)
     {
         $this->timelineMessageRepository = $timelineMessageRepository;
+        $this->messageProjectionRepository = $messageProjectionRepository;
     }
 
     public function handleMessagePublished(MessagePublished $messagePublished)
@@ -39,5 +48,12 @@ class UpdateTimeline
         foreach($timelineMessages as $timelineMessage) {
             $timelineMessage->incrementNbRepublish();
         }
+    }
+
+    public function handleFolloweeMessagePublished(FolloweeMessagePublished $followeeMessagePublished)
+    {
+        /** @var MessageProjection $messageProjection */
+        $messageProjection = $this->messageProjectionRepository->getById($followeeMessagePublished->getMessageId());
+        $this->timelineMessageRepository->save(new TimelineMessage($messageProjection->getMessageId(), $messageProjection->getContent(), $followeeMessagePublished->getSubscriptionId()->getFollowerId()));
     }
 }

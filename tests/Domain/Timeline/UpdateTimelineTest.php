@@ -4,14 +4,18 @@ namespace Tests\Domain\Timeline;
 
 use App\Domain\Identity\UserId;
 use App\Domain\Messages\MessageId;
+use App\Domain\Messages\MessageProjection;
 use App\Domain\Messages\MessagePublished;
 use App\Domain\Messages\MessageRepublished;
 use App\Domain\Messages\ReplyMessagePublished;
+use App\Domain\Subscriptions\FolloweeMessagePublished;
+use App\Domain\Subscriptions\SubscriptionId;
 use App\Domain\Timeline\ITimelineMessageRepository;
 use App\Domain\Timeline\TimelineMessage;
 use App\Domain\Timeline\TimelineMessageId;
 use App\Domain\Timeline\UpdateTimeline;
 use App\Infrastructure\IProjectionStore;
+use App\Infrastructure\Messages\MessageProjectionRepository;
 use App\Infrastructure\Timeline\TimelineMessageRepository;
 use Tests\Infrastructure\InMemoryProjectionStore;
 
@@ -29,12 +33,19 @@ class UpdateTimelineTest extends \PHPUnit_Framework_TestCase
     /** @var MessageId */
     private $messageId;
 
+    /** @var string */
+    private $messageContent;
+
     public function setup()
     {
         $this->projectionStore = new InMemoryProjectionStore();
         $this->timelineMessageRepository = new TimelineMessageRepository($this->projectionStore);
         $this->messageId = MessageId::generate();
-        $this->updateTimeline = new UpdateTimeline($this->timelineMessageRepository);
+        $this->messageContent = 'Hello';
+        $messageProjection = new MessageProjection($this->messageId, $this->messageContent);
+        $projectionStore = new InMemoryProjectionStore(array($this->messageId->getId() => $messageProjection));
+        $messageProjectionRepository = new MessageProjectionRepository($projectionStore);
+        $this->updateTimeline = new UpdateTimeline($this->timelineMessageRepository, $messageProjectionRepository);
     }
 
     public function testWhenHandleMessagePublished_ThenTimelineMessageIsSavedForAuthor()
@@ -79,5 +90,19 @@ class UpdateTimelineTest extends \PHPUnit_Framework_TestCase
         $timelineMessageId = new TimelineMessageId($messageRepublished->getMessageId(), $ownerId);
         $timelineMessage = $this->projectionStore->get($timelineMessageId->getId(), 'App\Domain\Timeline\TimelineMessage');
         \Assert\that($timelineMessage->getNbRepublish())->eq(1);
+    }
+
+    public function testWhenHandleFolloweeMessagePublished_ThenTimelineMessageIsSavedForFollower()
+    {
+        $followeeMessagePublished = new FolloweeMessagePublished($this->messageId, new SubscriptionId(new UserId('clem@mix-it.fr'), new UserId('florent@mix-it.fr')));
+
+        $this->updateTimeline->handleFolloweeMessagePublished($followeeMessagePublished);
+
+        /** @var TimelineMessage $timelineMessage */
+        $timelineMessageId = new TimelineMessageId($followeeMessagePublished->getMessageId(), $followeeMessagePublished->getSubscriptionId()->getFollowerId());
+        $timelineMessage = $this->projectionStore->get($timelineMessageId->getId(), 'App\Domain\Timeline\TimelineMessage');
+        \Assert\that($timelineMessage->getMessageId())->eq($this->messageId);
+        \Assert\that($timelineMessage->getOwnerId())->eq($followeeMessagePublished->getSubscriptionId()->getFollowerId());
+        \Assert\that($timelineMessage->getContent())->eq($this->messageContent);
     }
 }
