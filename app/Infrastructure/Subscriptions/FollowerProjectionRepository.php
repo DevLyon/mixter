@@ -9,6 +9,7 @@ use App\Infrastructure\IProjectionStore;
 
 class FollowerProjectionRepository implements IFollowerProjectionRepository
 {
+    const PROJECTION_TYPE = 'App\Domain\Subscriptions\FollowerProjection';
     /**
      * @var IProjectionStore
      */
@@ -22,7 +23,7 @@ class FollowerProjectionRepository implements IFollowerProjectionRepository
     public function getFollowersOf(UserId $followeeId)
     {
         return array_filter(
-            $this->projectionStore->getAll('App\Domain\Subscriptions\FollowerProjection'),
+            $this->projectionStore->getAll(self::PROJECTION_TYPE),
             function(FollowerProjection $item) use($followeeId) {
                 return $item->getFolloweeId() == $followeeId;
             });
@@ -30,6 +31,11 @@ class FollowerProjectionRepository implements IFollowerProjectionRepository
 
     public function save(FollowerProjection $followerProjection)
     {
-        $this->projectionStore->store($followerProjection->getFolloweeId()->getId(), $followerProjection);
+        $this->projectionStore->store($followerProjection->getSubscriptionId()->getId(), $followerProjection);
+    }
+
+    public function remove(FollowerProjection $followerProjection)
+    {
+        $this->projectionStore->remove($followerProjection->getSubscriptionId()->getId(), self::PROJECTION_TYPE);
     }
 }
