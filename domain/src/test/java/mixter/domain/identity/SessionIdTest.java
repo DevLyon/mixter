@@ -45,4 +45,11 @@ public class SessionIdTest {
         //When
         new SessionId(value);
     }
+
+    @Test
+    public void GivenASessionIdWhenItIsSerializedAsAStringThenItShouldSerializeAsItsValue() throws Exception {
+        String value = "test";
+        SessionId sessionId = new SessionId(value);
+        assertThat(sessionId.toString()).isEqualTo(value);
+    }
 }
