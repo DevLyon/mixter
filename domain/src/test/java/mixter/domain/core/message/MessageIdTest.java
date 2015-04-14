@@ -21,4 +21,13 @@ public class MessageIdTest {
         assertThat(messageId).isEqualTo(otherMessageId);
     }
 
+    @Test
+    public void GivenAMessageIdWhenItIsSerializedAsStringItShouldReturnTheMessageIdValue() throws Exception {
+        //Given
+        MessageId messageId = new MessageId(VALUE);
+        //When
+        String actual = messageId.toString();
+        //Then
+        assertThat(actual).isEqualTo(VALUE);
+    }
 }
