@@ -1,6 +1,4 @@
-package mixter.domain.identity.handlers;
-
-import mixter.domain.identity.SessionProjection;
+package mixter.domain.identity;
 
 public interface SessionProjectionRepository {
     void save(SessionProjection sessionProjection);
