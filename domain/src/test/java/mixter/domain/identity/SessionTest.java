@@ -37,6 +37,20 @@ public class SessionTest extends DomainTest {
         assertThat(eventPublisher.publishedEvents).containsExactly(expected);
     }
 
+    @Test
+    public void GivenADisconnectedSessionWhenLoggingOutThenNoEventIsRaised() {
+        // Given
+        Session session = sessionFor(
+                new UserConnected(SESSION_ID, USER_ID, Instant.now()),
+                new UserDisconnected(SESSION_ID, USER_ID));
+
+        // When
+        session.logout(eventPublisher);
+
+        // Then
+        assertThat(eventPublisher.publishedEvents).isEmpty();
+    }
+
     private Session sessionFor(Event... events) {
         return new Session(history(events));
     }
