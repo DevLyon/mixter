@@ -31,4 +31,18 @@ public class InMemorySessionProjectionRepositoryTest {
         assertThat(repository.getById(sessionProjection.getSessionId()).get()).isEqualTo(sessionProjection);
     }
 
+    @Test
+    public void GivenARepositoryWithASavedSessionWhenReplacingThisSessionWithThenItShouldReturnTheReplacedSessionProjection() {
+        // Given
+        SessionId sessionId = SessionId.generate();
+        SessionProjection sessionProjection = new SessionProjection(sessionId, USER_ID, SessionStatus.DISCONNECTED);
+        SessionProjection updatedSessionProjection = new SessionProjection(sessionId, USER_ID, SessionStatus.CONNECTED);
+        InMemorySessionProjectionRepository repository = new InMemorySessionProjectionRepository();
+        repository.save(sessionProjection);
+        // When
+        repository.replaceBy(updatedSessionProjection);
+        // Then
+        assertThat(repository.getById(sessionProjection.getSessionId()).get()).isEqualTo(updatedSessionProjection);
+    }
+
 }
