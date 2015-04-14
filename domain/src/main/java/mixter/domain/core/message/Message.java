@@ -6,9 +6,7 @@ import mixter.domain.UserId;
 import mixter.domain.core.message.events.MessagePublished;
 import mixter.domain.core.message.events.MessageRepublished;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class Message {
@@ -25,6 +23,9 @@ public class Message {
     }
 
     public void republish(UserId userId, EventPublisher eventPublisher, UserId authorId, String message) {
+        if (projection.publishers.contains(userId)) {
+            return;
+        }
         MessageRepublished event = new MessageRepublished(projection.getId(), userId, authorId, message);
         eventPublisher.publish(event);
     }
@@ -32,6 +33,7 @@ public class Message {
     private class DecisionProjection {
         private MessageId id;
         private Map<Class, Consumer> appliers = new HashMap<>();
+        public Set<UserId> publishers=new HashSet<>();
 
         public DecisionProjection(List<MessagePublished> history) {
             Consumer<MessagePublished> applyMessagePublished = this::apply;
@@ -46,6 +48,7 @@ public class Message {
 
         private void apply(MessagePublished event) {
             id = event.getMessageId();
+            publishers.add(event.getAuthorId());
         }
 
         public MessageId getId() {

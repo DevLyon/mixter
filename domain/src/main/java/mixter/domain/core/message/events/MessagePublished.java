@@ -43,4 +43,8 @@ public class MessagePublished implements Event {
     public MessageId getMessageId() {
         return messageId;
     }
+
+    public UserId getAuthorId() {
+        return authorId;
+    }
 }
