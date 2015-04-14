@@ -1,10 +1,13 @@
 package mixter.domain.identity.handlers;
 
+import mixter.doc.Handler;
 import mixter.domain.identity.SessionProjection;
+import mixter.domain.identity.SessionProjectionRepository;
 import mixter.domain.identity.SessionStatus;
 import mixter.domain.identity.events.UserConnected;
 import mixter.domain.identity.events.UserDisconnected;
 
+@Handler
 public class RegisterSession {
     private SessionProjectionRepository sessionProjectionRepository;
 
