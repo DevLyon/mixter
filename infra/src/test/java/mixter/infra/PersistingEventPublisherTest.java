@@ -28,4 +28,17 @@ public class PersistingEventPublisherTest {
         // Then
         assertThat(store.getEventsOfAggregate(id)).containsExactly(expected);
     }
+
+    @Test
+    public void GivenAPersistingEventPublisherWhenPublishingAnEventThenItIsForwarded() throws Exception {
+        // Given
+        AnAggregateId id = new AnAggregateId();
+        PersistingEventPublisher persistedPublisher = new PersistingEventPublisher(store, publisher);
+        EventA expected = new EventA(id);
+        // When
+        persistedPublisher.publish(expected);
+
+        // Then
+        assertThat(publisher.publishedEvents).containsExactly(expected);
+    }
 }

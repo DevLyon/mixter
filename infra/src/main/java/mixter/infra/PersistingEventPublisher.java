@@ -15,5 +15,6 @@ public class PersistingEventPublisher implements EventPublisher {
     @Override
     public void publish(Event event) {
         store.store(event);
+        publisher.publish(event);
     }
 }
