@@ -6,9 +6,7 @@ import mixter.domain.UserId;
 import mixter.domain.core.message.events.MessageQuacked;
 import mixter.domain.core.message.events.MessageRequacked;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class Message {
@@ -25,6 +23,9 @@ public class Message {
     }
 
     public void reQuack(UserId userId, EventPublisher eventPublisher, UserId authorId, String message) {
+        if (projection.publishers.contains(userId)) {
+            return;
+        }
         MessageRequacked event = new MessageRequacked(projection.getId(), userId, authorId, message);
         eventPublisher.publish(event);
     }
@@ -32,6 +33,7 @@ public class Message {
     private class DecisionProjection {
         private MessageId id;
         private Map<Class, Consumer> appliers = new HashMap<>();
+        public Set<UserId> publishers=new HashSet<>();
 
         public DecisionProjection(List<MessageQuacked> history) {
             Consumer<MessageQuacked> applyMessagePublished = this::apply;
@@ -46,6 +48,7 @@ public class Message {
 
         private void apply(MessageQuacked event) {
             id = event.getMessageId();
+            publishers.add(event.getAuthorId());
         }
 
         public MessageId getId() {
