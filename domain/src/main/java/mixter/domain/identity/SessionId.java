@@ -6,7 +6,9 @@ public class SessionId {
     private String value;
 
     public SessionId(String value) {
-
+        if (value.trim().isEmpty()) {
+            throw new SessionIdCannotBeEmpty();
+        }
         this.value = value;
     }
 
@@ -28,5 +30,10 @@ public class SessionId {
     @Override
     public int hashCode() {
         return value != null ? value.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return value;
     }
 }
