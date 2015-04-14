@@ -19,4 +19,14 @@ public class UserIdTest {
 
         assertThat(userId1).isEqualTo(userId2);
     }
+
+    @Test
+    public void GivenAnExistingUserIdWhenSerializingItToStringThenItShouldSerializeAsTheEmailString() throws Exception {
+        //Given
+        UserId userId1 = new UserId(AN_EMAIL);
+        //When
+        String seralizedUserId = userId1.toString();
+        //Then
+        assertThat(seralizedUserId).isEqualTo(AN_EMAIL);
+    }
 }
