@@ -1,5 +1,6 @@
 package mixter.domain.core.message;
 
+import mixter.domain.Event;
 import mixter.domain.SpyEventPublisher;
 import mixter.domain.UserId;
 import mixter.domain.core.message.events.MessagePublished;
@@ -69,12 +70,28 @@ public class MessageTest {
         assertThat(eventPublisher.publishedEvents).isEmpty();
     }
 
+    @Test
+    public void whenAMessageIsRepublishedTwiceByTheSameUserThenItShouldNotSendMessageRepublishedEvent() {
+        // Given
+        MessageId messageId = new MessageId();
+        Message message = messageFor(
+                new MessagePublished(messageId, CONTENT, AUTHOR_ID),
+                new MessageRepublished(messageId, USER_ID, AUTHOR_ID, CONTENT)
+        );
 
-    protected Message messageFor(MessagePublished... events) {
+        // When
+        message.republish(USER_ID, eventPublisher, AUTHOR_ID, CONTENT);
+
+        // Then
+        assertThat(eventPublisher.publishedEvents).isEmpty();
+    }
+
+
+    protected Message messageFor(Event... events) {
         return new Message(history(events));
     }
-    protected List<MessagePublished> history(MessagePublished... events) {
-        List<MessagePublished> eventHistory = new ArrayList<>();
+    protected List<Event> history(Event... events) {
+        List<Event> eventHistory = new ArrayList<>();
         Collections.addAll(eventHistory, events);
         return eventHistory;
     }
