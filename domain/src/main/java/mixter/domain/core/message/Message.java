@@ -22,7 +22,7 @@ public class Message {
     }
 
     public static MessageId publish(PublishMessage publishMessage, EventPublisher eventPublisher) {
-        MessageId messageId = new MessageId();
+        MessageId messageId = MessageId.generate();
         eventPublisher.publish(new MessagePublished(messageId, publishMessage.getMessage(), publishMessage.getAuthorId()));
         return messageId;
     }

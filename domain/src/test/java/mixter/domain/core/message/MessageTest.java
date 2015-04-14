@@ -37,7 +37,7 @@ public class MessageTest extends mixter.domain.DomainTest {
     @Test
     public void whenAMessageIsRepublishedThenItSendsAMessageRepublishedEvent() {
         // Given
-        MessageId messageId = new MessageId();
+        MessageId messageId = MessageId.generate();
         Message message = messageFor(
                 new MessagePublished(messageId, CONTENT, AUTHOR_ID)
         );
@@ -53,7 +53,7 @@ public class MessageTest extends mixter.domain.DomainTest {
     @Test
     public void whenAMessageIsRepublishedByItsAuthorThenItShouldNotSendRepublishedEvent() {
         // Given
-        MessageId messageId = new MessageId();
+        MessageId messageId = MessageId.generate();
 
         Message message = messageFor(
                 new MessagePublished(messageId, CONTENT, AUTHOR_ID)
@@ -69,7 +69,7 @@ public class MessageTest extends mixter.domain.DomainTest {
     @Test
     public void whenAMessageIsRepublishedTwiceByTheSameUserThenItShouldNotSendMessageRepublishedEvent() {
         // Given
-        MessageId messageId = new MessageId();
+        MessageId messageId = MessageId.generate();
         Message message = messageFor(
                 new MessagePublished(messageId, CONTENT, AUTHOR_ID),
                 new MessageRepublished(messageId, USER_ID, AUTHOR_ID, CONTENT)
