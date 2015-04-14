@@ -4,6 +4,9 @@ public class UserId {
     private String email;
 
     public UserId(String email) {
+        if (email.trim().isEmpty()) {
+            throw new UserEmailCannotBeEmpty();
+        }
         this.email = email;
     }
 
