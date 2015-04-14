@@ -17,4 +17,10 @@ public class FakeSessionProjectionRepository implements SessionProjectionReposit
     public void save(SessionProjection sessionProjection) {
         sessions.add(sessionProjection);
     }
+
+    @Override
+    public void replaceBy(SessionProjection sessionProjection) {
+        sessions.removeIf(s -> s.getSessionId().equals(sessionProjection.getSessionId()));
+        sessions.add(sessionProjection);
+    }
 }

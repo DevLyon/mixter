@@ -5,6 +5,7 @@ import mixter.domain.identity.SessionProjection;
 import mixter.domain.identity.SessionStatus;
 import mixter.domain.identity.UserId;
 import mixter.domain.identity.events.UserConnected;
+import mixter.domain.identity.events.UserDisconnected;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,6 +30,18 @@ public class RegisterSessionTest {
         handler.apply(userConnected);
         // Then
         SessionProjection sessionProjection = new SessionProjection(userConnected.getSessionId(), userConnected.getUserId(), SessionStatus.CONNECTED);
+        assertThat(sessionRepository.getSessions()).containsExactly(sessionProjection);
+    }
+
+    @Test
+    public void GivenARegisterSessionHandlerWhenItReceivesAUserDisconnectedEventThenItStoresADisconnectedSessionProjection() {
+        // Given
+        UserDisconnected userDisconnected = new UserDisconnected(SessionId.generate(), new UserId("user@mixit.fr"));
+        RegisterSession handler = new RegisterSession(sessionRepository);
+        // When
+        handler.apply(userDisconnected);
+        // Then
+        SessionProjection sessionProjection = new SessionProjection(userDisconnected.getSessionId(), userDisconnected.getUserId(), SessionStatus.DISCONNECTED);
         assertThat(sessionRepository.getSessions()).containsExactly(sessionProjection);
     }
 }
