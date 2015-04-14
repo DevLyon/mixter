@@ -69,7 +69,7 @@ public class MessageTest {
         assertThat(eventPublisher.publishedEvents).isEmpty();
     }
 
-    Test
+    @Test
     public void whenAMessageIsRepublishedTwiceByTheSameUserThenItShouldNotSendMessageRepublishedEvent() {
         // Given
         MessageId messageId = new MessageId();
