@@ -25,4 +25,8 @@ public class UserRegistered implements Event {
     public int hashCode() {
         return userId != null ? userId.hashCode() : 0;
     }
+
+    public UserId getUserId() {
+        return userId;
+    }
 }
