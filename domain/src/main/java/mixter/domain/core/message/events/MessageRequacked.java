@@ -1,8 +1,8 @@
 package mixter.domain.core.message.events;
 
 import mixter.domain.Event;
-import mixter.domain.UserId;
 import mixter.domain.core.message.MessageId;
+import mixter.domain.identity.UserId;
 
 public class MessageRequacked implements Event {
     private final MessageId messageId;
