@@ -13,4 +13,9 @@ public class InMemoryEventStore implements EventStore {
     public List<Event> getEventsOfAggregate(AggregateId aggregateId) {
         return events;
     }
+
+    @Override
+    public void store(Event event) {
+        events.add(event);
+    }
 }
