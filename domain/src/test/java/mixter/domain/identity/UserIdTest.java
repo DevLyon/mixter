@@ -1,6 +1,8 @@
 package mixter.domain.identity;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -29,4 +31,17 @@ public class UserIdTest {
         //Then
         assertThat(seralizedUserId).isEqualTo(AN_EMAIL);
     }
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+    @Test
+    public void GivenAnEmptyEmailStringWhenCreatingAUserIdThenAnExceptionShouldBeThrown() {
+        // Given
+        String email = "";
+        thrown.expect(UserEmailCannotBeEmpty.class);
+        // When
+        new UserId(email);
+    }
+
 }
