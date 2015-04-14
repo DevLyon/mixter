@@ -11,6 +11,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class InMemoryEventStoreTest {
     public static final AnAggregateId AGGREGATE_ID1 = new AnAggregateId();
+    public static final AnAggregateId AGGREGATE_ID2 = new AnAggregateId();
+    public static final AnAggregateId AGGREGATE_ID3 = new AnAggregateId();
 
     InMemoryEventStore store = new InMemoryEventStore();
 
@@ -44,5 +46,17 @@ public class InMemoryEventStoreTest {
 
         // Then
         assertThat(eventsOfAggregate).containsExactly(expected);
+    }
+
+    @Test
+    public void GivenAStoreHavingStoredEventsOfSeveralAggregatesWhenGetEventsOfOneAggregateThenReturnEventsOfOnlyThisAggregate() {
+        EventA expected = new EventA(AGGREGATE_ID1);
+        store.store(expected);
+        store.store(new EventA(AGGREGATE_ID2));
+        store.store(new EventA(AGGREGATE_ID3));
+
+        List<Event> eventsOfAggregateA = store.getEventsOfAggregate(AGGREGATE_ID1);
+
+        assertThat(eventsOfAggregateA).containsExactly(expected);
     }
 }
