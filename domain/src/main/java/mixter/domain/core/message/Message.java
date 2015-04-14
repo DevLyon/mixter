@@ -22,7 +22,7 @@ public class Message {
     }
 
     public static MessageId quack(UserId authorId, String message, EventPublisher eventPublisher) {
-        MessageId messageId = new MessageId();
+        MessageId messageId = MessageId.generate();;
         eventPublisher.publish(new MessageQuacked(messageId, message, authorId));
         return messageId;
     }
