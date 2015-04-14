@@ -31,4 +31,8 @@ public class SessionProjection {
         result = 31 * result + (status != null ? status.hashCode() : 0);
         return result;
     }
+
+    public SessionId getSessionId() {
+        return sessionId;
+    }
 }

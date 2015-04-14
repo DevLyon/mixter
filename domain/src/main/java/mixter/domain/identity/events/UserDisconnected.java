@@ -31,4 +31,12 @@ public class UserDisconnected implements Event {
         result = 31 * result + (userId != null ? userId.hashCode() : 0);
         return result;
     }
+
+    public UserId getUserId() {
+        return userId;
+    }
+
+    public SessionId getSessionId() {
+        return sessionId;
+    }
 }
