@@ -2,6 +2,7 @@ package mixter.domain.identity;
 
 import org.assertj.core.util.Sets;
 
+import java.util.Optional;
 import java.util.Set;
 
 public class FakeSessionProjectionRepository implements SessionProjectionRepository {
@@ -21,5 +22,10 @@ public class FakeSessionProjectionRepository implements SessionProjectionReposit
     public void replaceBy(SessionProjection sessionProjection) {
         sessions.removeIf(s -> s.getSessionId().equals(sessionProjection.getSessionId()));
         sessions.add(sessionProjection);
+    }
+
+    @Override
+    public Optional<SessionProjection> getById(SessionId sessionId) {
+        return Optional.empty();
     }
 }
