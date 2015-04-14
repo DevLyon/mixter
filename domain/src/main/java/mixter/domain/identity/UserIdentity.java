@@ -22,7 +22,7 @@ public class UserIdentity {
     }
 
     public SessionId logIn(EventPublisher eventPublisher) {
-        SessionId sessionId = new SessionId();
+        SessionId sessionId = SessionId.generate();
         eventPublisher.publish(new UserConnected(sessionId, projection.userId, Instant.now()));
         return sessionId;
     }
