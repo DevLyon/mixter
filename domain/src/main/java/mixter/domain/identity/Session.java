@@ -1,5 +1,7 @@
 package mixter.domain.identity;
 
+import mixter.doc.Aggregate;
+import mixter.doc.Projection;
 import mixter.domain.DecisionProjectionBase;
 import mixter.domain.Event;
 import mixter.domain.EventPublisher;
@@ -8,6 +10,7 @@ import mixter.domain.identity.events.UserDisconnected;
 
 import java.util.List;
 
+@Aggregate
 public class Session {
 
     private DecisionProjection projection;
@@ -22,6 +25,7 @@ public class Session {
         }
     }
 
+    @Projection
     private class DecisionProjection extends DecisionProjectionBase {
         public SessionId id;
         public UserId userId;
