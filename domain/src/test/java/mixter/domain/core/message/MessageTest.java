@@ -2,7 +2,7 @@ package mixter.domain.core.message;
 
 import mixter.domain.SpyEventPublisher;
 import mixter.domain.UserId;
-import mixter.domain.core.message.events.MessagePublished;
+import mixter.domain.core.message.events.MessageQuacked;
 import org.junit.Before;
 import org.junit.Test;
 
