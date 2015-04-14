@@ -2,7 +2,7 @@ package mixter.domain.core.message;
 
 import mixter.domain.Event;
 import mixter.domain.EventPublisher;
-import mixter.domain.UserId;
+import mixter.domain.identity.UserId;
 import mixter.domain.core.message.events.MessageQuacked;
 import mixter.domain.core.message.events.MessageRequacked;
 
