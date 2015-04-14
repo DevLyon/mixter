@@ -1,5 +1,6 @@
 package mixter.domain.identity;
 
+import mixter.doc.Aggregate;
 import mixter.domain.DecisionProjectionBase;
 import mixter.domain.Event;
 import mixter.domain.EventPublisher;
@@ -9,6 +10,7 @@ import mixter.domain.identity.events.UserRegistered;
 import java.time.Instant;
 import java.util.List;
 
+@Aggregate
 public class UserIdentity {
     private DecisionProjection projection;
 

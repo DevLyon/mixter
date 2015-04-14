@@ -1,5 +1,8 @@
 package mixter.domain.identity;
 
+import mixter.doc.Projection;
+
+@Projection
 public class SessionProjection {
     private final SessionId sessionId;
     private final UserId userId;
