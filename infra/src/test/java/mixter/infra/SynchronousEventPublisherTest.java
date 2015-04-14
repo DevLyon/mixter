@@ -16,7 +16,7 @@ public class SynchronousEventPublisherTest {
     }
 
     @Test
-    public void GivenASyncrhonousEventPublisherWithARegisteredHandlerWhenAnEventIsPublishedToItThenTheHandlerIsCalled() {
+    public void GivenASynchronousEventPublisherWithARegisteredHandlerWhenAnEventIsPublishedToItThenTheHandlerIsCalled() {
         Consumer<EventA> handler = spyEvenHandler::apply;
         SynchronousEventPublisher publisher = new SynchronousEventPublisher();
         publisher.register(EventA.class, handler);
@@ -27,4 +27,19 @@ public class SynchronousEventPublisherTest {
         assertThat(spyEvenHandler.isCalled()).isTrue();
     }
 
+    @Test
+    public void GivenASynchronousEventPublisherWith2RegisteredHandlersWhenAnEventIsPublishedToItThenBothHandlersAreCalled() {
+        Consumer<EventA> handler = spyEvenHandler::apply;
+        SpyEvenHandler spyEvenHandler2 = new SpyEvenHandler();
+        Consumer<EventA> handler2 = spyEvenHandler2::apply;
+        SynchronousEventPublisher publisher = new SynchronousEventPublisher();
+        publisher.register(EventA.class, handler);
+        publisher.register(EventA.class, handler2);
+        EventA event = new EventA(new AnAggregateId());
+
+        publisher.publish(event);
+
+        assertThat(this.spyEvenHandler.isCalled()).isTrue();
+        assertThat(spyEvenHandler2.isCalled()).isTrue();
+    }
 }
