@@ -8,13 +8,9 @@ import mixter.domain.core.message.events.MessageRequacked;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class MessageTest {
+public class MessageTest extends mixter.domain.DomainTest {
     public String CONTENT = "content";
     public UserId AUTHOR_ID = new UserId("author@mix-it.fr");
     public UserId USER_ID = new UserId("user@mix-it.fr");
@@ -86,13 +82,7 @@ public class MessageTest {
     }
 
 
-
     protected Message messageFor(Event... events) {
         return new Message(history(events));
-    }
-    protected List<Event> history(Event... events) {
-        List<Event> eventHistory = new ArrayList<>();
-        Collections.addAll(eventHistory, events);
-        return eventHistory;
     }
 }
