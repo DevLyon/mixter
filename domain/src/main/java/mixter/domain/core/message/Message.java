@@ -10,7 +10,6 @@ import mixter.domain.identity.UserId;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
 
 public class Message {
     private DecisionProjection projection;
@@ -38,10 +37,8 @@ public class Message {
         public Set<UserId> publishers=new HashSet<>();
 
         public DecisionProjection(List<Event> history) {
-            Consumer<MessagePublished> applyMessagePublished = this::apply;
-            Consumer<MessageRepublished> applyMessageRepublished = this::apply;
-            super.register(MessagePublished.class, applyMessagePublished);
-            super.register(MessageRepublished.class, applyMessageRepublished);
+            super.register(MessagePublished.class, this::apply);
+            super.register(MessageRepublished.class, this::apply);
             history.forEach(this::apply);
         }
 

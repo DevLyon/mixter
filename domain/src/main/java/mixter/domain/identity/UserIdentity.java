@@ -8,7 +8,6 @@ import mixter.domain.identity.events.UserRegistered;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class UserIdentity {
     private DecisionProjection projection;
@@ -31,8 +30,7 @@ public class UserIdentity {
         public UserId userId;
 
         public DecisionProjection(List<Event> history) {
-            Consumer<UserRegistered> applyUserRegistered = this::apply;
-            register(UserRegistered.class, applyUserRegistered);
+            register(UserRegistered.class, this::apply);
             history.forEach(this::apply);
         }
 
