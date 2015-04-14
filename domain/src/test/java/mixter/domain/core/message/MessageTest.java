@@ -28,6 +28,6 @@ public class MessageTest {
 
         // Then
         MessagePublished expectedEvent = new MessagePublished(messageId, CONTENT, AUTHOR_ID);
-        assertThat(eventPublisher.publishedEvents).extracting("message").containsExactly(expectedEvent.getMessage());
+        assertThat(eventPublisher.publishedEvents).containsExactly(expectedEvent);
     }
 }
