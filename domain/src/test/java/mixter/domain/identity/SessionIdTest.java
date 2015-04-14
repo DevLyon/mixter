@@ -36,4 +36,13 @@ public class SessionIdTest {
         //When
         new SessionId(value);
     }
+
+    @Test
+    public void GivenANullStringWhenCreatingASessionIdThenAnExceptionShouldBeThrown() throws Exception {
+        //Given
+        String value = null;
+        thrown.expect(SessionIdCannotBeEmpty.class);
+        //When
+        new SessionId(value);
+    }
 }
