@@ -17,7 +17,7 @@ public class InMemorySessionProjectionRepository implements SessionProjectionRep
 
     @Override
     public void replaceBy(SessionProjection sessionProjection) {
-
+        sessions.put(sessionProjection.getSessionId(), sessionProjection);
     }
 
     @Override
