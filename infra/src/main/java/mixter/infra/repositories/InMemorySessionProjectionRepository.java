@@ -22,7 +22,7 @@ public class InMemorySessionProjectionRepository implements SessionProjectionRep
 
     @Override
     public Optional<SessionProjection> getById(SessionId sessionId) {
-        return Optional.ofNullable(sessions.get(sessionId));
+        return Optional.ofNullable(sessions.get(sessionId)).filter(SessionProjection::isActive);
     }
 
 
