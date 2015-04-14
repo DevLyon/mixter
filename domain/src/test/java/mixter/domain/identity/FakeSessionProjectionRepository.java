@@ -1,6 +1,5 @@
-package mixter.domain.identity.handlers;
+package mixter.domain.identity;
 
-import mixter.domain.identity.SessionProjection;
 import org.assertj.core.util.Sets;
 
 import java.util.Set;

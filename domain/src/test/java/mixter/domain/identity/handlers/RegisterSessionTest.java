@@ -1,9 +1,6 @@
 package mixter.domain.identity.handlers;
 
-import mixter.domain.identity.SessionId;
-import mixter.domain.identity.SessionProjection;
-import mixter.domain.identity.SessionStatus;
-import mixter.domain.identity.UserId;
+import mixter.domain.identity.*;
 import mixter.domain.identity.events.UserConnected;
 import mixter.domain.identity.events.UserDisconnected;
 import org.junit.Before;
