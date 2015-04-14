@@ -44,4 +44,12 @@ public class UserIdTest {
         new UserId(email);
     }
 
+    @Test
+    public void GivenANullEmailStringWhenCreatingAUserIdThenAnExceptionShouldBeThrown() {
+        // Given
+        String email = null;
+        thrown.expect(UserEmailCannotBeEmpty.class);
+        // When
+        new UserId(email);
+    }
 }
