@@ -3,7 +3,7 @@ package mixter.domain.core.message;
 import mixter.domain.SpyEventPublisher;
 import mixter.domain.UserId;
 import mixter.domain.core.message.events.MessageQuacked;
-import mixter.domain.core.message.events.MessageReQuacked;
+import mixter.domain.core.message.events.MessageRequacked;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -48,7 +48,7 @@ public class MessageTest {
         message.reQuack(USER_ID, eventPublisher, AUTHOR_ID, CONTENT);
 
         // Then
-        MessageQuacked expectedEvent = new MessageQuacked(messageId, USER_ID, AUTHOR_ID, CONTENT);
+        MessageRequacked expectedEvent = new MessageRequacked(messageId, USER_ID, AUTHOR_ID, CONTENT);
         assertThat(eventPublisher.publishedEvents).containsExactly(expectedEvent);
     }
 
