@@ -43,4 +43,8 @@ public class MessageQuacked implements Event {
     public MessageId getMessageId() {
         return messageId;
     }
+
+    public UserId getAuthorId() {
+        return authorId;
+    }
 }
