@@ -1,6 +1,7 @@
 package mixter.domain.core.message;
 
-import mixter.domain.UserId;
+
+import mixter.domain.identity.UserId;
 
 public class PublishMessage {
     private final String message;

@@ -2,9 +2,9 @@ package mixter.domain.core.message;
 
 import mixter.domain.Event;
 import mixter.domain.EventPublisher;
-import mixter.domain.UserId;
 import mixter.domain.core.message.events.MessagePublished;
 import mixter.domain.core.message.events.MessageRepublished;
+import mixter.domain.identity.UserId;
 
 import java.util.*;
 import java.util.function.Consumer;

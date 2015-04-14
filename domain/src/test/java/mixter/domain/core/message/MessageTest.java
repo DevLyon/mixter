@@ -2,9 +2,9 @@ package mixter.domain.core.message;
 
 import mixter.domain.Event;
 import mixter.domain.SpyEventPublisher;
-import mixter.domain.UserId;
 import mixter.domain.core.message.events.MessagePublished;
 import mixter.domain.core.message.events.MessageRepublished;
+import mixter.domain.identity.UserId;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,8 +16,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class MessageTest {
     public String CONTENT = "content";
-    public UserId AUTHOR_ID = new UserId();
-    public UserId USER_ID = new UserId();
+    public UserId AUTHOR_ID = new UserId("author@mix-it.fr");
+    public UserId USER_ID = new UserId("user@mix-it.fr");
     public SpyEventPublisher eventPublisher;
 
     @Before
