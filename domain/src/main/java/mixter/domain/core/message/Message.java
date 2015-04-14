@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 public class Message {
     private DecisionProjection projection;
 
-    public Message(List<MessagePublished> history) {
+    public Message(List<Event> history) {
         projection=new DecisionProjection(history);
     }
 
@@ -35,9 +35,11 @@ public class Message {
         private Map<Class, Consumer> appliers = new HashMap<>();
         public Set<UserId> publishers=new HashSet<>();
 
-        public DecisionProjection(List<MessagePublished> history) {
+        public DecisionProjection(List<Event> history) {
             Consumer<MessagePublished> applyMessagePublished = this::apply;
+            Consumer<MessageRepublished> applyMessageRepublished = this::apply;
             appliers.put(MessagePublished.class, applyMessagePublished);
+            appliers.put(MessageRepublished.class, applyMessageRepublished);
             history.forEach(this::apply);
         }
         @SuppressWarnings("unchecked")
@@ -49,6 +51,10 @@ public class Message {
         private void apply(MessagePublished event) {
             id = event.getMessageId();
             publishers.add(event.getAuthorId());
+        }
+
+        private void apply(MessageRepublished event) {
+            publishers.add(event.getUserId());
         }
 
         public MessageId getId() {
