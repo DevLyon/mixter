@@ -1,5 +1,6 @@
 package mixter.domain.identity.events;
 
+import mixter.domain.AggregateId;
 import mixter.domain.Event;
 import mixter.domain.identity.UserId;
 
@@ -27,6 +28,11 @@ public class UserRegistered implements Event {
     }
 
     public UserId getUserId() {
+        return userId;
+    }
+
+    @Override
+    public AggregateId getId() {
         return userId;
     }
 }
