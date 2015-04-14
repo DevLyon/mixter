@@ -31,4 +31,18 @@ public class InMemoryEventStoreTest {
         // Then
         assertThat(eventsOfAggregate).isEmpty();
     }
+
+    @Test
+    public void GivenAnEmptyEventStoreWhenStoringAnEventAndGettingTheEventsOfTheAggregateThenItReturnsTheEvent() {
+        // Given
+        AggregateId aggregateId1 = AGGREGATE_ID1;
+        EventA expected = new EventA(aggregateId1);
+
+        // When
+        store.store(expected);
+        List<Event> eventsOfAggregate = store.getEventsOfAggregate(aggregateId1);
+
+        // Then
+        assertThat(eventsOfAggregate).containsExactly(expected);
+    }
 }
