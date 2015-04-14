@@ -53,6 +53,23 @@ public class MessageTest {
         assertThat(eventPublisher.publishedEvents).containsExactly(expectedEvent);
     }
 
+    @Test
+    public void whenAMessageIsRepublishedByItsAuthorThenItShouldNotSendRepublishedEvent() {
+        // Given
+        MessageId messageId = new MessageId();
+
+        Message message = messageFor(
+                new MessagePublished(messageId, CONTENT, AUTHOR_ID)
+        );
+
+        // When
+        message.republish(AUTHOR_ID, eventPublisher, AUTHOR_ID, CONTENT);
+
+        // Then
+        assertThat(eventPublisher.publishedEvents).isEmpty();
+    }
+
+
     protected Message messageFor(MessagePublished... events) {
         return new Message(history(events));
     }
@@ -61,4 +78,6 @@ public class MessageTest {
         Collections.addAll(eventHistory, events);
         return eventHistory;
     }
+
+
 }
