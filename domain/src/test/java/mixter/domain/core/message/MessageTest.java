@@ -1,5 +1,6 @@
 package mixter.domain.core.message;
 
+import mixter.domain.Event;
 import mixter.domain.SpyEventPublisher;
 import mixter.domain.UserId;
 import mixter.domain.core.message.events.MessageQuacked;
@@ -68,12 +69,29 @@ public class MessageTest {
         assertThat(eventPublisher.publishedEvents).isEmpty();
     }
 
+    @Test
+    public void whenAMessageIsRequackedTwiceByTheSameUserThenItShouldNotSendMessageRequackedEvent() {
+        // Given
+        MessageId messageId = new MessageId();
+        Message message = messageFor(
+                new MessageQuacked(messageId, CONTENT, AUTHOR_ID),
+                new MessageRequacked(messageId, USER_ID, AUTHOR_ID, CONTENT)
+        );
 
-    protected Message messageFor(MessageQuacked... events) {
+        // When
+        message.reQuack(USER_ID, eventPublisher, AUTHOR_ID, CONTENT);
+
+        // Then
+        assertThat(eventPublisher.publishedEvents).isEmpty();
+    }
+
+
+
+    protected Message messageFor(Event... events) {
         return new Message(history(events));
     }
-    protected List<MessageQuacked> history(MessageQuacked... events) {
-        List<MessageQuacked> eventHistory = new ArrayList<>();
+    protected List<Event> history(Event... events) {
+        List<Event> eventHistory = new ArrayList<>();
         Collections.addAll(eventHistory, events);
         return eventHistory;
     }
