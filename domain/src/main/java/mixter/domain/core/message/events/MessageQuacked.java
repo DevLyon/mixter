@@ -1,9 +1,10 @@
 package mixter.domain.core.message.events;
 
+import mixter.domain.Event;
 import mixter.domain.UserId;
 import mixter.domain.core.message.MessageId;
 
-public class MessageQuacked {
+public class MessageQuacked implements Event {
     private final MessageId messageId;
     private final String message;
     private final UserId authorId;
@@ -37,5 +38,9 @@ public class MessageQuacked {
         result = 31 * result + (message != null ? message.hashCode() : 0);
         result = 31 * result + (authorId != null ? authorId.hashCode() : 0);
         return result;
+    }
+
+    public MessageId getMessageId() {
+        return messageId;
     }
 }
