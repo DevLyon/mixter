@@ -22,4 +22,9 @@ public class UserId {
     public int hashCode() {
         return email != null ? email.hashCode() : 0;
     }
+
+    @Override
+    public String toString() {
+        return email;
+    }
 }
