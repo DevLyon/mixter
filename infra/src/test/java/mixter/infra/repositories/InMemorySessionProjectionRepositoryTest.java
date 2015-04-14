@@ -45,4 +45,16 @@ public class InMemorySessionProjectionRepositoryTest {
         assertThat(repository.getById(sessionProjection.getSessionId()).get()).isEqualTo(updatedSessionProjection);
     }
 
+    @Test
+    public void GivenARepositoryWithAnInactiveSessionWhenRetrievingItByIdThenItShouldReturnAnEmptyOption() {
+        // Given
+        SessionProjection sessionProjection = new SessionProjection(SessionId.generate(), USER_ID, SessionStatus.DISCONNECTED);
+        InMemorySessionProjectionRepository repository = new InMemorySessionProjectionRepository();
+        repository.save(sessionProjection);
+        // When
+        Optional<SessionProjection> maybeSession = repository.getById(sessionProjection.getSessionId());
+        // Then
+        assertThat(maybeSession).isEqualTo(Optional.empty());
+    }
+
 }
