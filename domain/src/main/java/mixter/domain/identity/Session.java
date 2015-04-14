@@ -7,7 +7,6 @@ import mixter.domain.identity.events.UserConnected;
 import mixter.domain.identity.events.UserDisconnected;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 public class Session {
 
@@ -18,16 +17,19 @@ public class Session {
     }
 
     public void logout(EventPublisher eventPublisher) {
-        eventPublisher.publish(new UserDisconnected(projection.id, projection.userId));
+        if (projection.active) {
+            eventPublisher.publish(new UserDisconnected(projection.id, projection.userId));
+        }
     }
 
     private class DecisionProjection extends DecisionProjectionBase {
         public SessionId id;
         public UserId userId;
+        public boolean active = true;
 
         public DecisionProjection(List<Event> history) {
-            Consumer<UserConnected> applyUserConnected = this::apply;
-            register(UserConnected.class, applyUserConnected);
+            register(UserConnected.class, this::apply);
+            register(UserDisconnected.class, this::apply);
             history.forEach(this::apply);
         }
 
@@ -36,5 +38,8 @@ public class Session {
             userId = event.getUserId();
         }
 
+        public void apply(UserDisconnected event) {
+            active = false;
+        }
     }
 }
