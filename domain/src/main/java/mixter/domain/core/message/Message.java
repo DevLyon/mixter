@@ -1,12 +1,15 @@
 package mixter.domain.core.message;
 
+import mixter.domain.DecisionProjectionBase;
 import mixter.domain.Event;
 import mixter.domain.EventPublisher;
 import mixter.domain.core.message.events.MessagePublished;
 import mixter.domain.core.message.events.MessageRepublished;
 import mixter.domain.identity.UserId;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class Message {
@@ -30,22 +33,16 @@ public class Message {
         eventPublisher.publish(event);
     }
 
-    private class DecisionProjection {
+    private class DecisionProjection extends DecisionProjectionBase {
         private MessageId id;
-        private Map<Class, Consumer> appliers = new HashMap<>();
         public Set<UserId> publishers=new HashSet<>();
 
         public DecisionProjection(List<Event> history) {
             Consumer<MessagePublished> applyMessagePublished = this::apply;
             Consumer<MessageRepublished> applyMessageRepublished = this::apply;
-            appliers.put(MessagePublished.class, applyMessagePublished);
-            appliers.put(MessageRepublished.class, applyMessageRepublished);
+            super.register(MessagePublished.class, applyMessagePublished);
+            super.register(MessageRepublished.class, applyMessageRepublished);
             history.forEach(this::apply);
-        }
-        @SuppressWarnings("unchecked")
-        public void apply(Event event) {
-            Consumer consumer = appliers.get(event.getClass());
-            consumer.accept(event);
         }
 
         private void apply(MessagePublished event) {
