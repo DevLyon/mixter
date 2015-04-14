@@ -1,5 +1,7 @@
 package mixter.domain.core.message;
 
+import mixter.doc.Aggregate;
+import mixter.doc.Projection;
 import mixter.domain.DecisionProjectionBase;
 import mixter.domain.Event;
 import mixter.domain.EventPublisher;
@@ -11,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Aggregate
 public class Message {
     private DecisionProjection projection;
 
@@ -32,6 +35,7 @@ public class Message {
         eventPublisher.publish(event);
     }
 
+    @Projection
     private class DecisionProjection extends DecisionProjectionBase {
         private MessageId id;
         public Set<UserId> publishers=new HashSet<>();
