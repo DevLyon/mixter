@@ -1,4 +1,6 @@
 package mixter.domain.core.message;
 
-public class MessageId {
+import mixter.domain.AggregateId;
+
+public class MessageId implements AggregateId {
 }

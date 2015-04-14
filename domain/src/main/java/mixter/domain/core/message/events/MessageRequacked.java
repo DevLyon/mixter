@@ -1,5 +1,6 @@
 package mixter.domain.core.message.events;
 
+import mixter.domain.AggregateId;
 import mixter.domain.Event;
 import mixter.domain.core.message.MessageId;
 import mixter.domain.identity.UserId;
@@ -54,5 +55,10 @@ public class MessageRequacked implements Event {
         result = 31 * result + (authorId != null ? authorId.hashCode() : 0);
         result = 31 * result + (message != null ? message.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public AggregateId getId() {
+        return messageId;
     }
 }

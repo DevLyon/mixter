@@ -1,6 +1,8 @@
 package mixter.domain.identity;
 
-public class UserId {
+import mixter.domain.AggregateId;
+
+public class UserId implements AggregateId {
     private String email;
 
     public UserId(String email) {

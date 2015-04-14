@@ -1,5 +1,6 @@
 package mixter.domain.identity.events;
 
+import mixter.domain.AggregateId;
 import mixter.domain.Event;
 import mixter.domain.identity.SessionId;
 import mixter.domain.identity.UserId;
@@ -27,5 +28,10 @@ public class UserConnected implements Event {
 
     public Instant getNow() {
         return now;
+    }
+
+    @Override
+    public AggregateId getId() {
+        return userId;
     }
 }
