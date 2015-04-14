@@ -36,7 +36,7 @@ public class MessageTest extends mixter.domain.DomainTest {
     @Test
     public void whenAMessageIsRequackedThenItSendsAMessageRequackedEvent() {
         // Given
-        MessageId messageId = new MessageId();
+        MessageId messageId = MessageId.generate();
         Message message = messageFor(
                 new MessageQuacked(messageId, CONTENT, AUTHOR_ID)
         );
@@ -52,7 +52,7 @@ public class MessageTest extends mixter.domain.DomainTest {
     @Test
     public void whenAMessageIsRequackedByItsAuthorThenItShouldNotSendRequackedEvent() {
         // Given
-        MessageId messageId = new MessageId();
+        MessageId messageId = MessageId.generate();
 
         Message message = messageFor(
                 new MessageQuacked(messageId, CONTENT, AUTHOR_ID)
@@ -68,7 +68,7 @@ public class MessageTest extends mixter.domain.DomainTest {
     @Test
     public void whenAMessageIsRequackedTwiceByTheSameUserThenItShouldNotSendMessageRequackedEvent() {
         // Given
-        MessageId messageId = new MessageId();
+        MessageId messageId = MessageId.generate();
         Message message = messageFor(
                 new MessageQuacked(messageId, CONTENT, AUTHOR_ID),
                 new MessageRequacked(messageId, USER_ID, AUTHOR_ID, CONTENT)
