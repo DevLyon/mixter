@@ -1,9 +1,9 @@
 package mixter.infra;
 
-public class SpyEvenHandler {
+public class SpyEvenHandler<T> {
     boolean called = false;
 
-    public void apply(EventA event) {
+    public void apply(T event) {
         called = true;
     }
 
