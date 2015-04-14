@@ -12,4 +12,9 @@ public class FakeSessionProjectionRepository implements SessionProjectionReposit
     public Set<SessionProjection> getSessions() {
         return sessions;
     }
+
+    @Override
+    public void save(SessionProjection sessionProjection) {
+        sessions.add(sessionProjection);
+    }
 }
