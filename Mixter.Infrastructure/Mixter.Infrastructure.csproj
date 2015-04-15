@@ -45,6 +45,7 @@
     <Compile Include="FollowersRepository.cs" />
     <Compile Include="MessagesRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SessionsRepository.cs" />
     <Compile Include="SubscriptionsRepository.cs" />
     <Compile Include="TimelineMessagesRepository.cs" />
   </ItemGroup>

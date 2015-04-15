@@ -60,6 +60,11 @@
     <Compile Include="Core\Messages\MessageTest.cs" />
     <Compile Include="Core\Subscriptions\Handlers\NotifyFollowerOfFolloweeMessageTest.cs" />
     <Compile Include="Core\Subscriptions\SubscriptionTest.cs" />
+    <Compile Include="Core\Subscriptions\UpdateFollowersTest.cs" />
+    <Compile Include="Identity\SessionHandlerTest.cs" />
+    <Compile Include="Identity\SessionIdTest.cs" />
+    <Compile Include="Identity\SessionTest.cs" />
+    <Compile Include="Identity\UserIdentityTest.cs" />
     <Compile Include="Identity\UserIdTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
