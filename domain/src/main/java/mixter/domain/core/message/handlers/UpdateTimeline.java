@@ -1,9 +1,11 @@
 package mixter.domain.core.message.handlers;
 
+import mixter.doc.Handler;
 import mixter.domain.core.message.TimelineMessageProjection;
 import mixter.domain.core.message.TimelineMessageRepository;
 import mixter.domain.core.message.events.MessageQuacked;
 
+@Handler
 public class UpdateTimeline {
     private TimelineMessageRepository timelineRepository;
 
