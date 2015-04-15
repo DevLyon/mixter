@@ -34,6 +34,10 @@ public class Subscription {
         }
     }
 
+    public SubscriptionId getId() {
+        return projection.id;
+    }
+
     private class DecisionProjection extends DecisionProjectionBase {
         public SubscriptionId id;
         public boolean active = true;
