@@ -25,6 +25,11 @@ public class Session {
         }
     }
 
+    public SessionId getId() {
+        return projection.id;
+    }
+
+
     @Projection
     private class DecisionProjection extends DecisionProjectionBase {
         public SessionId id;
