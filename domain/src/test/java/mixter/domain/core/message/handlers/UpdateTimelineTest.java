@@ -31,7 +31,7 @@ public class UpdateTimelineTest {
         // Given
         MessageId messageId = MessageId.generate();
         MessageQuacked messageQuacked = new MessageQuacked(messageId, CONTENT, AUTHOR_ID);
-        UpdateTimeline handler = new UpdateTimeline();
+        UpdateTimeline handler = new UpdateTimeline(timelineRepository);
         // When
         handler.apply(messageQuacked);
         // Then
