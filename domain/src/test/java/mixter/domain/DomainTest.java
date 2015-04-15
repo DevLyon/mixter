@@ -10,4 +10,8 @@ public class DomainTest {
         Collections.addAll(eventHistory, events);
         return eventHistory;
     }
+
+    protected Subscription subscriptionFor(Event... events) {
+        return new Subscription(history(events));
+    }
 }
