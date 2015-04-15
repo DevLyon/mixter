@@ -136,6 +136,22 @@ public class MessageTest extends mixter.domain.DomainTest {
         assertThat(eventPublisher.publishedEvents).isEmpty();
     }
 
+    @Test
+    public void whenADeletedMessageIsRequackedThenItShouldNotSendMessageRequackedEvent() {
+        // Given
+        MessageId messageId = MessageId.generate();
+        Message message = messageFor(
+                new MessageQuacked(messageId, CONTENT, AUTHOR_ID),
+                new MessageDeleted(messageId)
+        );
+
+        // When
+        message.reQuack(RANDOM_GUY, eventPublisher, AUTHOR_ID, CONTENT);
+
+        // Then
+        assertThat(eventPublisher.publishedEvents).isEmpty();
+    }
+
     protected Message messageFor(Event... events) {
         return new Message(history(events));
     }
