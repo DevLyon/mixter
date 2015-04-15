@@ -32,6 +32,6 @@ public class UserConnected implements Event {
 
     @Override
     public AggregateId getId() {
-        return userId;
+        return sessionId;
     }
 }

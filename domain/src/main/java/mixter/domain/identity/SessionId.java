@@ -1,8 +1,10 @@
 package mixter.domain.identity;
 
+import mixter.domain.AggregateId;
+
 import java.util.UUID;
 
-public class SessionId {
+public class SessionId implements AggregateId {
     private String value;
 
     public SessionId(String value) {
