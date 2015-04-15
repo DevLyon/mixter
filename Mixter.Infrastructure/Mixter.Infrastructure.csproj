@@ -42,7 +42,10 @@
     <Compile Include="EventPublisher.cs" />
     <Compile Include="EventPublisherWithStorage.cs" />
     <Compile Include="EventsStore.cs" />
+    <Compile Include="FollowersRepository.cs" />
+    <Compile Include="MessagesRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SubscriptionsRepository.cs" />
     <Compile Include="TimelineMessagesRepository.cs" />
   </ItemGroup>
   <ItemGroup>

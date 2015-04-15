@@ -2,6 +2,8 @@
 using Mixter.Domain.Core.Messages;
 using Mixter.Domain.Core.Messages.Events;
 using Mixter.Domain.Core.Messages.Handlers;
+using Mixter.Domain.Core.Subscriptions;
+using Mixter.Domain.Core.Subscriptions.Events;
 using Mixter.Domain.Identity;
 using Mixter.Infrastructure;
 using NFluent;
@@ -18,12 +20,13 @@ namespace Mixter.Domain.Tests.Core.Messages.Handlers
 
         private TimelineMessagesRepository _repository;
         private UpdateTimeline _handler;
+        private EventsStore _store;
 
         [TestInitialize]
         public void Initialize()
         {
             _repository = new TimelineMessagesRepository();
-            _handler = new UpdateTimeline(_repository);
+            _handler = new UpdateTimeline(_repository, new MessagesRepository(_store));
         }
 
         [TestMethod]
@@ -45,5 +48,18 @@ namespace Mixter.Domain.Tests.Core.Messages.Handlers
             Check.That(_repository.GetMessagesOfUser(replier))
                  .ContainsExactly(new TimelineMessageProjection(replier, replier, Content, MessageId));
         }
+
+        [TestMethod]
+        public void GivenMessagePublishedByFolloweeWhenHandleFolloweeMessagePublishedThenSaveTimelineMessageProjection()
+        {
+            var followee = Author;
+            _store.Store(new MessagePublished(MessageId, followee, Content));
+            var follower = new UserId("owner@mixit.fr");
+            _handler.Handle(new FolloweeMessagePublished(new SubscriptionId(follower, followee), MessageId));
+
+            Check.That(_repository.GetMessagesOfUser(follower))
+                 .ContainsExactly(new TimelineMessageProjection(follower, followee, Content, MessageId));
+        }
+
     }
 }

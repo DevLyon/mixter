@@ -1,4 +1,5 @@
-﻿using Mixter.Domain.Core.Messages;
+﻿using System.Collections.Generic;
+using Mixter.Domain.Core.Messages;
 using Mixter.Domain.Core.Subscriptions.Events;
 using Mixter.Domain.Identity;
 
@@ -8,7 +9,7 @@ namespace Mixter.Domain.Core.Subscriptions
     {
         private readonly DecisionProjection _projection;
 
-        public Subscription(IDomainEvent[] events)
+        public Subscription(IEnumerable<IDomainEvent> events)
         {
             _projection = new DecisionProjection();
 
