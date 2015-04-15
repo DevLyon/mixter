@@ -1,14 +1,18 @@
 package mixter.domain.core.subscription;
 
+import mixter.doc.Aggregate;
 import mixter.domain.DecisionProjectionBase;
 import mixter.domain.Event;
 import mixter.domain.EventPublisher;
+import mixter.domain.core.message.MessageId;
+import mixter.domain.core.subscription.events.FolloweeMessagePublished;
 import mixter.domain.core.subscription.events.UserFollowed;
 import mixter.domain.core.subscription.events.UserUnfollowed;
 import mixter.domain.identity.UserId;
 
 import java.util.List;
 
+@Aggregate
 public class Subscription {
     private DecisionProjection projection;
 
@@ -22,6 +26,10 @@ public class Subscription {
 
     public void unfollow(EventPublisher eventPublisher) {
         eventPublisher.publish(new UserUnfollowed(projection.id));
+    }
+
+    public void notifyFollower(MessageId messageId, EventPublisher eventPublisher) {
+        eventPublisher.publish(new FolloweeMessagePublished(projection.id, messageId));
     }
 
     private class DecisionProjection extends DecisionProjectionBase {
