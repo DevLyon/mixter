@@ -44,13 +44,16 @@ public class Message {
     }
 
     public void delete(UserId authorId, EventPublisher eventPublisher) {
-        eventPublisher.publish(new MessageDeleted(projection.id));
+        if (projection.authorId == authorId) {
+            eventPublisher.publish(new MessageDeleted(projection.id));
+        }
     }
 
     @Projection
     private class DecisionProjection extends DecisionProjectionBase {
         private MessageId id;
         public Set<UserId> publishers=new HashSet<>();
+        public UserId authorId;
 
         public DecisionProjection(List<Event> history) {
             super.register(MessagePublished.class, this::apply);
@@ -62,6 +65,7 @@ public class Message {
         private void apply(MessagePublished event) {
             id = event.getMessageId();
             publishers.add(event.getAuthorId());
+            authorId = event.getAuthorId();
         }
 
         private void apply(ReplyMessagePublished event) {
