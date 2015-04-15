@@ -62,5 +62,17 @@ namespace Mixter.Domain.Tests.Core.Messages.Handlers
                  .ContainsExactly(new TimelineMessageProjection(follower, followee, Content, MessageId));
         }
 
+        [TestMethod]
+        public void GivenMessageRepublishedByFolloweeWhenHandleFolloweeMessageRePublishedThenSaveTimelineMessageProjectionWithOriginalAuthor()
+        {
+            _store.Store(new MessagePublished(MessageId, Author, Content));
+            var followee = new UserId("followee@mixit.fr");
+            _store.Store(new MessageRepublished(MessageId, followee));
+            var follower = new UserId("owner@mixit.fr");
+            _handler.Handle(new FolloweeMessagePublished(new SubscriptionId(follower, followee), MessageId));
+
+            Check.That(_repository.GetMessagesOfUser(follower))
+                 .ContainsExactly(new TimelineMessageProjection(follower, Author, Content, MessageId));
+        }
     }
 }
