@@ -138,6 +138,23 @@ public class MessageTest extends mixter.domain.DomainTest {
         assertThat(eventPublisher.publishedEvents).containsExactly(expectedEvent);
     }
 
+    @Test
+    public void whenAMessageIsDeletedBySomeoneElseThenItShouldNotSendMessageDeletedEvent() {
+        // Given
+        MessageId messageId = MessageId.generate();
+        List<Event> eventHistory = history(
+                new MessagePublished(messageId, CONTENT, AUTHOR_ID)
+        );
+
+        Message message = new Message(eventHistory);
+
+        // When
+        message.delete(RANDOM_GUY, eventPublisher);
+
+        // Then
+        assertThat(eventPublisher.publishedEvents).isEmpty();
+    }
+
     protected Message messageFor(Event... events) {
         return new Message(history(events));
     }
