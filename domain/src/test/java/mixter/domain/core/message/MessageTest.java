@@ -3,8 +3,8 @@ package mixter.domain.core.message;
 import mixter.domain.Event;
 import mixter.domain.SpyEventPublisher;
 import mixter.domain.core.message.events.MessagePublished;
-import mixter.domain.core.message.events.MessageReplied;
 import mixter.domain.core.message.events.MessageRepublished;
+import mixter.domain.core.message.events.ReplyMessagePublished;
 import mixter.domain.identity.UserId;
 import org.junit.Before;
 import org.junit.Test;
@@ -97,7 +97,7 @@ public class MessageTest extends mixter.domain.DomainTest {
         MessageId replyId = message.reply(REPLIER_ID, originalMessageId, AUTHOR_ID, REPLY_CONTENT, eventPublisher);
 
         //Then
-        MessageReplied expected = new MessageReplied(AUTHOR_ID, REPLIER_ID, REPLY_CONTENT, originalMessageId, replyId);
+        ReplyMessagePublished expected = new ReplyMessagePublished(AUTHOR_ID, REPLIER_ID, REPLY_CONTENT, originalMessageId, replyId);
         assertThat(eventPublisher.publishedEvents).containsExactly(expected);
     }
 
