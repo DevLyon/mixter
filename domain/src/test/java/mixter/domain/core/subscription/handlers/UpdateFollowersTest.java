@@ -32,4 +32,17 @@ public class UpdateFollowersTest {
         // Then
         assertThat(repository.getFollowers(FOLLOWEE)).containsExactly(FOLLOWER);
     }
+
+    @Test
+    public void shouldRemoveFollowerOfFolloweeOnUserUnfollowed() {
+        // Given
+        UserFollowed userFollowed = new UserFollowed(new SubscriptionId(FOLLOWER, FOLLOWEE));
+        UserUnfollowed userUnfollowed = new UserUnfollowed(new SubscriptionId(FOLLOWER, FOLLOWEE));
+        UpdateFollowers handler = new UpdateFollowers(repository);
+        handler.apply(userFollowed);
+        // When
+        handler.apply(userUnfollowed);
+        // Then
+        assertThat(repository.getFollowers(FOLLOWEE)).isEmpty();
+    }
 }
