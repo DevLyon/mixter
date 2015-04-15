@@ -17,6 +17,7 @@ public class MessageTest extends mixter.domain.DomainTest {
     public String CONTENT = "content";
     public UserId AUTHOR_ID = new UserId("author@mix-it.fr");
     public UserId USER_ID = new UserId("user@mix-it.fr");
+    public UserId RANDOM_GUY = new UserId("randomeGuy@mix-it.fr");
     public SpyEventPublisher eventPublisher;
 
     @Before
@@ -101,6 +102,24 @@ public class MessageTest extends mixter.domain.DomainTest {
         MessageDeleted expectedEvent = new MessageDeleted(messageId);
         assertThat(eventPublisher.publishedEvents).containsExactly(expectedEvent);
     }
+
+    @Test
+    public void whenAMessageIsDeletedBySomeoneElseThenItShouldNotSendMessageDeletedEvent() {
+        // Given
+        MessageId messageId = MessageId.generate();
+        List<Event> eventHistory = history(
+                new MessageQuacked(messageId, CONTENT, AUTHOR_ID)
+        );
+
+        Message message = new Message(eventHistory);
+
+        // When
+        message.delete(RANDOM_GUY, eventPublisher);
+
+        // Then
+        assertThat(eventPublisher.publishedEvents).isEmpty();
+    }
+
 
     protected Message messageFor(Event... events) {
         return new Message(history(events));
