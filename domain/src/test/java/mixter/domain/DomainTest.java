@@ -1,5 +1,7 @@
 package mixter.domain;
 
+import mixter.domain.core.subscription.Subscription;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
