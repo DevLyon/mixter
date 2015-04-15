@@ -38,9 +38,13 @@ public class Message {
     }
 
     public MessageId reply(UserId replierId, MessageId messageId, UserId authorId, String replyContent, EventPublisher eventPublisher) {
-        MessageId replyId = MessageId.generate();
-        eventPublisher.publish(new ReplyMessagePublished(authorId, replierId, replyContent, messageId, replyId));
-        return replyId;
+        if (projection.isNotDeleted()) {
+            MessageId replyId = MessageId.generate();
+            eventPublisher.publish(new ReplyMessagePublished(authorId, replierId, replyContent, messageId, replyId));
+            return replyId;
+        } else {
+            return null;
+        }
     }
 
     public void delete(UserId authorId, EventPublisher eventPublisher) {

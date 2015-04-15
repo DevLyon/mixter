@@ -187,6 +187,22 @@ public class MessageTest extends mixter.domain.DomainTest {
         assertThat(eventPublisher.publishedEvents).isEmpty();
     }
 
+    @Test
+    public void whenADeletedMessageIsRepiedToThenItShouldNotSendReplyMessagePublishedEvent() {
+        // Given
+        MessageId originalMessageId = MessageId.generate();
+        Message message = messageFor(
+                new MessagePublished(originalMessageId, CONTENT, AUTHOR_ID),
+                new MessageDeleted(originalMessageId)
+        );
+
+        // When
+        MessageId replyId = message.reply(REPLIER_ID, originalMessageId, AUTHOR_ID, REPLY_CONTENT, eventPublisher);
+
+        // Then
+        assertThat(eventPublisher.publishedEvents).isEmpty();
+    }
+
     protected Message messageFor(Event... events) {
         return new Message(history(events));
     }
