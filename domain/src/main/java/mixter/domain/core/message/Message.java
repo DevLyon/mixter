@@ -30,7 +30,7 @@ public class Message {
     }
 
     public void republish(UserId userId, EventPublisher eventPublisher, UserId authorId, String message) {
-        if (projection.publishers.contains(userId)) {
+        if (projection.publishers.contains(userId) || projection.deleted) {
             return;
         }
         MessageRepublished event = new MessageRepublished(projection.getId(), userId, authorId, message);
