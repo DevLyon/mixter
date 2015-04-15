@@ -1,6 +1,7 @@
 package mixter.domain.core.subscription.handlers;
 
 import mixter.domain.EventPublisher;
+import mixter.domain.core.message.MessageId;
 import mixter.domain.core.message.events.MessagePublished;
 import mixter.domain.core.message.events.MessageRepublished;
 import mixter.domain.core.subscription.FollowerRepository;
@@ -25,18 +26,18 @@ public class NotifyFollowerOfFolloweeMessage {
     }
 
     public void apply(MessagePublished messagePublished) {
-        Set<UserId> followers = followerRepository.getFollowers(messagePublished.getAuthorId());
+        notifyFollowers(messagePublished.getAuthorId(), messagePublished.getMessageId());
+    }
+
+    private void notifyFollowers(UserId followeee, MessageId messageId) {
+        Set<UserId> followers = followerRepository.getFollowers(followeee);
         for (UserId follower : followers) {
-            Subscription subscription = subscriptionRepository.getById(new SubscriptionId(follower, messagePublished.getAuthorId()));
-            subscription.notifyFollower(messagePublished.getMessageId(), eventPublisher);
+            Subscription subscription = subscriptionRepository.getById(new SubscriptionId(follower, followeee));
+            subscription.notifyFollower(messageId, eventPublisher);
         }
     }
 
     public void apply(MessageRepublished event) {
-        Set<UserId> followers = followerRepository.getFollowers(event.getAuthorId());
-        for (UserId follower : followers) {
-            Subscription subscription = subscriptionRepository.getById(new SubscriptionId(follower, event.getAuthorId()));
-            subscription.notifyFollower(event.getMessageId(), eventPublisher);
-        }
+        notifyFollowers(event.getAuthorId(), event.getMessageId());
     }
 }
