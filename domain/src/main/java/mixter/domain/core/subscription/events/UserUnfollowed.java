@@ -31,4 +31,8 @@ public class UserUnfollowed implements Event {
     public int hashCode() {
         return subscriptionId != null ? subscriptionId.hashCode() : 0;
     }
+
+    public SubscriptionId getSubscriptionId() {
+        return subscriptionId;
+    }
 }

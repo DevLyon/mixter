@@ -4,6 +4,7 @@ import mixter.domain.core.subscription.FakeFollowerRepository;
 import mixter.domain.core.subscription.FollowerRepository;
 import mixter.domain.core.subscription.SubscriptionId;
 import mixter.domain.core.subscription.events.UserFollowed;
+import mixter.domain.core.subscription.events.UserUnfollowed;
 import mixter.domain.identity.UserId;
 import org.junit.Before;
 import org.junit.Test;
