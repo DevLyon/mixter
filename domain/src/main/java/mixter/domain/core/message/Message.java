@@ -8,7 +8,7 @@ import mixter.domain.EventPublisher;
 import mixter.domain.identity.UserId;
 import mixter.domain.core.message.events.MessageQuacked;
 import mixter.domain.core.message.events.MessageRequacked;
-
+import mixter.domain.core.message.events.MessageDeleted;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,6 +33,10 @@ public class Message {
         }
         MessageRequacked event = new MessageRequacked(projection.getId(), userId, authorId, message);
         eventPublisher.publish(event);
+    }
+
+    public void delete(UserId authorId, EventPublisher eventPublisher) {
+        eventPublisher.publish(new MessageDeleted(projection.id));
     }
 
     @Projection
