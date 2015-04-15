@@ -28,6 +28,10 @@ public class UserIdentity {
         return sessionId;
     }
 
+    public UserId getId() {
+        return projection.userId;
+    }
+
     private class DecisionProjection extends DecisionProjectionBase {
         public UserId userId;
 
