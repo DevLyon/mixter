@@ -38,6 +38,7 @@ namespace Mixter.Domain.Core.Subscriptions.Handlers
 
         public void Handle(ReplyMessagePublished evt)
         {
+            NotifyAllFollowers(evt.Replier, evt.ReplyId);
         }
 
         private void NotifyAllFollowers(UserId followee, MessageId messageId)
