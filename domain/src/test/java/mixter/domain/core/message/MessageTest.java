@@ -3,6 +3,7 @@ package mixter.domain.core.message;
 import mixter.domain.Event;
 import mixter.domain.SpyEventPublisher;
 import mixter.domain.core.message.events.MessagePublished;
+import mixter.domain.core.message.events.MessageReplied;
 import mixter.domain.core.message.events.MessageRepublished;
 import mixter.domain.identity.UserId;
 import org.junit.Before;
@@ -14,6 +15,9 @@ public class MessageTest extends mixter.domain.DomainTest {
     public String CONTENT = "content";
     public UserId AUTHOR_ID = new UserId("author@mix-it.fr");
     public UserId USER_ID = new UserId("user@mix-it.fr");
+    public UserId REPLIER_ID = new UserId("replier@mix-it.fr");
+    public String REPLY_CONTENT = "reply content";
+    public UserId RANDOM_GUY = new UserId("randomeGuy@mix-it.fr");
     public SpyEventPublisher eventPublisher;
 
     @Before
@@ -82,6 +86,20 @@ public class MessageTest extends mixter.domain.DomainTest {
         assertThat(eventPublisher.publishedEvents).isEmpty();
     }
 
+    @Test
+    public void WhenReplyThenRaiseReplyMessagePublished() {
+        MessageId originalMessageId = MessageId.generate();
+        Message message = messageFor(
+                new MessagePublished(originalMessageId, CONTENT, AUTHOR_ID)
+        );
+
+        // When
+        MessageId replyId = message.reply(REPLIER_ID, originalMessageId, AUTHOR_ID, REPLY_CONTENT, eventPublisher);
+
+        //Then
+        MessageReplied expected = new MessageReplied(AUTHOR_ID, REPLIER_ID, REPLY_CONTENT, originalMessageId, replyId);
+        assertThat(eventPublisher.publishedEvents).containsExactly(expected);
+    }
 
     protected Message messageFor(Event... events) {
         return new Message(history(events));
