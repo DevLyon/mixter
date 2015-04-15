@@ -20,6 +20,8 @@ public class NotifyFollowerOfFolloweeMessageTest extends DomainTest {
     public String CONTENT = "Content";
     public UserId AUTHOR_ID = new UserId("author@mix-it.fr");
     public UserId FOLLOWER_ID = new UserId("follower@mix-it.fr");
+    public UserId USER_ID = new UserId("someUser@mix-it.fr");
+
     public MessageId MESSAGE_ID = MessageId.generate();
 
     private SpyEventPublisher eventPublisher;
@@ -48,4 +50,24 @@ public class NotifyFollowerOfFolloweeMessageTest extends DomainTest {
         FolloweeMessagePublished followeeMessagePublished = new FolloweeMessagePublished(new SubscriptionId(FOLLOWER_ID, AUTHOR_ID), MESSAGE_ID);
         assertThat(eventPublisher.publishedEvents).containsExactly(followeeMessagePublished);
     }
+
+    @Test
+    public void ARepublishedMessageShouldNotifyFollowers() {
+        // Given
+        MessageRepublished messageRepublished = new MessageRepublished(MESSAGE_ID, USER_ID, AUTHOR_ID, CONTENT);
+        Subscription subscription = subscriptionFor(
+                new UserFollowed(new SubscriptionId(FOLLOWER_ID, AUTHOR_ID))
+        );
+        subscriptionRepository.add(subscription);
+        followerRepository.saveFollower(AUTHOR_ID, FOLLOWER_ID);
+
+        NotifyFollowerOfFolloweeMessage handler = new NotifyFollowerOfFolloweeMessage(followerRepository, subscriptionRepository, eventPublisher);
+
+        // When
+        handler.apply(messageRepublished);
+        // Then
+        FolloweeMessagePublished followeeMessagePublished = new FolloweeMessagePublished(new SubscriptionId(FOLLOWER_ID, AUTHOR_ID), MESSAGE_ID);
+        assertThat(eventPublisher.publishedEvents).containsExactly(followeeMessagePublished);
+    }
+
 }
