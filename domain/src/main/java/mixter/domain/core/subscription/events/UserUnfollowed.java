@@ -4,11 +4,10 @@ import mixter.domain.AggregateId;
 import mixter.domain.Event;
 import mixter.domain.core.subscription.SubscriptionId;
 
-public class UserFollowed implements Event {
+public class UserUnfollowed implements Event {
     private SubscriptionId subscriptionId;
 
-    public UserFollowed(SubscriptionId subscriptionId) {
-
+    public UserUnfollowed(SubscriptionId subscriptionId) {
         this.subscriptionId = subscriptionId;
     }
 
@@ -22,7 +21,7 @@ public class UserFollowed implements Event {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        UserFollowed that = (UserFollowed) o;
+        UserUnfollowed that = (UserUnfollowed) o;
 
         return !(subscriptionId != null ? !subscriptionId.equals(that.subscriptionId) : that.subscriptionId != null);
 
@@ -31,9 +30,5 @@ public class UserFollowed implements Event {
     @Override
     public int hashCode() {
         return subscriptionId != null ? subscriptionId.hashCode() : 0;
-    }
-
-    public SubscriptionId getSubscriptionId() {
-        return subscriptionId;
     }
 }
