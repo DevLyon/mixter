@@ -87,7 +87,7 @@ public class MessageTest extends mixter.domain.DomainTest {
     }
 
     @Test
-    public void WhenReplyThenRaiseReplyMessagePublished() {
+    public void whenReplyThenRaiseReplyMessagePublished() {
         MessageId originalMessageId = MessageId.generate();
         Message message = messageFor(
                 new MessagePublished(originalMessageId, CONTENT, AUTHOR_ID)
@@ -99,6 +99,22 @@ public class MessageTest extends mixter.domain.DomainTest {
         //Then
         ReplyMessagePublished expected = new ReplyMessagePublished(AUTHOR_ID, REPLIER_ID, REPLY_CONTENT, originalMessageId, replyId);
         assertThat(eventPublisher.publishedEvents).containsExactly(expected);
+    }
+
+    @Test
+    public void whenRepublishReplyThenRaiseMessageRepublishedWithReplyIdAsMessageId() {
+        MessageId originalMessageId = MessageId.generate();
+        MessageId replyId = MessageId.generate();
+        Message message = messageFor(
+                new ReplyMessagePublished(REPLIER_ID, AUTHOR_ID, REPLY_CONTENT, originalMessageId, replyId)
+        );
+
+        // When
+        message.republish(USER_ID, eventPublisher, REPLIER_ID, REPLY_CONTENT);
+
+        //Then
+        MessageRepublished expectedEvent = new MessageRepublished(replyId, USER_ID, REPLIER_ID, REPLY_CONTENT);
+        assertThat(eventPublisher.publishedEvents).containsExactly(expectedEvent);
     }
 
     protected Message messageFor(Event... events) {
