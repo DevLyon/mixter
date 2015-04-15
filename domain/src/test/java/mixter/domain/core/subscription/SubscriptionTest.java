@@ -65,6 +65,20 @@ public class SubscriptionTest extends DomainTest {
         assertThat(eventPublisher.publishedEvents).containsExactly(new FolloweeMessageQuacked(SUBSCRIPTION_ID, messageId));
     }
 
+    @Test
+    public void whenNotifyFollowerWhoUnfollowedThenDoNotRaisedFollowerMessagePublished() {
+        // Given
+        Subscription subscription = subscriptionFor(
+                new UserFollowed(SUBSCRIPTION_ID),
+                new UserUnfollowed(SUBSCRIPTION_ID)
+        );
+        MessageId messageId = MessageId.generate();
+
+        // When
+        subscription.notifyFollower(messageId, eventPublisher);
+
+        assertThat(eventPublisher.publishedEvents).isEmpty();
+    }
 
     protected Subscription subscriptionFor(Event... events) {
         return new Subscription(history(events));
