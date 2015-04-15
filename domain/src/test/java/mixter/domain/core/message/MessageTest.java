@@ -2,12 +2,15 @@ package mixter.domain.core.message;
 
 import mixter.domain.Event;
 import mixter.domain.SpyEventPublisher;
+import mixter.domain.core.message.events.MessageDeleted;
 import mixter.domain.core.message.events.MessagePublished;
 import mixter.domain.core.message.events.MessageRepublished;
 import mixter.domain.core.message.events.ReplyMessagePublished;
 import mixter.domain.identity.UserId;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -114,6 +117,24 @@ public class MessageTest extends mixter.domain.DomainTest {
 
         //Then
         MessageRepublished expectedEvent = new MessageRepublished(replyId, USER_ID, REPLIER_ID, REPLY_CONTENT);
+        assertThat(eventPublisher.publishedEvents).containsExactly(expectedEvent);
+    }
+
+
+    public void whenAMessageIsDeletedByItsAuthorThenItShouldSendMessageDeletedEvent() {
+        // Given
+        MessageId messageId = MessageId.generate();
+        List<Event> eventHistory = history(
+                new MessagePublished(messageId, CONTENT, AUTHOR_ID)
+        );
+
+        Message message = new Message(eventHistory);
+
+        // When
+        message.delete(AUTHOR_ID, eventPublisher);
+
+        // Then
+        MessageDeleted expectedEvent = new MessageDeleted(messageId);
         assertThat(eventPublisher.publishedEvents).containsExactly(expectedEvent);
     }
 
