@@ -5,8 +5,11 @@ import mixter.domain.SpyEventPublisher;
 import mixter.domain.identity.UserId;
 import mixter.domain.core.message.events.MessageQuacked;
 import mixter.domain.core.message.events.MessageRequacked;
+import mixter.domain.core.message.events.MessageDeleted;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -81,6 +84,23 @@ public class MessageTest extends mixter.domain.DomainTest {
         assertThat(eventPublisher.publishedEvents).isEmpty();
     }
 
+    @Test
+    public void whenAMessageIsDeletedByItsAuthorThenItShouldSendMessageDeletedEvent() {
+        // Given
+        MessageId messageId = MessageId.generate();
+        List<Event> eventHistory = history(
+                new MessageQuacked(messageId, CONTENT, AUTHOR_ID)
+        );
+
+        Message message = new Message(eventHistory);
+
+        // When
+        message.delete(AUTHOR_ID, eventPublisher);
+
+        // Then
+        MessageDeleted expectedEvent = new MessageDeleted(messageId);
+        assertThat(eventPublisher.publishedEvents).containsExactly(expectedEvent);
+    }
 
     protected Message messageFor(Event... events) {
         return new Message(history(events));
