@@ -25,6 +25,7 @@ namespace Mixter.Domain.Tests.Core.Messages.Handlers
         [TestInitialize]
         public void Initialize()
         {
+            _store = new EventsStore();
             _repository = new TimelineMessagesRepository();
             _handler = new UpdateTimeline(_repository, new MessagesRepository(_store));
         }

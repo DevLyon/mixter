@@ -1,15 +1,18 @@
 ﻿using Mixter.Domain.Core.Messages.Events;
+using Mixter.Domain.Core.Subscriptions.Events;
 using Mixter.Domain.Identity;
 
 namespace Mixter.Domain.Core.Messages.Handlers
 {
-    public class UpdateTimeline : IEventHandler<MessagePublished>, IEventHandler<ReplyMessagePublished>
+    public class UpdateTimeline : IEventHandler<MessagePublished>, IEventHandler<ReplyMessagePublished>, IEventHandler<FolloweeMessagePublished>
     {
         private readonly ITimelineMessagesRepository _timelineMessagesRepository;
+        private readonly IMessagesRepository _messagesRepository;
 
-        public UpdateTimeline(ITimelineMessagesRepository timelineMessagesRepository)
+        public UpdateTimeline(ITimelineMessagesRepository timelineMessagesRepository, IMessagesRepository messagesRepository)
         {
             _timelineMessagesRepository = timelineMessagesRepository;
+            _messagesRepository = messagesRepository;
         }
 
         public void Handle(MessagePublished evt)
@@ -32,6 +35,13 @@ namespace Mixter.Domain.Core.Messages.Handlers
             Save(ownerId, authorId, content, messageId);
         }
 
+        public void Handle(FolloweeMessagePublished evt)
+        {
+            var ownerId = evt.SubscriptionId.Follower;
+            var messageDescription = _messagesRepository.GetDescription(evt.MessageId);
+
+            Save(ownerId, messageDescription.Author, messageDescription.Content, evt.MessageId);
+        }
         private void Save(UserId ownerId, UserId authorId, string content, MessageId messageId)
         {
             var projection = new TimelineMessageProjection(ownerId, authorId, content, messageId);

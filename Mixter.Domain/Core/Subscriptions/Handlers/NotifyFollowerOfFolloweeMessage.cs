@@ -28,6 +28,7 @@ namespace Mixter.Domain.Core.Subscriptions.Handlers
 
         public void Handle(MessagePublished evt)
         {
+            NotifyAllFollowers(evt.Author, evt.Id);
         }
 
         public void Handle(MessageRepublished evt)
@@ -36,6 +37,15 @@ namespace Mixter.Domain.Core.Subscriptions.Handlers
 
         public void Handle(ReplyMessagePublished evt)
         {
+        }
+
+        private void NotifyAllFollowers(UserId followee, MessageId messageId)
+        {
+            foreach (var follower in _followersRepository.GetFollowers(followee))
+            {
+                var subscription = _subscriptionsRepository.Get(new SubscriptionId(follower, followee));
+                subscription.NotifyFollower(_eventPublisher, messageId);
+            }
         }
     }
 }
