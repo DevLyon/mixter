@@ -42,4 +42,8 @@ public class SessionProjection {
     public boolean isActive() {
         return status == SessionStatus.CONNECTED;
     }
+
+    public UserId getUserId() {
+        return userId;
+    }
 }
