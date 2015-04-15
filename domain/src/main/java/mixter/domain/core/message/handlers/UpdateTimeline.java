@@ -3,6 +3,7 @@ package mixter.domain.core.message.handlers;
 import mixter.domain.core.message.TimelineMessageProjection;
 import mixter.domain.core.message.TimelineMessageRepository;
 import mixter.domain.core.message.events.MessagePublished;
+import mixter.domain.core.message.events.ReplyMessagePublished;
 
 public class UpdateTimeline {
     private TimelineMessageRepository timelineRepository;
@@ -14,5 +15,9 @@ public class UpdateTimeline {
 
     public void apply(MessagePublished event) {
         timelineRepository.save(new TimelineMessageProjection(event.getAuthorId(), event.getAuthorId(), event.getMessage(), event.getMessageId()));
+    }
+
+    public void apply(ReplyMessagePublished event) {
+        timelineRepository.save(new TimelineMessageProjection(event.getReplierId(), event.getReplierId(), event.getMessage(), event.getMessageId()));
     }
 }
