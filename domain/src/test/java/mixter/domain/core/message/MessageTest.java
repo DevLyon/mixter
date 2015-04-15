@@ -155,6 +155,22 @@ public class MessageTest extends mixter.domain.DomainTest {
         assertThat(eventPublisher.publishedEvents).isEmpty();
     }
 
+    @Test
+    public void whenAMessageIsDeletedTwiceThenItShouldNotSendMessageDeletedEvent() {
+        // Given
+        MessageId messageId = MessageId.generate();
+        Message message = messageFor(
+                new MessagePublished(messageId, CONTENT, AUTHOR_ID),
+                new MessageDeleted(messageId)
+        );
+
+        // When
+        message.delete(AUTHOR_ID, eventPublisher);
+
+        // Then
+        assertThat(eventPublisher.publishedEvents).isEmpty();
+    }
+
     protected Message messageFor(Event... events) {
         return new Message(history(events));
     }
