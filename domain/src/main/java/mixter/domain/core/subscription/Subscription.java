@@ -29,20 +29,28 @@ public class Subscription {
     }
 
     public void notifyFollower(MessageId messageId, EventPublisher eventPublisher) {
-        eventPublisher.publish(new FolloweeMessageQuacked(projection.id, messageId));
+        if (projection.active) {
+            eventPublisher.publish(new FolloweeMessageQuacked(projection.id, messageId));
+        }
     }
 
     private class DecisionProjection extends DecisionProjectionBase {
         public SubscriptionId id;
+        public boolean active = true;
 
         public DecisionProjection(List<Event> history) {
             super();
             super.register(UserFollowed.class, this::apply);
+            super.register(UserUnfollowed.class, this::apply);
             history.forEach(this::apply);
         }
 
         private void apply(UserFollowed event) {
             id = event.getSubscriptionId();
+        }
+
+        private void apply(UserUnfollowed event) {
+            active = false;
         }
     }
 }
