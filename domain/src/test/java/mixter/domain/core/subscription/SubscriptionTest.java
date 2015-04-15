@@ -3,6 +3,8 @@ package mixter.domain.core.subscription;
 import mixter.domain.DomainTest;
 import mixter.domain.Event;
 import mixter.domain.SpyEventPublisher;
+import mixter.domain.core.message.MessageId;
+import mixter.domain.core.subscription.events.FolloweeMessageQuacked;
 import mixter.domain.core.subscription.events.UserFollowed;
 import mixter.domain.core.subscription.events.UserUnfollowed;
 import mixter.domain.identity.UserId;
@@ -48,6 +50,21 @@ public class SubscriptionTest extends DomainTest {
         UserUnfollowed userUnfollowed = new UserUnfollowed(SUBSCRIPTION_ID);
         assertThat(eventPublisher.publishedEvents).containsExactly(userUnfollowed);
     }
+
+    @Test
+    public void whenNotifyFollowerThenFolloweeMessageQuackedIsRaised() {
+        //Given
+        Subscription subscription = subscriptionFor(
+                new UserFollowed(SUBSCRIPTION_ID)
+        );
+        MessageId messageId = MessageId.generate();
+
+        //When
+        subscription.notifyFollower(messageId, eventPublisher);
+
+        assertThat(eventPublisher.publishedEvents).containsExactly(new FolloweeMessageQuacked(SUBSCRIPTION_ID, messageId));
+    }
+
 
     protected Subscription subscriptionFor(Event... events) {
         return new Subscription(history(events));
