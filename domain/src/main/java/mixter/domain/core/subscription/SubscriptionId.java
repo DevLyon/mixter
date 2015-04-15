@@ -30,4 +30,12 @@ public class SubscriptionId implements AggregateId {
         result = 31 * result + (followee != null ? followee.hashCode() : 0);
         return result;
     }
+
+    public UserId getFollowee() {
+        return followee;
+    }
+
+    public UserId getFollower() {
+        return follower;
+    }
 }
