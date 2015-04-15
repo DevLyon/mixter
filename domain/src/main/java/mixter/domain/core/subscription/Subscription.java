@@ -4,6 +4,8 @@ import mixter.doc.Aggregate;
 import mixter.domain.DecisionProjectionBase;
 import mixter.domain.Event;
 import mixter.domain.EventPublisher;
+import mixter.domain.core.message.MessageId;
+import mixter.domain.core.subscription.events.FolloweeMessageQuacked;
 import mixter.domain.core.subscription.events.UserFollowed;
 import mixter.domain.core.subscription.events.UserUnfollowed;
 import mixter.domain.identity.UserId;
@@ -24,6 +26,10 @@ public class Subscription {
 
     public void unfollow(EventPublisher eventPublisher) {
         eventPublisher.publish(new UserUnfollowed(projection.id));
+    }
+
+    public void notifyFollower(MessageId messageId, EventPublisher eventPublisher) {
+        eventPublisher.publish(new FolloweeMessageQuacked(projection.id, messageId));
     }
 
     private class DecisionProjection extends DecisionProjectionBase {
