@@ -4,8 +4,13 @@ import mixter.domain.DomainTest;
 import mixter.domain.SpyEventPublisher;
 import mixter.domain.core.message.MessageId;
 import mixter.domain.core.message.events.MessagePublished;
+import mixter.domain.core.message.events.MessageRepublished;
 import mixter.domain.core.subscription.FakeFollowerRepository;
 import mixter.domain.core.subscription.FakeSubscriptionRepository;
+import mixter.domain.core.subscription.Subscription;
+import mixter.domain.core.subscription.SubscriptionId;
+import mixter.domain.core.subscription.events.FolloweeMessagePublished;
+import mixter.domain.core.subscription.events.UserFollowed;
 import mixter.domain.identity.UserId;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,6 +25,7 @@ public class NotifyFollowerOfFolloweeMessageTest extends DomainTest {
     public UserId USER_ID = new UserId("someUser@mix-it.fr");
 
     public MessageId MESSAGE_ID = MessageId.generate();
+    public MessageId REPLY_MESSAGE_ID = MessageId.generate();
 
     private SpyEventPublisher eventPublisher;
     private FakeSubscriptionRepository subscriptionRepository;
@@ -67,4 +73,22 @@ public class NotifyFollowerOfFolloweeMessageTest extends DomainTest {
         assertThat(eventPublisher.publishedEvents).containsExactly(followeeMessagePublished);
     }
 
+    @Test
+    public void AReplyMessageShouldNotifyFollowers() {
+        // Given
+        ReplyMessagePublished messageReplied = new ReplyMessagePublished(AUTHOR_ID, USER_ID, CONTENT, MESSAGE_ID, REPLY_MESSAGE_ID);
+        Subscription subscription = subscriptionFor(
+                new UserFollowed(new SubscriptionId(FOLLOWER_ID, AUTHOR_ID))
+        );
+        subscriptionRepository.add(subscription);
+        followerRepository.saveFollower(AUTHOR_ID, FOLLOWER_ID);
+
+        NotifyFollowerOfFolloweeMessage handler = new NotifyFollowerOfFolloweeMessage(followerRepository, subscriptionRepository, eventPublisher);
+
+        // When
+        handler.apply(messageReplied);
+        // Then
+        FolloweeMessagePublished followeeMessagePublished = new FolloweeMessagePublished(new SubscriptionId(FOLLOWER_ID, AUTHOR_ID), REPLY_MESSAGE_ID);
+        assertThat(eventPublisher.publishedEvents).containsExactly(followeeMessagePublished);
+    }
 }
