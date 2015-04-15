@@ -33,6 +33,7 @@ namespace Mixter.Domain.Core.Subscriptions.Handlers
 
         public void Handle(MessageRepublished evt)
         {
+            NotifyAllFollowers(evt.Republisher, evt.Id);
         }
 
         public void Handle(ReplyMessagePublished evt)
