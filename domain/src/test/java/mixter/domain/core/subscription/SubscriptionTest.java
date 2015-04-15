@@ -1,7 +1,6 @@
 package mixter.domain.core.subscription;
 
 import mixter.domain.DomainTest;
-import mixter.domain.Event;
 import mixter.domain.SpyEventPublisher;
 import mixter.domain.core.message.MessageId;
 import mixter.domain.core.subscription.events.FolloweeMessageQuacked;
@@ -80,7 +79,4 @@ public class SubscriptionTest extends DomainTest {
         assertThat(eventPublisher.publishedEvents).isEmpty();
     }
 
-    protected Subscription subscriptionFor(Event... events) {
-        return new Subscription(history(events));
-    }
 }
