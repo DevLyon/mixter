@@ -5,6 +5,7 @@ import mixter.domain.SpyEventPublisher;
 import mixter.domain.core.message.MessageId;
 import mixter.domain.core.message.events.MessagePublished;
 import mixter.domain.core.message.events.MessageRepublished;
+import mixter.domain.core.message.events.ReplyMessagePublished;
 import mixter.domain.core.subscription.FakeFollowerRepository;
 import mixter.domain.core.subscription.FakeSubscriptionRepository;
 import mixter.domain.core.subscription.Subscription;

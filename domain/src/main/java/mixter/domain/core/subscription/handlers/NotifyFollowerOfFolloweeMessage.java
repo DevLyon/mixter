@@ -4,6 +4,7 @@ import mixter.domain.EventPublisher;
 import mixter.domain.core.message.MessageId;
 import mixter.domain.core.message.events.MessagePublished;
 import mixter.domain.core.message.events.MessageRepublished;
+import mixter.domain.core.message.events.ReplyMessagePublished;
 import mixter.domain.core.subscription.FollowerRepository;
 import mixter.domain.core.subscription.Subscription;
 import mixter.domain.core.subscription.SubscriptionId;
@@ -39,5 +40,9 @@ public class NotifyFollowerOfFolloweeMessage {
 
     public void apply(MessageRepublished event) {
         notifyFollowers(event.getAuthorId(), event.getMessageId());
+    }
+
+    public void apply(ReplyMessagePublished messageReplied) {
+        notifyFollowers(messageReplied.getAuthorId(), messageReplied.getMessageId());
     }
 }
