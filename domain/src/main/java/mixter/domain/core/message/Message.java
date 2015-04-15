@@ -5,6 +5,7 @@ import mixter.doc.Projection;
 import mixter.domain.DecisionProjectionBase;
 import mixter.domain.Event;
 import mixter.domain.EventPublisher;
+import mixter.domain.core.message.events.MessageDeleted;
 import mixter.domain.core.message.events.MessagePublished;
 import mixter.domain.core.message.events.MessageRepublished;
 import mixter.domain.core.message.events.ReplyMessagePublished;
@@ -40,6 +41,10 @@ public class Message {
         MessageId replyId = MessageId.generate();
         eventPublisher.publish(new ReplyMessagePublished(authorId, replierId, replyContent, messageId, replyId));
         return replyId;
+    }
+
+    public void delete(UserId authorId, EventPublisher eventPublisher) {
+        eventPublisher.publish(new MessageDeleted(projection.id));
     }
 
     @Projection
