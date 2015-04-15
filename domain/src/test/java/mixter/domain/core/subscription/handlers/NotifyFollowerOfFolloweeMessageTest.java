@@ -25,6 +25,7 @@ public class NotifyFollowerOfFolloweeMessageTest extends DomainTest {
     public UserId USER_ID = new UserId("someUser@mix-it.fr");
 
     public MessageId MESSAGE_ID = MessageId.generate();
+    public MessageId REPLY_MESSAGE_ID = MessageId.generate();
 
     private SpyEventPublisher eventPublisher;
     private FakeSubscriptionRepository subscriptionRepository;
@@ -72,4 +73,22 @@ public class NotifyFollowerOfFolloweeMessageTest extends DomainTest {
         assertThat(eventPublisher.publishedEvents).containsExactly(followeeMessagePublished);
     }
 
+    @Test
+    public void AReplyMessageShouldNotifyFollowers() {
+        // Given
+        ReplyMessagePublished messageReplied = new ReplyMessagePublished(AUTHOR_ID, USER_ID, CONTENT, MESSAGE_ID, REPLY_MESSAGE_ID);
+        Subscription subscription = subscriptionFor(
+                new UserFollowed(new SubscriptionId(FOLLOWER_ID, AUTHOR_ID))
+        );
+        subscriptionRepository.add(subscription);
+        followerRepository.saveFollower(AUTHOR_ID, FOLLOWER_ID);
+
+        NotifyFollowerOfFolloweeMessage handler = new NotifyFollowerOfFolloweeMessage(followerRepository, subscriptionRepository, eventPublisher);
+
+        // When
+        handler.apply(messageReplied);
+        // Then
+        FolloweeMessagePublished followeeMessagePublished = new FolloweeMessagePublished(new SubscriptionId(FOLLOWER_ID, AUTHOR_ID), REPLY_MESSAGE_ID);
+        assertThat(eventPublisher.publishedEvents).containsExactly(followeeMessagePublished);
+    }
 }
