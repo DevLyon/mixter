@@ -50,10 +50,16 @@ public class Message {
         public DecisionProjection(List<Event> history) {
             super.register(MessagePublished.class, this::apply);
             super.register(MessageRepublished.class, this::apply);
+            super.register(ReplyMessagePublished.class, this::apply);
             history.forEach(this::apply);
         }
 
         private void apply(MessagePublished event) {
+            id = event.getMessageId();
+            publishers.add(event.getAuthorId());
+        }
+
+        private void apply(ReplyMessagePublished event) {
             id = event.getMessageId();
             publishers.add(event.getAuthorId());
         }

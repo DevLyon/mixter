@@ -50,4 +50,12 @@ public class ReplyMessagePublished implements Event {
         result = 31 * result + (messageId != null ? messageId.hashCode() : 0);
         return result;
     }
+
+    public MessageId getMessageId() {
+        return messageId;
+    }
+
+    public UserId getAuthorId() {
+        return authorId;
+    }
 }
