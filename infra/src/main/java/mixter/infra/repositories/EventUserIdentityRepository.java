@@ -1,26 +1,20 @@
 package mixter.infra.repositories;
 
 import mixter.domain.Event;
-import mixter.domain.identity.UserId;
 import mixter.domain.identity.UserIdentity;
 import mixter.infra.EventStore;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
-public class EventUserIdentityRepository {
-    private EventStore eventStore;
+public class EventUserIdentityRepository extends AggregateRepository<UserIdentity> {
 
     public EventUserIdentityRepository(EventStore eventStore) {
-        this.eventStore = eventStore;
+        super(eventStore);
     }
 
-    public UserIdentity getById(UserId userId) {
-        List<Event> history = eventStore.getEventsOfAggregate(userId);
-        if (history.isEmpty()) {
-            throw new NoSuchElementException();
-        } else {
-            return new UserIdentity(history);
-        }
+    @Override
+    protected UserIdentity fromHistory(List<Event> history) {
+        return new UserIdentity(history);
     }
+
 }
