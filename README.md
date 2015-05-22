@@ -9,6 +9,9 @@ Javascript.
 Starting
 -------
 
+Checkout `slide` branch, where you can find slides used for Mix-IT workshop.
+It explains the main steps and goals for each (only the title is in French ;)).
+
 1. Choose a language and checkout `{language}-workshop`, for `java` that would be
 `java-workshop`.
 2. Implement the failing test
