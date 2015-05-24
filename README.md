@@ -48,3 +48,8 @@ that's why we call it DecisionProjection. We kept this class private inside the 
 
 3. Commands and command handlers are not shown here for now, for simplicity, it has been left implicit through method of aggregates.
 Perhaps something to introduce in further version.
+
+Any questions ?
+---------------
+
+You can contact us through GitHub or on Twitter : @clem_bouillier, @florentpellet, @jeanhelou, @ouarzy.
