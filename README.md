@@ -34,19 +34,22 @@ Explanations of some implementation details
 We have done some choices that we consider implementation details, but that can hurt
 some people. So we try to explain them here.
 
-1. About events publication mecanism in CQRS/ES, there are two main well known options :
+### About events publication mecanism in CQRS/ES, there are two main well known options :
 
 1) use an AggregateRoot base class that accumulate uncommitted events that are picked by Repository on Save of the aggregate.
+
 2) use DomainEvents.Raise(event) static call from AggregateRoot protected Apply method
 
 We chose a third way that consists of passing an IEventPublisher (with Publish method) to each aggregate method to raise events.
 There is no more need to call Repository.Save and it avoids static method call.
 
-2. We use a DecisionProjection concept to keep track of "transient state" of aggregates.
+### We use a DecisionProjection concept to keep track of "transient state" of aggregates.
+
 We thought this "transient state" as a special projection (like Read model ones) to take further decision in the aggregate,
 that's why we call it DecisionProjection. We kept this class private inside the aggregate.
 
-3. Commands and command handlers are not shown here for now, for simplicity, it has been left implicit through method of aggregates.
+### Commands and command handlers are not shown here for now, for simplicity, it has been left implicit through method of aggregates.
+
 Perhaps something to introduce in further version.
 
 Any questions ?
