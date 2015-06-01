@@ -25,7 +25,7 @@ module Identity =
         [ UserRegistered { UserId = userId } ]
 
     let logIn sessionId getCurrentTime decisionProjection =
-        [ UserConnected { SessionId = sessionId; UserId = decisionProjection.UserId; ConnectedAt = getCurrentTime } ]
+        [ UserConnected { SessionId = sessionId; UserId = decisionProjection.UserId; ConnectedAt = getCurrentTime () } ]
 
     let apply decisionProjection event =
         match event with
