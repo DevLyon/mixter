@@ -29,13 +29,15 @@ module Identity =
         [ UserConnected { SessionId = sessionId; UserId = decisionProjection.UserId; ConnectedAt = getCurrentTime () } ]
 
     let logOut decisionProjection =
-        [ UserDisconnected { SessionId = decisionProjection.SessionId.Value; UserId = decisionProjection.UserId } ]
+        match decisionProjection.SessionId with
+            | Some sessionId -> [ UserDisconnected { SessionId = sessionId; UserId = decisionProjection.UserId } ]
+            | None -> []
 
     let applyOne decisionProjection event =
         match event with
         | UserRegistered e -> { decisionProjection with UserId = e.UserId }
         | UserConnected e -> { decisionProjection with SessionId = Some e.SessionId }
-        | UserDisconnected _ -> decisionProjection
+        | UserDisconnected _ -> { decisionProjection with SessionId = None }
 
     let apply decisionProjection events =
         Seq.fold applyOne decisionProjection events
