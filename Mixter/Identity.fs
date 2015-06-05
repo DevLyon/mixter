@@ -7,19 +7,20 @@ module Identity =
 
     type SessionId = SessionId of string
         with static member generate = SessionId (Guid.NewGuid().ToString())
-
-    type UserRegisteredEvent = { UserId: UserId }
-
-    type UserConnectedEvent = { SessionId: SessionId; UserId: UserId; ConnectedAt: DateTime}
-
+        
     type Event = 
-        UserRegistered of UserRegisteredEvent
+        | UserRegistered of UserRegisteredEvent
         | UserConnected of UserConnectedEvent
+        | UserDisconnected of UserDisconnectedEvent
+    and UserRegisteredEvent = { UserId: UserId }
+    and UserConnectedEvent = { SessionId: SessionId; UserId: UserId; ConnectedAt: DateTime}
+    and UserDisconnectedEvent = { SessionId: SessionId; UserId: UserId }
 
     type DecisionProjection = {
-        UserId: UserId
+        UserId: UserId;
+        SessionId: SessionId option
     }
-        with static member initial = { UserId = UserId "" }
+        with static member initial = { UserId = UserId ""; SessionId = None }
 
     let register userId =
         [ UserRegistered { UserId = userId } ]
@@ -27,9 +28,14 @@ module Identity =
     let logIn sessionId getCurrentTime decisionProjection =
         [ UserConnected { SessionId = sessionId; UserId = decisionProjection.UserId; ConnectedAt = getCurrentTime () } ]
 
-    let apply decisionProjection event =
-        match event with
-        | UserRegistered e -> { UserId = e.UserId }
-        | UserConnected _ -> decisionProjection
+    let logOut decisionProjection =
+        [ UserDisconnected { SessionId = decisionProjection.SessionId.Value; UserId = decisionProjection.UserId } ]
 
-    
+    let applyOne decisionProjection event =
+        match event with
+        | UserRegistered e -> { decisionProjection with UserId = e.UserId }
+        | UserConnected e -> { decisionProjection with SessionId = Some e.SessionId }
+        | UserDisconnected _ -> decisionProjection
+
+    let apply decisionProjection events =
+        Seq.fold applyOne decisionProjection events
