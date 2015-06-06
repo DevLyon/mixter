@@ -41,3 +41,9 @@ module Identity =
 
     let apply decisionProjection events =
         Seq.fold applyOne decisionProjection events
+
+    module Read =
+        type Session = { SessionId: SessionId; UserId: UserId }
+
+        let getSessionById sessionId sessions = Map.tryFind sessionId sessions
+
