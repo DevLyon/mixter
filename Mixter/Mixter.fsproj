@@ -44,6 +44,8 @@
   <ItemGroup>
     <Compile Include="Identity.fs" />
     <None Include="paket.references" />
+    <Compile Include="Identity.Infrastructure.fs" />
+    <None Include="App.fsx" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>

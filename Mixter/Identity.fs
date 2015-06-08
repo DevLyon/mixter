@@ -43,7 +43,21 @@ module Identity =
         Seq.fold applyOne decisionProjection events
 
     module Read =
+        type RepositoryChange<'a> = 
+            | None
+            | Add of 'a
+            | Remove of 'a
+
         type Session = { SessionId: SessionId; UserId: UserId }
+            with static member empty = { SessionId = SessionId ""; UserId = UserId "" }
 
-        let getSessionById sessionId sessions = Map.tryFind sessionId sessions
+        type getSessionById = SessionId -> Session option
 
+        let project (getSessionById:getSessionById) event = 
+            match event with
+            | UserConnected e -> Add { SessionId = e.SessionId; UserId = e.UserId }
+            | UserDisconnected e -> 
+                let session = getSessionById e.SessionId
+                match session with
+                | Some session -> Remove session
+                | option.None -> None

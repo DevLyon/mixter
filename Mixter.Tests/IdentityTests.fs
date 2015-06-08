@@ -49,15 +49,21 @@ type ``Given a started session`` ()=
 open Read
 
 [<TestFixture>]
-type ``Given a repository of session projection`` ()=
-
+type ``Given a handler of session events`` ()=
+    let sessionId = SessionId.generate
+    let userId = UserId "clem@mix-it.fr"
+    let sessions = fun x -> Some { SessionId = sessionId; UserId = userId }
+    
     [<Test>]
-    member x.``Given repository contains two session projection, when get a session by its id, then it returns the corresponding session projection`` () =
-        let sessionId = SessionId.generate
-        let anotherSessionId = SessionId.generate
-        let sessions = 
-            Map.empty<SessionId, Session>
-                .Add(sessionId, { SessionId = sessionId; UserId = UserId "clem@mix-it.fr" })
-                .Add(anotherSessionId, { SessionId = anotherSessionId; UserId = UserId "clem@mix-it.fr" })
-        getSessionById sessionId sessions
-            |> should equal (Some { UserId = UserId "clem@mix-it.fr"; SessionId = sessionId })
+    member x.``When project user connected, then it returns a Session projection`` () =
+        let userConnected = UserConnected { SessionId = sessionId; UserId = userId; ConnectedAt = DateTime.Now}
+        let expectedAddSession = Add { SessionId = sessionId; UserId = userId }
+        project sessions userConnected
+            |> should equal expectedAddSession
+            
+    [<Test>]
+    member x.``When project user disconnected, then it returns a Remove change of Session projection`` () =
+        let userConnected = UserDisconnected { SessionId = sessionId; UserId = userId }
+        let expectedRemoveSession = Remove { SessionId = sessionId; UserId = userId }
+        project sessions userConnected
+            |> should equal expectedRemoveSession

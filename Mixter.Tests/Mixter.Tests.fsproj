@@ -52,6 +52,7 @@
     <Compile Include="IdentityTests.fs" />
     <None Include="paket.references" />
     <None Include="App.config" />
+    <Compile Include="Identity.Infrastructure.Tests.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
