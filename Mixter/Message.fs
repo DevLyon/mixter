@@ -15,19 +15,22 @@ module Message =
     and MessageRepublished = { MessageId: MessageId }
 
     type DecisionProjection = {
-        MessageId: MessageId option
+        MessageId: MessageId option;
+        AuthorId: UserId option;
     }
-        with static member initial = { MessageId = None }
+        with static member initial = { MessageId = None; AuthorId = None }
 
-    let publish messageId userId content =
-        [ MessagePublished { MessageId = messageId; UserId = userId; Content = content } ]
+    let publish messageId authorId content =
+        [ MessagePublished { MessageId = messageId; UserId = authorId; Content = content } ]
 
-    let republish decisionProjection =
-        [ MessageRepublished { MessageId = decisionProjection.MessageId.Value } ]
+    let republish republisherId decisionProjection =
+        if republisherId = decisionProjection.AuthorId.Value
+        then []
+        else [ MessageRepublished { MessageId = decisionProjection.MessageId.Value } ]
 
     let applyOne decisionProjection event =
         match event with
-        | MessagePublished e -> { decisionProjection with MessageId = Some e.MessageId }
+        | MessagePublished e -> { decisionProjection with MessageId = Some e.MessageId; AuthorId = Some e.UserId }
         | _ -> failwith "Unknown event"
 
     let apply decisionProjection events =

@@ -18,5 +18,13 @@ type ``Given a Message`` ()=
     member x.``When republish, then user republished event is returned`` () =
         let messageId = MessageId.generate
         apply DecisionProjection.initial [ MessagePublished { MessageId = messageId; UserId = UserId "clem@mix-it.fr"; Content = "hello world" } ]
-            |> republish
+            |> republish (UserId "someone@mix-it.fr")
             |> should equal [ MessageRepublished { MessageId = messageId } ]
+            
+    [<Test>] 
+    member x.``When author republish, then nothing is returned`` () =
+        let messageId = MessageId.generate
+        let authorId = UserId "clem@mix-it.fr"
+        apply DecisionProjection.initial [ MessagePublished { MessageId = messageId; UserId = authorId; Content = "hello world" } ]
+            |> republish authorId
+            |> should equal []
