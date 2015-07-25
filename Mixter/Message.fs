@@ -29,7 +29,7 @@ let republish republisherId decisionProjection =
 let applyOne decisionProjection event =
     match event with
     | MessagePublished e -> { decisionProjection with MessageId = Some e.MessageId; AuthorId = Some e.UserId }
-    | _ -> failwith "Unknown event"
+    | MessageRepublished _ -> decisionProjection
 
 let apply decisionProjection =
     Seq.fold applyOne decisionProjection
