@@ -33,5 +33,5 @@ module Message =
         | MessagePublished e -> { decisionProjection with MessageId = Some e.MessageId; AuthorId = Some e.UserId }
         | _ -> failwith "Unknown event"
 
-    let apply decisionProjection events =
-        Seq.fold applyOne decisionProjection events
+    let apply decisionProjection =
+        Seq.fold applyOne decisionProjection
