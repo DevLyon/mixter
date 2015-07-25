@@ -50,10 +50,10 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="IdentityTests.fs" />
+    <Compile Include="MessageTests.fs" />
+    <Compile Include="Identity.Infrastructure.Tests.fs" />
     <None Include="paket.references" />
     <None Include="App.config" />
-    <Compile Include="Identity.Infrastructure.Tests.fs" />
-    <Compile Include="MessageTests.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

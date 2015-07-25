@@ -43,10 +43,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Identity.fs" />
-    <None Include="paket.references" />
+    <Compile Include="Message.fs" />
     <Compile Include="Identity.Infrastructure.fs" />
     <None Include="App.fsx" />
-    <Compile Include="Message.fs" />
+    <None Include="paket.references" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
