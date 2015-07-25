@@ -17,7 +17,8 @@ type ``Given a User`` ()=
     member x.``When he logs in, then user connected event is returned`` () =
         let sessionId = SessionId.generate
         let getCurrentTime = fun () -> new DateTime()
-        apply DecisionProjection.initial [ UserRegistered { UserId = UserId "clem@mix-it.fr" } ]
+        [ UserRegistered { UserId = UserId "clem@mix-it.fr" } ]
+            |> apply UnregisteredUser 
             |> logIn sessionId getCurrentTime
             |> should equal [ UserConnected { SessionId = sessionId; UserId = UserId "clem@mix-it.fr"; ConnectedAt = getCurrentTime () } ]
 
@@ -30,7 +31,7 @@ type ``Given a started session`` ()=
         let userId = UserId "clem@mix-it.fr"
         let getCurrentTime = fun () -> new DateTime()
         [ UserRegistered { UserId = userId }; UserConnected { SessionId = sessionId; UserId = userId; ConnectedAt = getCurrentTime () }]
-            |> apply DecisionProjection.initial
+            |> apply UnregisteredUser
             |> logOut
             |> should equal [ UserDisconnected { SessionId = sessionId; UserId = userId } ]
     
@@ -42,7 +43,7 @@ type ``Given a started session`` ()=
         [ UserRegistered { UserId = userId }; 
         UserConnected { SessionId = sessionId; UserId = userId; ConnectedAt = getCurrentTime () };
         UserDisconnected { SessionId = sessionId; UserId = userId } ]
-            |> apply DecisionProjection.initial
+            |> apply UnregisteredUser
             |> logOut
             |> should equal []
 
