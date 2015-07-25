@@ -12,23 +12,23 @@ type Event =
 and MessagePublished = { MessageId: MessageId; UserId: UserId; Content: string}
 and MessageRepublished = { MessageId: MessageId }
 
-type DecisionProjection = {
-    MessageId: MessageId option;
-    AuthorId: UserId option;
-}
-    with static member initial = { MessageId = None; AuthorId = None }
+type DecisionProjection = 
+    | InitialProjection
+    | MessagePublishedProjection of MessagePublishedProjection 
+and MessagePublishedProjection = { MessageId: MessageId; AuthorId: UserId; }
 
 let publish messageId authorId content =
     [ MessagePublished { MessageId = messageId; UserId = authorId; Content = content } ]
 
 let republish republisherId decisionProjection =
-    if republisherId = decisionProjection.AuthorId.Value
-    then []
-    else [ MessageRepublished { MessageId = decisionProjection.MessageId.Value } ]
+    match decisionProjection with
+    | MessagePublishedProjection p when p.AuthorId <> republisherId -> [ MessageRepublished { MessageId = p.MessageId } ]
+    | MessagePublishedProjection _
+    | InitialProjection -> []
 
 let applyOne decisionProjection event =
     match event with
-    | MessagePublished e -> { decisionProjection with MessageId = Some e.MessageId; AuthorId = Some e.UserId }
+    | MessagePublished e -> MessagePublishedProjection { MessageId = e.MessageId; AuthorId = e.UserId }
     | MessageRepublished _ -> decisionProjection
 
 let apply decisionProjection =
