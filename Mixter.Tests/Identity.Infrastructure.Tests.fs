@@ -14,8 +14,9 @@ type ``Given a repository of session projection`` ()=
     member x.``Given repository contains two session projection, when get a session by its id, then it returns the corresponding session projection`` () =
         let sessionId = SessionId.generate
         let anotherSessionId = SessionId.generate
-        let sessions =  new Dictionary<SessionId, Session>()
-        sessions.Add(sessionId, { SessionId = sessionId; UserId = UserId "clem@mix-it.fr" })
-        sessions.Add(anotherSessionId, { SessionId = anotherSessionId; UserId = UserId "clem@mix-it.fr" })
-        getSessionByIdFromMemory sessions sessionId
+        let sessions = new MemorySessionsStore()
+        Add { SessionId = sessionId; UserId = UserId "clem@mix-it.fr" } |> sessions.ApplyChange
+        Add { SessionId = anotherSessionId; UserId = UserId "clem@mix-it.fr" } |> sessions.ApplyChange
+
+        sessions.GetSession sessionId
             |> should equal (Some { UserId = UserId "clem@mix-it.fr"; SessionId = sessionId })
