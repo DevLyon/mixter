@@ -59,12 +59,12 @@ type ``Given a handler of session events`` ()=
     member x.``When project user connected, then it returns a Session projection`` () =
         let userConnected = UserConnected { SessionId = sessionId; UserId = userId; ConnectedAt = DateTime.Now}
         let expectedAddSession = Add { SessionId = sessionId; UserId = userId }
-        project sessions userConnected
+        Read.apply sessions userConnected
             |> should equal expectedAddSession
             
     [<Test>]
     member x.``When project user disconnected, then it returns a Remove change of Session projection`` () =
         let userConnected = UserDisconnected { SessionId = sessionId; UserId = userId }
         let expectedRemoveSession = Remove sessionId
-        project sessions userConnected
+        Read.apply sessions userConnected
             |> should equal expectedRemoveSession

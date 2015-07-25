@@ -56,7 +56,7 @@ module Read =
 
     type getSessionById = SessionId -> Session option
 
-    let project (getSessionById:getSessionById) event = 
+    let apply (getSessionById:getSessionById) event = 
         match event with
         | UserConnected e -> Add { SessionId = e.SessionId; UserId = e.UserId }
         | UserDisconnected e -> Remove e.SessionId

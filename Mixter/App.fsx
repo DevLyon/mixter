@@ -26,7 +26,7 @@ let sessionsStore = new MemorySessionsStore()
 
 let simulateSessionStorage (userEvents, sessionId) =
     userEvents 
-        |> Seq.map (Read.project sessionsStore.GetSession)
+        |> Seq.map (Read.apply sessionsStore.GetSession)
         |> Seq.iter sessionsStore.ApplyChange
 
     sessionId
