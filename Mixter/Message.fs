@@ -13,23 +13,23 @@ and MessagePublished = { MessageId: MessageId; UserId: UserId; Content: string}
 and MessageRepublished = { MessageId: MessageId }
 
 type DecisionProjection = 
-    | InitialProjection
-    | MessagePublishedProjection of MessagePublishedProjection 
-and MessagePublishedProjection = { MessageId: MessageId; AuthorId: UserId; }
+    | NotPublishedMessage
+    | PublishedMessage of PublishedMessage 
+and PublishedMessage = { MessageId: MessageId; AuthorId: UserId; }
 
 let publish messageId authorId content =
     [ MessagePublished { MessageId = messageId; UserId = authorId; Content = content } ]
 
 let republish republisherId decisionProjection =
     match decisionProjection with
-    | MessagePublishedProjection p when p.AuthorId <> republisherId -> [ MessageRepublished { MessageId = p.MessageId } ]
-    | MessagePublishedProjection _
-    | InitialProjection -> []
+    | PublishedMessage p when p.AuthorId <> republisherId -> [ MessageRepublished { MessageId = p.MessageId } ]
+    | PublishedMessage _
+    | NotPublishedMessage -> []
 
 let applyOne decisionProjection event =
     match event with
-    | MessagePublished e -> MessagePublishedProjection { MessageId = e.MessageId; AuthorId = e.UserId }
+    | MessagePublished e -> PublishedMessage { MessageId = e.MessageId; AuthorId = e.UserId }
     | MessageRepublished _ -> decisionProjection
 
 let apply events =
-    Seq.fold applyOne InitialProjection events
+    Seq.fold applyOne NotPublishedMessage events
