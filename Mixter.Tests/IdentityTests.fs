@@ -18,7 +18,7 @@ type ``Given a User`` ()=
         let sessionId = SessionId.generate
         let getCurrentTime = fun () -> new DateTime()
         [ UserRegistered { UserId = UserId "clem@mix-it.fr" } ]
-            |> apply UnregisteredUser 
+            |> apply 
             |> logIn sessionId getCurrentTime
             |> should equal [ UserConnected { SessionId = sessionId; UserId = UserId "clem@mix-it.fr"; ConnectedAt = getCurrentTime () } ]
 
@@ -31,7 +31,7 @@ type ``Given a started session`` ()=
         let userId = UserId "clem@mix-it.fr"
         let getCurrentTime = fun () -> new DateTime()
         [ UserRegistered { UserId = userId }; UserConnected { SessionId = sessionId; UserId = userId; ConnectedAt = getCurrentTime () }]
-            |> apply UnregisteredUser
+            |> apply
             |> logOut
             |> should equal [ UserDisconnected { SessionId = sessionId; UserId = userId } ]
     
@@ -43,7 +43,7 @@ type ``Given a started session`` ()=
         [ UserRegistered { UserId = userId }; 
         UserConnected { SessionId = sessionId; UserId = userId; ConnectedAt = getCurrentTime () };
         UserDisconnected { SessionId = sessionId; UserId = userId } ]
-            |> apply UnregisteredUser
+            |> apply
             |> logOut
             |> should equal []
 

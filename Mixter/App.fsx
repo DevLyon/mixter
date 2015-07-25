@@ -11,7 +11,7 @@ let userId = UserId "clem@mix-it.fr"
 let registrationEvents = register userId
 
 // Simulate user reloading & logIn
-let user = apply UnregisteredUser registrationEvents
+let user = apply registrationEvents
 let now = fun () -> DateTime.Now
 let sessionId = SessionId.generate
 let loginEvents = logIn sessionId now user

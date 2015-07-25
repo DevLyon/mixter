@@ -42,8 +42,8 @@ let applyOne decisionProjection event =
     | (ConnectedUser _, UserDisconnected e) -> RegisteredUser { UserId = e.UserId }
     | _ -> failwith "Invalid transition"
 
-let apply decisionProjection =
-    Seq.fold applyOne decisionProjection
+let apply events =
+    Seq.fold applyOne UnregisteredUser events
 
 module Read =
     type Session = { SessionId: SessionId; UserId: UserId }

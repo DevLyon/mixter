@@ -31,5 +31,5 @@ let applyOne decisionProjection event =
     | MessagePublished e -> MessagePublishedProjection { MessageId = e.MessageId; AuthorId = e.UserId }
     | MessageRepublished _ -> decisionProjection
 
-let apply decisionProjection =
-    Seq.fold applyOne decisionProjection
+let apply events =
+    Seq.fold applyOne InitialProjection events
