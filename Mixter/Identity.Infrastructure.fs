@@ -14,5 +14,5 @@ let getSessionByIdFromMemory (sessions:Dictionary<SessionId, Session>) sessionId
 let applyChangeInMemory (sessions:Dictionary<SessionId, Session>) change = 
     match change with 
     | Add session -> sessions.Add (session.SessionId, session)
-    | Remove session -> sessions.Remove session.SessionId |> ignore
+    | Remove sessionId -> sessions.Remove sessionId |> ignore
     | None -> ()

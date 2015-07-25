@@ -65,6 +65,6 @@ type ``Given a handler of session events`` ()=
     [<Test>]
     member x.``When project user disconnected, then it returns a Remove change of Session projection`` () =
         let userConnected = UserDisconnected { SessionId = sessionId; UserId = userId }
-        let expectedRemoveSession = Remove { SessionId = sessionId; UserId = userId }
+        let expectedRemoveSession = Remove sessionId
         project sessions userConnected
             |> should equal expectedRemoveSession
