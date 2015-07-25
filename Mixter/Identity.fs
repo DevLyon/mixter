@@ -38,8 +38,8 @@ let applyOne decisionProjection event =
     | UserConnected e -> { decisionProjection with SessionId = Some e.SessionId }
     | UserDisconnected _ -> { decisionProjection with SessionId = None }
 
-let apply decisionProjection events =
-    Seq.fold applyOne decisionProjection events
+let apply decisionProjection =
+    Seq.fold applyOne decisionProjection
 
 module Read =
     type RepositoryChange<'a> = 
