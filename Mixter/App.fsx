@@ -9,7 +9,7 @@ let userId = UserId "clem@mix-it.fr"
 let registrationEvents = register userId
 
 // Simulate user reloading & logIn
-let user = apply DecisionProjection.initial registrationEvents
+let user = apply UnregisteredUser registrationEvents
 let now = fun () -> DateTime.Now
 let sessionId = SessionId.generate
 let loginEvents = logIn sessionId now user
@@ -21,8 +21,8 @@ open System.Collections.Generic
 let sessionProjections = new Dictionary<SessionId, Read.Session>()
 let getSessionById = getSessionByIdFromMemory sessionProjections
 loginEvents 
-|> Seq.map (Read.project getSessionById)
-|> Seq.iter (Mixter.Infrastructure.Identity.Read.applyChangeInMemory sessionProjections)
+    |> Seq.map (Read.project getSessionById)
+    |> Seq.iter (Mixter.Infrastructure.Identity.Read.applyChangeInMemory sessionProjections)
 
 // Read session projection
 let session = getSessionById sessionId
