@@ -1,5 +1,5 @@
-var idGenerator = require('../../idGenerator');
 var decisionProjection = require('../decisionProjection');
+var session = require('./session');
 
 var UserIdentityId = exports.UserIdentityId = function UserIdentity(email){
     this.email = email;
@@ -17,14 +17,6 @@ var UserRegistered = exports.UserRegistered = function UserRegistered(userIdenti
     Object.freeze(this);
 };
 
-var UserConnected = exports.UserConnected = function UserConnected(sessionId, userIdentityId, connectedAt){
-    this.userIdentityId = userIdentityId;
-    this.sessionId = sessionId;
-    this.connectedAt = connectedAt;
-
-    Object.freeze(this);
-};
-
 var UserIdentity = function UserIdentity(events){
     var self = this;
 
@@ -33,7 +25,7 @@ var UserIdentity = function UserIdentity(events){
     }).apply(events);
 
     self.logIn = function logIn(publishEvent){
-        publishEvent(new UserConnected(idGenerator.generate(), projection.id, new Date()));
+        session.logIn(publishEvent, projection.id);
     };
 };
 
