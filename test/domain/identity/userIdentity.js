@@ -1,14 +1,18 @@
 var userIdentity = require('../../../src/domain/identity/userIdentity');
+var session = require('../../../src/domain/identity/session');
 var expect = require('chai').expect;
 
 describe('User Identity Aggregate', function() {
     var email = 'user@mix-it.fr';
 
-    var eventsRaised;
+    var eventsRaised = [];
     var publishEvent = function publishEvent(evt){
-        eventsRaised = [];
         eventsRaised.push(evt);
     };
+
+    beforeEach(function(){
+        eventsRaised = [];
+    });
 
     it('When create UserIdentityId Then toString return email', function() {
         var id = new userIdentity.UserIdentityId(email);
@@ -31,9 +35,9 @@ describe('User Identity Aggregate', function() {
 
         expect(eventsRaised).to.have.length(1);
         var event = eventsRaised[0];
-        expect(event).to.be.an.instanceof(userIdentity.UserConnected);
+        expect(event).to.be.an.instanceof(session.UserConnected);
         expect(event.userIdentityId).to.equal(id);
-        expect(event.connectedAt - new Date()).to.within(-1, 1);
+        expect(event.connectedAt - new Date()).to.within(-5, 5);
         expect(event.sessionId).not.to.be.empty;
     });
 });
