@@ -12,6 +12,8 @@ var UpdateTimeline = function UpdateTimeline(timelineMessageRepository){
     self.register = function(eventPublisher) {
         eventPublisher.on(message.MessageQuacked, function(event){
             saveProjection(event.author, event.author, event.content, event.messageId);
+        }).on(message.MessageDeleted, function(event){
+            timelineMessageRepository.deleteMessage(event.messageId);
         });
     };
 };
