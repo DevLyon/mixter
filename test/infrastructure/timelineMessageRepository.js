@@ -47,4 +47,19 @@ describe('TimelineMessage Repository', function() {
 
         expect(messages).to.have.length(1);
     });
+
+    it('Given a message saved for several users When remove this message Then remove this message of all users', function() {
+        repository.save(timelineMessageProjection.create(ownerId, authorId, messageContent, messageId));
+        var message2 = timelineMessageProjection.create(ownerId, authorId, messageContent, new MessageId('M2'));
+        repository.save(message2);
+        var ownerId2 = new UserId('owner2@mix-it.fr');
+        repository.save(timelineMessageProjection.create(ownerId2, authorId, messageContent, messageId));
+
+        repository.deleteMessage(messageId);
+
+        var messagesOfOwner1 = repository.getMessageOfUser(ownerId);
+        expect(messagesOfOwner1).to.have.length(1);
+        expect(messagesOfOwner1).to.contains(message2);
+        expect(repository.getMessageOfUser(ownerId2)).to.have.length(0);
+    });
 });
