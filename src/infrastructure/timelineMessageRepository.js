@@ -12,6 +12,12 @@ var TimelineMessageRepository = function TimelineMessageRepository(){
         });
     };
 
+    self.deleteMessage = function(messageId){
+        _.remove(projections, {
+            messageId: messageId
+        });
+    };
+
     self.save = function(projection){
         remove(projection.ownerId, projection.messageId);
 
