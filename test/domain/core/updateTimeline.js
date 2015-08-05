@@ -29,4 +29,13 @@ describe('UpdateTimeline Handler', function() {
         var expectedProjection = timelineMessageProjection.create(author, author, messageContent, messageId);
         expect(repository.getMessageOfUser(author)).to.contains(expectedProjection);
     });
+
+    it('When handle MessageDeleted Then remove this message in TimelineMessageProjections', function() {
+        eventPublisher.publish(new message.MessageQuacked(messageId, author, messageContent));
+
+        eventPublisher.publish(new message.MessageDeleted(messageId));
+
+        var expectedProjection = timelineMessageProjection.create(author, author, messageContent, messageId);
+        expect(repository.getMessageOfUser(author)).not.to.contains(expectedProjection);
+    });
 });
