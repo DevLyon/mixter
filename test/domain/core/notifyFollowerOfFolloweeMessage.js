@@ -15,8 +15,10 @@ describe('NotifyFollowerOfFolloweeMessage Handler', function() {
     var subscriptionId = new SubscriptionId(new UserId('follower@mix-it.fr'), new UserId('followee@mix-it.fr'));
 
     var eventPublisher;
-    var events = [];
+    var events;
     beforeEach(function(){
+        events = [];
+
         var eventsStore = createEventsStore();
         var followersRepository = createFollowersRepository();
         var subscriptionsRepository = createSubscriptionsRepository(eventsStore, followersRepository);
@@ -29,13 +31,27 @@ describe('NotifyFollowerOfFolloweeMessage Handler', function() {
         notifyFollowerOfFolloweeMessage.create(subscriptionsRepository).register(eventPublisher);
     });
 
-    it('Given follower When MessageQuacked by followee Then raise FolloweeMessageQuacked', function() {
-        eventPublisher.publish(new subscription.UserFollowed(subscriptionId));
-        var messageQuacked = new message.MessageQuacked(new MessageId('M1'), subscriptionId.followee, 'Hello');
+    describe('Given follower', function(){
+        beforeEach(function(){
+            eventPublisher.publish(new subscription.UserFollowed(subscriptionId));
+        });
 
-        eventPublisher.publish(messageQuacked);
+        it('When MessageQuacked by followee Then raise FolloweeMessageQuacked', function() {
+            var messageQuacked = new message.MessageQuacked(new MessageId('M1'), subscriptionId.followee, 'Hello');
 
-        var expectedEvent = new subscription.FolloweeMessageQuacked(subscriptionId, messageQuacked.messageId);
-        expect(events).to.contains(expectedEvent);
+            eventPublisher.publish(messageQuacked);
+
+            var expectedEvent = new subscription.FolloweeMessageQuacked(subscriptionId, messageQuacked.messageId);
+            expect(events).to.contains(expectedEvent);
+        });
+
+        it('When MessageRequacked by followee Then raise FolloweeMessageQuacked', function() {
+            var messageRequacked = new message.MessageRequacked(new MessageId('M1'), subscriptionId.followee);
+
+            eventPublisher.publish(messageRequacked);
+
+            var expectedEvent = new subscription.FolloweeMessageQuacked(subscriptionId, messageRequacked.messageId);
+            expect(events).to.contains(expectedEvent);
+        });
     });
 });
