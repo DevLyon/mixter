@@ -1,0 +1,250 @@
+#!/bin/bash
+
+declare -A languages=( ["js"]="js/v2/full" )
+declare -A testsNbByStep=( [1]=4 [2]=1 [3]=4 [4]=4 [5]=2 )
+
+testBranch="test"
+solutionBranch="solution"
+workshopBranch="workshop"
+
+function askLanguage() {
+  while true; do
+    printf -v question "Language (%s) ?\n" "${!languages[@]}"
+    read -p "$question" response
+    if [ ${languages[$response]+_} ]; then
+      selectedLanguage=$response
+      break
+    fi 
+  done
+}
+
+function clean() {
+  echo "Clean repository..."
+
+  git reset --hard HEAD > /dev/null
+  git checkout master > /dev/null
+  git branch -D $testBranch > /dev/null 2>&1 
+  git branch -D $solutionBranch > /dev/null 2>&1
+  git branch -D $workshopBranch > /dev/null 2>&1
+
+  git tag --list | grep -e '^step' | xargs git tag -d > /dev/null 2>&1
+  git branch --list | grep -e '^${workshop}-step' | xargs git branch -D > /dev/null 2>&1 
+}
+
+stepNb=${#testsNbByStep[@]}
+currentStep=1
+currentTestOfStep=1
+currentTestTag=""
+nextTestTag=""
+currentStepTag=""
+nextStepTag=""
+hasNextTestForCurrentStep=false
+hasNextStep=false
+
+function updateCurrentTestTag(){
+  currentTestTag="step${currentStep}-test${currentTestOfStep}"
+}
+
+function updateNextTestTag(){
+  if [ $currentStep -le $stepNb ] && [ ${testsNbByStep[$currentStep]} -le $currentTestOfStep ]
+  then
+    nextStepNum=$(($currentStep + 1))
+    nextTestTag="step${nextStepNum}-test1"
+  else
+    nextTestOfStep=$(($currentTestOfStep + 1))
+    nextTestTag="step${currentStep}-test${nextTestOfStep}"
+  fi
+}
+
+function updateCurrentStepTag(){
+  currentStepTag="step${currentStep}"
+}
+
+function updateNextStepTag(){
+  nextStepNum=$(($currentStep + 1))
+  nextStepTag="step${nextStepNum}"
+}
+
+function updateHasNextTestForCurrentStep(){
+  if [ $currentStep -le $stepNb ] &&  [ $currentTestOfStep -lt ${testsNbByStep[$currentStep]} ]
+  then 
+    hasNextTestForCurrentStep=true
+  else
+    hasNextTestForCurrentStep=false
+  fi
+}
+
+function updateHasNextStep(){
+  if [ $currentStep -lt $stepNb ]
+  then 
+    hasNextStep=true
+  else
+    hasNextStep=false
+  fi
+}
+
+function updateTagVariables(){
+  updateCurrentTestTag
+  updateNextTestTag
+  updateCurrentStepTag
+  updateNextStepTag
+  updateHasNextTestForCurrentStep
+  updateHasNextStep
+}
+
+function nextTest(){
+  if [ ${testsNbByStep[$currentStep]} -le $currentTestOfStep ]
+  then
+    currentStep=$(($currentStep + 1))
+    currentTestOfStep=1
+  else
+    currentTestOfStep=$(($currentTestOfStep + 1))
+  fi
+
+  updateTagVariables
+}
+
+function resetTestCounter(){
+  currentStep=1
+  currentTestOfStep=1
+
+  updateTagVariables
+}
+
+function addStepNavigationCommand(){
+  tag=$1
+
+  cat << EOF > ./jumpToNextStep
+#!/bin/bash
+
+git add -A
+git commit -m "Abort test"
+git checkout -b ${workshopBranch}-${tag} ${tag}
+git merge ${tag}-test1
+git checkout --ours .
+git add .
+git commit -m "Merge with test branch"
+EOF
+  
+  chmod +x ./jumpToNextStep
+  git add jumpToNextStep > /dev/null
+
+  git commit -m "Add step navigation commands" > /dev/null
+}
+
+function pickCommitForSolution(){
+  line="$1"
+  hash="$(echo $line | cut -d' ' -f1)"
+
+  printf "."
+
+  if [[ $line == *" KO]"* ]] && [ $currentTestOfStep -eq 1 ] && [ $hasNextStep = true ]
+  then 
+    addStepNavigationCommand $nextStepTag
+  fi
+
+  git cherry-pick $hash > /dev/null
+  
+  if [[ $line == *" KO]"* ]] && [ $currentTestOfStep -eq 1 ]
+  then
+    git tag $currentStepTag > /dev/null
+    echo "${currentStepTag} Ok"
+  fi
+
+  if [[ $line == *" KO]"* ]]
+  then
+    nextTest
+  fi
+}
+
+function initializeSolutionBranch() {
+  referenceBranch=$1
+
+  echo "Initialize solution branch"
+
+  resetTestCounter
+
+  git checkout -b $solutionBranch origin/master > /dev/null
+  git log $referenceBranch --pretty=tformat:'%h %s' --reverse -E HEAD.. | while read line
+      do pickCommitForSolution "$line"
+  done
+
+  echo "Done"
+}
+
+function addNavigationCommand(){
+  tag=$1
+  
+  cat << EOF > ./next
+#!/bin/bash
+ 
+git add -A
+git commit -m "Resolve test"
+git merge $tag
+EOF
+  
+  chmod +x ./next
+  git add next > /dev/null
+  
+  git commit -m "Add test navigation commands" > /dev/null
+}
+
+function pickCommitForTest(){
+  line=$1
+  hash="$(echo $line | cut -d' ' -f1)"
+    
+  printf "."
+
+  git cherry-pick $hash > /dev/null
+
+  if [[ $line == *" KO]"* ]]
+  then
+      if [ $hasNextStep = true ] || [ $hasNextTestForCurrentStep = true ]
+      then
+        addNavigationCommand $nextTestTag
+      fi
+       
+      git tag $currentTestTag > /dev/null
+      echo "$currentTestTag Ok"
+  
+      nextTest
+  fi
+}
+
+function initializeTestBranch(){
+  echo "Initialize test branch"
+
+  resetTestCounter
+
+  git checkout -b $testBranch origin/master > /dev/null
+  git log $solutionBranch --pretty=tformat:'%h %s' --grep '[^K]\][^\[]' --grep '^[^\[]' --reverse -E HEAD.. | while read line
+    do pickCommitForTest "$line"
+  done
+
+  echo "Done"
+}
+
+function initializeWorkflow(){
+  echo "Initialize workspace"
+    
+  resetTestCounter
+
+  git checkout -b $workshopBranch $currentStepTag
+}
+
+askLanguage
+
+clean
+initializeSolutionBranch "${languages[$selectedLanguage]}"
+initializeTestBranch
+initializeWorkflow
+
+echo "Koan OK"
+echo ""
+echo ""
+
+GREEN='\033[0;32m'
+NC='\033[0m'
+printf $GREEN
+cat welcome.txt
+printf $NC
