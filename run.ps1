@@ -214,3 +214,7 @@ initializeTestBranch
 InitializeWorkflow
 
 Write-Host "Koan OK"
+Write-Host ""
+Write-Host ""
+
+Get-Content welcome.txt | Write-Host -f green
