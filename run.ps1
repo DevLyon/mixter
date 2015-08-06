@@ -1,3 +1,4 @@
+$languages = @{ "js"="js/v2/full" }
 $branch = "js/v2/full"
 $testsNbByStep = @{ 1=4; 2=1; 3=4; 4=4; 5=2 }
 
@@ -138,6 +139,22 @@ function pickCommitForTest($line){
 	}
 }
 
+function AskParametreWithValues($name, $values){
+    do {
+        $value = Read-Host ($name + " (" + ($values -join ", ") + ")")
+    } while(-Not ($values -contains $value))
+
+    return $value
+}
+
+function askLanguage(){
+	AskParametreWithValues "Language" $languages.Keys
+}
+
+$selectedLanguage = askLanguage
+
+$referenceBranch = $languages.$selectedLanguage
+
 clean
 
 sleep 5
@@ -145,7 +162,7 @@ sleep 5
 $currentStep = 1
 $currentTestOfStep = 1
 git checkout -b $solutionBranch origin/master
-git log $branch --pretty=tformat:'%h %s' --reverse -E HEAD.. | %{ pickCommitForSolution $_ }
+git log $referenceBranch --pretty=tformat:'%h %s' --reverse -E HEAD.. | %{ pickCommitForSolution $_ }
 
 sleep 2
 
