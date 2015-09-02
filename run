@@ -165,7 +165,7 @@ function initializeSolutionBranch() {
   resetTestCounter
 
   git checkout -b $solutionBranch origin/master > /dev/null
-  git log $referenceBranch --pretty=tformat:'%h %s' --reverse -E HEAD.. | while read line
+  git log origin/$referenceBranch --pretty=tformat:'%h %s' --reverse -E HEAD.. | while read line
       do pickCommitForSolution "$line"
   done
 
