@@ -1,4 +1,4 @@
-$languages = @{ "js"="js/v2/full" }
+$languages = @{ "js"="origin/js/v2/full" }
 $testsNbByStep = @{ 1=4; 2=1; 3=4; 4=4; 5=2 }
 
 $testBranch = "test"
