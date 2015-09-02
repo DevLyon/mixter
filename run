@@ -1,20 +1,22 @@
 #!/bin/bash
 
-declare -A languages=( ["js"]="js/v2/full" )
 testsNbByStep=( 4 1 4 4 2 )
 
 testBranch="test"
 solutionBranch="solution"
 workshopBranch="workshop"
+referenceBranch=""
 
 function askLanguage() {
   while true; do
-    printf -v question "Language (%s) ?\n" "${!languages[@]}"
-    read -p "$question" response
-    if [ ${languages[$response]+_} ]; then
+    read -p "Language (js, c#) ?  " response
+    case "$response" in
+    "js")
       selectedLanguage=$response
+      referenceBranch="js/v2/full"
       break
-    fi 
+      ;;
+    esac
   done
 }
 
@@ -158,8 +160,6 @@ function pickCommitForSolution(){
 }
 
 function initializeSolutionBranch() {
-  referenceBranch=$1
-
   echo "Initialize solution branch"
 
   resetTestCounter
@@ -235,7 +235,7 @@ function initializeWorkflow(){
 askLanguage
 
 clean
-initializeSolutionBranch "${languages[$selectedLanguage]}"
+initializeSolutionBranch
 initializeTestBranch
 initializeWorkflow
 
