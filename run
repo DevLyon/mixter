@@ -1,7 +1,7 @@
 #!/bin/bash
 
 declare -A languages=( ["js"]="js/v2/full" )
-declare -A testsNbByStep=( [1]=4 [2]=1 [3]=4 [4]=4 [5]=2 )
+testsNbByStep=( 4 1 4 4 2 )
 
 testBranch="test"
 solutionBranch="solution"
@@ -46,7 +46,7 @@ function updateCurrentTestTag(){
 }
 
 function updateNextTestTag(){
-  if [ $currentStep -le $stepNb ] && [ ${testsNbByStep[$currentStep]} -le $currentTestOfStep ]
+  if [ $currentStep -le $stepNb ] && [ ${testsNbByStep[$currentStep-1]} -le $currentTestOfStep ]
   then
     nextStepNum=$(($currentStep + 1))
     nextTestTag="step${nextStepNum}-test1"
@@ -66,7 +66,7 @@ function updateNextStepTag(){
 }
 
 function updateHasNextTestForCurrentStep(){
-  if [ $currentStep -le $stepNb ] &&  [ $currentTestOfStep -lt ${testsNbByStep[$currentStep]} ]
+  if [ $currentStep -le $stepNb ] &&  [ $currentTestOfStep -lt ${testsNbByStep[$currentStep-1]} ]
   then 
     hasNextTestForCurrentStep=true
   else
@@ -93,7 +93,7 @@ function updateTagVariables(){
 }
 
 function nextTest(){
-  if [ ${testsNbByStep[$currentStep]} -le $currentTestOfStep ]
+  if [ ${testsNbByStep[$currentStep-1]} -le $currentTestOfStep ]
   then
     currentStep=$(($currentStep + 1))
     currentTestOfStep=1
