@@ -229,7 +229,7 @@ function initializeWorkflow(){
     
   resetTestCounter
 
-  git checkout -b $workshopBranch $currentStepTag
+  git checkout -b $workshopBranch $currentTestTag
 }
 
 askLanguage
