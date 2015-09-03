@@ -203,7 +203,7 @@ function InitializeWorkflow(){
 	
 	resetTestCounter
 
-	git checkout -b $workshopBranch (getCurrentStepTag)
+	git checkout -b $workshopBranch (getCurrentTestTag)
 }
 
 $selectedLanguage = askLanguage
