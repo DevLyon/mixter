@@ -9,7 +9,7 @@ referenceBranch=""
 
 function askLanguage() {
   while true; do
-    read -p "Language (js, c#) ?  " response
+    read -p "Language (js) ?  " response
     case "$response" in
     "js")
       selectedLanguage=$response
