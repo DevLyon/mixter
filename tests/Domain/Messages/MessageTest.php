@@ -3,83 +3,83 @@
 use App\Domain\Identity\UserId;
 use App\Domain\Messages\Message;
 use App\Domain\Messages\MessageId;
-use App\Domain\Messages\MessagePublished;
-use App\Domain\Messages\MessageRepublished;
+use App\Domain\Messages\MessageQuacked;
+use App\Domain\Messages\MessageRequacked;
 use Tests\Domain\FakeEventPublisher;
 
 class MessageTest extends \PHPUnit_Framework_TestCase
 {
-    public function testWhenPublishAMessage_ThenMessagePublishedIsRaised()
+    public function testWhenQuackAMessage_ThenMessageQuackedIsRaised()
     {
         $fakeEventPublisher = new FakeEventPublisher();
         $authorId = new UserId('clem@mix-it.fr');
 
-        Message::publish($fakeEventPublisher, 'hello', $authorId);
+        Message::quack($fakeEventPublisher, 'hello', $authorId);
 
         \Assert\that($fakeEventPublisher->events)->count(1);
-        /** @var MessagePublished $messagePublished */
-        $messagePublished = $fakeEventPublisher->events[0];
-        \Assert\that($messagePublished->getMessageId())->notNull();
-        \Assert\that($messagePublished->getContent())->eq('hello');
-        \Assert\that($messagePublished->getAuthorId())->eq($authorId);
+        /** @var MessageQuacked $messageQuacked */
+        $messageQuacked = $fakeEventPublisher->events[0];
+        \Assert\that($messageQuacked->getMessageId())->notNull();
+        \Assert\that($messageQuacked->getContent())->eq('hello');
+        \Assert\that($messageQuacked->getAuthorId())->eq($authorId);
     }
 
-    public function testWhenPublishTwoMessages_ThenTwoDifferentMessagePublishedAreRaised()
+    public function testWhenQuackTwoMessages_ThenTwoDifferentMessageQuackedAreRaised()
     {
         $fakeEventPublisher = new FakeEventPublisher();
         $authorId = new UserId('clem@mix-it.fr');
 
-        Message::publish($fakeEventPublisher, 'hello', $authorId);
-        Message::publish($fakeEventPublisher, 'how are you ?', $authorId);
+        Message::quack($fakeEventPublisher, 'hello', $authorId);
+        Message::quack($fakeEventPublisher, 'how are you ?', $authorId);
 
         \Assert\that($fakeEventPublisher->events)->count(2);
-        /** @var MessagePublished $firstMessagePublished */
-        $firstMessagePublished = $fakeEventPublisher->events[0];
-        /** @var MessagePublished $secondMessagePublished */
-        $secondMessagePublished = $fakeEventPublisher->events[1];
-        \Assert\that($firstMessagePublished->getMessageId())
-            ->notEq($secondMessagePublished->getMessageId());
+        /** @var MessageQuacked $firstMessageQuacked */
+        $firstMessageQuacked = $fakeEventPublisher->events[0];
+        /** @var MessageQuacked $secondMessageQuacked */
+        $secondMessageQuacked = $fakeEventPublisher->events[1];
+        \Assert\that($firstMessageQuacked->getMessageId())
+            ->notEq($secondMessageQuacked->getMessageId());
     }
 
-    public function testWhenRepublishAMessage_ThenMessageRepublishedIsRaised()
+    public function testWhenRequackAMessage_ThenMessageRequackedIsRaised()
     {
         $fakeEventPublisher = new FakeEventPublisher();
         $authorId = new UserId('clem@mix-it.fr');
-        $messagePublished = new MessagePublished(MessageId::generate(), 'Hello', $authorId);
-        $message = new Message(array($messagePublished));
-        $republisherId = new UserId('emilien@mix-it.fr');
+        $messageQuacked = new MessageQuacked(MessageId::generate(), 'Hello', $authorId);
+        $message = new Message(array($messageQuacked));
+        $requackerId = new UserId('emilien@mix-it.fr');
 
-        $message->republish($fakeEventPublisher, $republisherId);
+        $message->requack($fakeEventPublisher, $requackerId);
 
         \Assert\that($fakeEventPublisher->events)->count(1);
-        /** @var MessageRepublished $messageRepublished */
-        $messageRepublished = $fakeEventPublisher->events[0];
-        \Assert\that($messageRepublished->getMessageId())->eq($messagePublished->getMessageId());
-        \Assert\that($messageRepublished->getRepublisherId())->eq($republisherId);
+        /** @var MessageRequacked $messageRequacked */
+        $messageRequacked = $fakeEventPublisher->events[0];
+        \Assert\that($messageRequacked->getMessageId())->eq($messageQuacked->getMessageId());
+        \Assert\that($messageRequacked->getRequackerId())->eq($requackerId);
     }
 
-    public function testWhenAuthorRepublishItsOwnMessage_ThenNothingHappens()
+    public function testWhenAuthorRequackItsOwnMessage_ThenNothingHappens()
     {
         $fakeEventPublisher = new FakeEventPublisher();
         $authorId = new UserId('clem@mix-it.fr');
-        $messagePublished = new MessagePublished(MessageId::generate(), 'Hello', $authorId);
-        $message = new Message(array($messagePublished));
+        $messageQuacked = new MessageQuacked(MessageId::generate(), 'Hello', $authorId);
+        $message = new Message(array($messageQuacked));
 
-        $message->republish($fakeEventPublisher, $authorId);
+        $message->requack($fakeEventPublisher, $authorId);
 
         \Assert\that($fakeEventPublisher->events)->count(0);
     }
 
-    public function testWhenRepublisherRepublishASecondTime_ThenNothingHappens()
+    public function testWhenRequackerRequackASecondTime_ThenNothingHappens()
     {
         $fakeEventPublisher = new FakeEventPublisher();
         $authorId = new UserId('clem@mix-it.fr');
-        $messagePublished = new MessagePublished(MessageId::generate(), 'Hello', $authorId);
-        $republisherId = new UserId('emilien@mix-it.fr');
-        $messageRepublished = new MessageRepublished($messagePublished->getMessageId(), $republisherId);
-        $message = new Message(array($messagePublished, $messageRepublished));
+        $messageQuacked = new MessageQuacked(MessageId::generate(), 'Hello', $authorId);
+        $requackerId = new UserId('emilien@mix-it.fr');
+        $messageRequacked = new MessageRequacked($messageQuacked->getMessageId(), $requackerId);
+        $message = new Message(array($messageQuacked, $messageRequacked));
 
-        $message->republish($fakeEventPublisher, $republisherId);
+        $message->requack($fakeEventPublisher, $requackerId);
 
         \Assert\that($fakeEventPublisher->events)->count(0);
     }

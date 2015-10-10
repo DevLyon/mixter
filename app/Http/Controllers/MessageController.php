@@ -20,28 +20,28 @@ class MessageController extends Controller
         $this->eventPublisher = $eventPublisher;
     }
 
-    public function publish()
+    public function quack()
     {
         // DEBT : should be found through session -> later
         $authorId = new UserId(Input::get('userId'));
 
         $messageContent = Input::get('content');
-        Message::publish($this->eventPublisher, $messageContent, $authorId);
+        Message::quack($this->eventPublisher, $messageContent, $authorId);
         return response('Message published', 201);
     }
 
-    public function republish(IMessageRepository $messageRepository)
+    public function requack(IMessageRepository $messageRepository)
     {
         // DEBT : should be found through session -> later
-        $republisherId = new UserId(Input::get('userId'));
+        $requackerId = new UserId(Input::get('userId'));
 
-        $messageToRepublishId = new MessageId(Input::get('messageId'));
+        $messageToRequackId = new MessageId(Input::get('messageId'));
         try {
-            $message = $messageRepository->get($messageToRepublishId);
-            $message->republish($this->eventPublisher, $republisherId);
-            return response('Message '.$messageToRepublishId->getId().' republished', 201);
+            $message = $messageRepository->get($messageToRequackId);
+            $message->requack($this->eventPublisher, $requackerId);
+            return response('Message '.$messageToRequackId->getId().' requacked', 201);
         } catch (UnknownAggregate $unknownAggregate) {
-            return response('Message to republish does not exist', 401);
+            return response('Message to requack does not exist', 401);
         }
     }
 }

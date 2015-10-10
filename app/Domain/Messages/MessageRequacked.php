@@ -5,18 +5,18 @@ namespace App\Domain\Messages;
 use App\Domain\Identity\UserId;
 use App\Domain\IDomainEvent;
 
-class MessageRepublished implements IDomainEvent
+class MessageRequacked implements IDomainEvent
 {
     /** @var MessageId */
     private $messageId;
 
     /** @var UserId */
-    private $republisherId;
+    private $requackerId;
 
-    public function __construct(MessageId $messageId, UserId $republisherId)
+    public function __construct(MessageId $messageId, UserId $requackerId)
     {
         $this->messageId = $messageId;
-        $this->republisherId = $republisherId;
+        $this->requackerId = $requackerId;
     }
 
     /**
@@ -30,9 +30,9 @@ class MessageRepublished implements IDomainEvent
     /**
      * @return UserId
      */
-    public function getRepublisherId()
+    public function getRequackerId()
     {
-        return $this->republisherId;
+        return $this->requackerId;
     }
 
     /**

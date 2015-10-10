@@ -5,7 +5,7 @@ namespace App\Domain\Messages;
 use App\Domain\Identity\UserId;
 use App\Domain\IDomainEvent;
 
-class MessagePublished implements IDomainEvent {
+class MessageQuacked implements IDomainEvent {
 
     /**
      * @var MessageId
