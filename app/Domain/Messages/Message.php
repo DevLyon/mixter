@@ -30,7 +30,8 @@ namespace App\Domain\Messages {
 
         public function delete(IEventPublisher $eventPublisher, UserId $deleterId)
         {
-            if($deleterId != $this->decisionProjection->getAuthorId()) {
+            if($this->decisionProjection->isDeleted()
+                || $deleterId != $this->decisionProjection->getAuthorId()) {
                 return;
             }
             $eventPublisher->publish(
@@ -43,6 +44,7 @@ namespace App\Domain\Messages\Message {
 
     use App\Domain\DecisionProjectionBase;
     use App\Domain\Identity\UserId;
+    use App\Domain\Messages\MessageDeleted;
     use App\Domain\Messages\MessageId;
     use App\Domain\Messages\MessageQuacked;
     use App\Domain\Messages\MessageRequacked;
@@ -58,10 +60,14 @@ namespace App\Domain\Messages\Message {
         /** @var array */
         private $requackers = array();
 
+        /** @var bool */
+        private $deleted = false;
+
         public function __construct($events)
         {
             $this->registerMessageQuacked();
             $this->registerMessageRequacked();
+            $this->registerMessageDeleted();
             parent::__construct($events);
         }
 
@@ -89,6 +95,14 @@ namespace App\Domain\Messages\Message {
             return $this->requackers;
         }
 
+        /**
+         * @return boolean
+         */
+        public function isDeleted()
+        {
+            return $this->deleted;
+        }
+
         private function registerMessageQuacked()
         {
             $this->register('App\Domain\Messages\MessageQuacked', function (MessageQuacked $event) {
@@ -101,6 +115,13 @@ namespace App\Domain\Messages\Message {
         {
             $this->register('App\Domain\Messages\MessageRequacked', function (MessageRequacked $event) {
                 $this->requackers[] = $event->getRequackerId();
+            });
+        }
+
+        private function registerMessageDeleted()
+        {
+            $this->register('App\Domain\Messages\MessageDeleted', function (MessageDeleted $event){
+                $this->deleted = true;
             });
         }
     }
