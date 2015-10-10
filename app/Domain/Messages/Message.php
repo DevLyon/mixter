@@ -8,9 +8,9 @@ namespace App\Domain\Messages {
 
     class Message
     {
-        public static function publish(IEventPublisher $eventPublisher, $messageContent, UserId $authorId)
+        public static function quack(IEventPublisher $eventPublisher, $messageContent, UserId $authorId)
         {
-            $eventPublisher->publish(new MessagePublished(MessageId::generate(), $messageContent, $authorId));
+            $eventPublisher->publish(new MessageQuacked(MessageId::generate(), $messageContent, $authorId));
         }
 
         public function __construct($events)
@@ -18,14 +18,14 @@ namespace App\Domain\Messages {
             $this->decisionProjection = new DecisionProjection($events);
         }
 
-        public function republish(IEventPublisher $eventPublisher, UserId $republisherId)
+        public function requack(IEventPublisher $eventPublisher, UserId $requackerId)
         {
-            if($republisherId == $this->decisionProjection->getAuthorId()
-                || in_array($republisherId, $this->decisionProjection->getRepublishers())) {
+            if($requackerId == $this->decisionProjection->getAuthorId()
+                || in_array($requackerId, $this->decisionProjection->getRequackers())) {
                 return;
             }
             $eventPublisher->publish(
-                new MessageRepublished($this->decisionProjection->getMessageId(), $republisherId));
+                new MessageRequacked($this->decisionProjection->getMessageId(), $requackerId));
         }
     }
 }
@@ -35,8 +35,8 @@ namespace App\Domain\Messages\Message {
     use App\Domain\DecisionProjectionBase;
     use App\Domain\Identity\UserId;
     use App\Domain\Messages\MessageId;
-    use App\Domain\Messages\MessagePublished;
-    use App\Domain\Messages\MessageRepublished;
+    use App\Domain\Messages\MessageQuacked;
+    use App\Domain\Messages\MessageRequacked;
 
     class DecisionProjection extends DecisionProjectionBase
     {
@@ -47,12 +47,12 @@ namespace App\Domain\Messages\Message {
         private $authorId;
 
         /** @var array */
-        private $republishers = array();
+        private $requackers = array();
 
         public function __construct($events)
         {
-            $this->registerMessagePublished();
-            $this->registerMessageRepublished();
+            $this->registerMessageQuacked();
+            $this->registerMessageRequacked();
             parent::__construct($events);
         }
 
@@ -75,23 +75,23 @@ namespace App\Domain\Messages\Message {
         /**
          * @return array
          */
-        public function getRepublishers()
+        public function getRequackers()
         {
-            return $this->republishers;
+            return $this->requackers;
         }
 
-        private function registerMessagePublished()
+        private function registerMessageQuacked()
         {
-            $this->register('App\Domain\Messages\MessagePublished', function (MessagePublished $event) {
+            $this->register('App\Domain\Messages\MessageQuacked', function (MessageQuacked $event) {
                 $this->messageId = $event->getMessageId();
                 $this->authorId = $event->getAuthorId();
             });
         }
 
-        private function registerMessageRepublished()
+        private function registerMessageRequacked()
         {
-            $this->register('App\Domain\Messages\MessageRepublished', function (MessageRepublished $event) {
-                $this->republishers[] = $event->getRepublisherId();
+            $this->register('App\Domain\Messages\MessageRequacked', function (MessageRequacked $event) {
+                $this->requackers[] = $event->getRequackerId();
             });
         }
     }
