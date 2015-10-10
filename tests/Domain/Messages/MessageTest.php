@@ -2,6 +2,7 @@
 
 use App\Domain\Identity\UserId;
 use App\Domain\Messages\Message;
+use App\Domain\Messages\MessageDeleted;
 use App\Domain\Messages\MessageId;
 use App\Domain\Messages\MessageQuacked;
 use App\Domain\Messages\MessageRequacked;
@@ -82,5 +83,21 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         $message->requack($fakeEventPublisher, $requackerId);
 
         \Assert\that($fakeEventPublisher->events)->count(0);
+    }
+
+    public function testWhenAuthorDeleteMessage_ThenMessageDeletedIsRaised()
+    {
+        $fakeEventPublisher = new FakeEventPublisher();
+        $authorId = new UserId('clem@mix-it.fr');
+        $messageQuacked = new MessageQuacked(MessageId::generate(), 'Hello', $authorId);
+        $message = new Message(array($messageQuacked));
+
+        $message->delete($fakeEventPublisher, $authorId);
+
+        \Assert\that($fakeEventPublisher->events)->count(1);
+        /** @var MessageDeleted $messageDeleted */
+        $messageDeleted = $fakeEventPublisher->events[0];
+        \Assert\that($messageDeleted->getMessageId())->eq($messageQuacked->getMessageId());
+        \Assert\that($messageDeleted->getDeleterId())->eq($authorId);
     }
 }
