@@ -28,7 +28,7 @@ namespace Mixter.Web
 
             var eventsStore = new EventsStore();
 
-            var sessionsRepository = new SessionsRepository();
+            var sessionsRepository = new SessionsRepository(new EventsStore());
 
             var eventPublisher = new EventPublisher();
             var eventPublisherWithStorage = new EventPublisherWithStorage(eventsStore, eventPublisher);
