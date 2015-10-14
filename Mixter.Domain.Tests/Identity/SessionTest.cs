@@ -23,5 +23,17 @@ namespace Mixter.Domain.Tests.Identity
             Check.That(_eventPublisher.Events)
                  .Contains(new UserDisconnected(SessionId, UserId));
         }
+
+        [Fact]
+        public void GivenUserDisconnectedWhenUserLogoutThenNothing()
+        {
+            var session = new Session(
+                new UserConnected(SessionId, UserId, DateTime.Now),
+                new UserDisconnected(SessionId, UserId));
+
+            session.Logout(_eventPublisher);
+
+            Check.That(_eventPublisher.Events).IsEmpty();
+        }
     }
 }
