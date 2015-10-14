@@ -28,13 +28,13 @@ namespace Mixter.Domain.Identity
         }
 
         [Projection]
-        private class DecisionProjection
+        private class DecisionProjection : DecisionProjectionBase
         {
             public UserId Id { get; private set; }
 
-            public void Apply(IDomainEvent @event)
+            public DecisionProjection()
             {
-                When((dynamic)@event);
+                AddHandler<UserRegistered>(When);
             }
 
             private void When(UserRegistered evt)
