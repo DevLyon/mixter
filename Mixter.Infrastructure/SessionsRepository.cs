@@ -9,6 +9,12 @@ namespace Mixter.Infrastructure
 
         public void Save(SessionProjection projection)
         {
+            if (_projectionsById.ContainsKey(projection.SessionId))
+            {
+                _projectionsById[projection.SessionId] = projection;
+                return;
+            }
+
             _projectionsById.Add(projection.SessionId, projection);
         }
 
