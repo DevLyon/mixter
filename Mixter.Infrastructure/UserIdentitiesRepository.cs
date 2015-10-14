@@ -3,7 +3,7 @@ using Mixter.Domain.Identity;
 
 namespace Mixter.Infrastructure
 {
-    public class UserIdentitiesRepository
+    public class UserIdentitiesRepository : IUserIdentitiesRepository
     {
         private readonly EventsStore _eventStore;
 
