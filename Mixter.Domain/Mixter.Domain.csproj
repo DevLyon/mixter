@@ -47,6 +47,7 @@
     <Compile Include="Identity\Events\UserDisconnected.cs" />
     <Compile Include="Identity\Events\UserRegistered.cs" />
     <Compile Include="Identity\UnknownSession.cs" />
+    <Compile Include="Identity\UnknownUserIdentity.cs" />
     <Compile Include="IEventHandler.cs" />
     <Compile Include="Identity\ISessionsRepository.cs" />
     <Compile Include="Identity\Session.cs" />
