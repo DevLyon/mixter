@@ -16,7 +16,7 @@ git merge @@nexttag@@
 $jumpToNextStepCommandTemplate = @"
 @echo off
 
-git add -A & git commit -m "Abort test" & git checkout -b $workshopBranch-@@nexttag@@ @@nexttag@@ & git merge @@nexttag@@-test1 & git checkout --ours . & git add . & git commit -m "Merge with test branch" 
+git add -A & git commit -m "Abort test" & git checkout -b $workshopBranch-@@nexttag@@ @@nexttag@@ & git merge @@nexttag@@-test1 >nul 2>&1 & git checkout --ours . & git add . & git commit -m "Merge with test branch" 
 "@
 
 function AskParametreWithValues($name, $values){
