@@ -7,5 +7,8 @@
 
         [Query]
         UserId? GetUserIdOfSession(SessionId sessionId);
+        
+        [Query]
+        Session GetSession(SessionId sessionId);
     }
 }

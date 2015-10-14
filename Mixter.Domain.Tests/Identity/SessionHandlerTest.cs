@@ -64,6 +64,11 @@ namespace Mixter.Domain.Tests.Identity
             {
                 throw new NotImplementedException();
             }
+
+            public Session GetSession(SessionId sessionId)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }
