@@ -9,7 +9,7 @@ $nextCommandTemplate = @"
 @echo off
 
 git add -A 
-git commit -m ""Resolve test"" 
+git commit -m "Resolve test"
 git merge @@nexttag@@
 "@
 
