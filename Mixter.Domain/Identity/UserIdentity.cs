@@ -22,9 +22,9 @@ namespace Mixter.Domain.Identity
         }
 
         [Command]
-        public void LogIn(IEventPublisher eventPublisher)
+        public SessionId LogIn(IEventPublisher eventPublisher)
         {
-            Session.LogIn(eventPublisher, _projection.Id);
+            return Session.LogIn(eventPublisher, _projection.Id);
         }
 
         [Projection]

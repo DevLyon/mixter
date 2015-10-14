@@ -17,10 +17,12 @@ namespace Mixter.Domain.Identity
         }
 
         [Command]
-        public static void LogIn(IEventPublisher eventPublisher, UserId userId)
+        public static SessionId LogIn(IEventPublisher eventPublisher, UserId userId)
         {
             var id = SessionId.Generate();
             eventPublisher.Publish(new UserConnected(id, userId, DateTime.Now));
+
+            return id;
         }
 
         [Command]
