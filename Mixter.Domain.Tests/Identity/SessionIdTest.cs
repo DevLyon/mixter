@@ -14,5 +14,13 @@ namespace Mixter.Domain.Tests.Identity
 
             Check.That(sessionId1).IsNotEqualTo(sessionId2);
         }
+
+        [Fact]
+        public void WhenGenerateThenToStringReturnId()
+        {
+            var session = SessionId.Generate();
+
+            Check.That(session.ToString()).IsEqualTo(session.Id);
+        }
     }
 }
