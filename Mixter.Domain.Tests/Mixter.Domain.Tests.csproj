@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EventPublisherFake.cs" />
+    <Compile Include="Identity\SessionIdTest.cs" />
     <Compile Include="Identity\UserIdentityTest.cs" />
     <Compile Include="Identity\UserIdTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
