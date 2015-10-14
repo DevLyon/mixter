@@ -62,6 +62,16 @@ namespace Mixter.Domain.Tests.Core.Messages
                 .ContainsExactly(new MessageRequacked(MessageId, Requacker));
         }
 
+        [Fact]
+        public void WhenRequackMyOwnMessageThenDoNotRaiseMessageRequacked()
+        {
+            var message = CreateMessage(new MessageQuacked(MessageId, Author, MessageContent));
+
+            message.Requack(_eventPublisher, Author);
+
+            Check.That(_eventPublisher.Events).IsEmpty();
+        }
+
         private Message CreateMessage(params IDomainEvent[] events)
         {
             return new Message(events);

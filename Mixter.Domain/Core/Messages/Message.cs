@@ -25,6 +25,11 @@ namespace Mixter.Domain.Core.Messages
 
         public void Requack(IEventPublisher eventPublisher, UserId requacker)
         {
+            if (_projection.Author.Equals(requacker))
+            {
+                return;
+            }
+
             var evt = new MessageRequacked(_projection.Id, requacker);
             eventPublisher.Publish(evt);
         }
@@ -32,6 +37,8 @@ namespace Mixter.Domain.Core.Messages
         private class DecisionProjection : DecisionProjectionBase
         {
             public MessageId Id { get; private set; }
+
+            public UserId Author { get; private set; }
 
             public DecisionProjection()
             {
@@ -41,6 +48,7 @@ namespace Mixter.Domain.Core.Messages
             private void When(MessageQuacked evt)
             {
                 Id = evt.Id;
+                Author = evt.Author;
             }
         }
     }
