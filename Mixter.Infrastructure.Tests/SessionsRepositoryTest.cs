@@ -1,4 +1,5 @@
 ﻿using System;
+using Mixter.Domain;
 using Mixter.Domain.Identity;
 using Mixter.Domain.Identity.Events;
 using NFluent;
