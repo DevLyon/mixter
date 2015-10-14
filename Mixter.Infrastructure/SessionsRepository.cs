@@ -3,7 +3,7 @@ using Mixter.Domain.Identity;
 
 namespace Mixter.Infrastructure
 {
-    public class SessionsRepository
+    public class SessionsRepository : ISessionsRepository
     {
         private readonly IDictionary<SessionId, SessionProjection> _projectionsById = new Dictionary<SessionId, SessionProjection>();
 

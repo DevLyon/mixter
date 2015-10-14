@@ -45,7 +45,10 @@
     <Compile Include="Identity\Events\UserConnected.cs" />
     <Compile Include="Identity\Events\UserDisconnected.cs" />
     <Compile Include="Identity\Events\UserRegistered.cs" />
+    <Compile Include="IEventHandler.cs" />
+    <Compile Include="Identity\ISessionsRepository.cs" />
     <Compile Include="Identity\Session.cs" />
+    <Compile Include="Identity\SessionHandler.cs" />
     <Compile Include="Identity\SessionId.cs" />
     <Compile Include="Identity\SessionProjection.cs" />
     <Compile Include="Identity\SessionState.cs" />
