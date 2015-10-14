@@ -31,10 +31,11 @@ namespace Mixter.Domain.Tests.Identity
         {
             var userIdentity = new UserIdentity(new UserRegistered(UserId));
 
-            userIdentity.LogIn(_eventPublisher);
+            var sessionId = userIdentity.LogIn(_eventPublisher);
 
             var evt = _eventPublisher.Events.OfType<UserConnected>().First();
             Check.That(evt.UserId).IsEqualTo(UserId);
+            Check.That(evt.SessionId).IsEqualTo(sessionId);
             Check.That(evt.ConnectedAt).IsBeforeOrEqualTo(DateTime.Now).And.IsAfterOrEqualTo(DateTime.Now.AddSeconds(-1));
         }
     }

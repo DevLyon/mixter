@@ -19,9 +19,9 @@ namespace Mixter.Domain.Identity
             eventPublisher.Publish(new UserRegistered(userId));
         }
 
-        public void LogIn(IEventPublisher eventPublisher)
+        public SessionId LogIn(IEventPublisher eventPublisher)
         {
-            Session.LogIn(eventPublisher, _projection.Id);
+            return Session.LogIn(eventPublisher, _projection.Id);
         }
 
         private class DecisionProjection : DecisionProjectionBase
