@@ -58,6 +58,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EventPublisherTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SessionsRepositoryTest.cs" />
   </ItemGroup>
