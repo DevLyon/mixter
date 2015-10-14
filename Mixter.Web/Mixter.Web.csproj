@@ -71,7 +71,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="ExceptionStatusCodeHandler.cs" />
     <Compile Include="IdentityApi.cs" />
+    <Compile Include="NotFoundStatusCodeHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
