@@ -18,7 +18,7 @@ $jumpToNextStepCommandTemplate = @"
 
 git add -A 
 git commit -m ""Abort test"" 
-git checkout -b "@ + $workshopBranch + @"-@@nexttag@@ @@nexttag@@
+git checkout -b $workshopBranch-@@nexttag@@ @@nexttag@@
 git merge @@nexttag@@-test1
 git checkout --ours .
 git add .
