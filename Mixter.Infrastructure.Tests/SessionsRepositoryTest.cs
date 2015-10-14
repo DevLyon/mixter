@@ -35,5 +35,15 @@ namespace Mixter.Infrastructure.Tests
 
             Check.That(_repository.GetUserIdOfSession(SessionId).HasValue).IsFalse();
         }
+
+        [Fact]
+        public void GivenAlreadyProjectionWhenSaveSameProjectionThenUpdateProjection()
+        {
+            _repository.Save(new SessionProjection(SessionId, UserId, SessionState.Enabled));
+
+            _repository.Save(new SessionProjection(SessionId, UserId, SessionState.Disabled));
+
+            Check.That(_repository.GetUserIdOfSession(SessionId).HasValue).IsFalse();
+        }
     }
 }
