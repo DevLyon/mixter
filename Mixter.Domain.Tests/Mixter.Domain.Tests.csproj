@@ -58,6 +58,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Messages\MessageIdTest.cs" />
     <Compile Include="EventPublisherFake.cs" />
     <Compile Include="Identity\SessionHandlerTest.cs" />
     <Compile Include="Identity\SessionTest.cs" />
