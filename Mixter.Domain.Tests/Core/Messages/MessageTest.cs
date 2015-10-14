@@ -27,7 +27,7 @@ namespace Mixter.Domain.Tests.Core.Messages
         {
             Message.Quack(_eventPublisher, Author, MessageContent);
 
-            var evt = (MessageQuacked)_eventPublisher.Events.First();
+            var evt = (MessageQuacked) _eventPublisher.Events.First();
             Check.That(evt.Content).IsEqualTo(MessageContent);
             Check.That(evt.Author).IsEqualTo(Author);
         }
@@ -47,7 +47,7 @@ namespace Mixter.Domain.Tests.Core.Messages
         {
             var messageId = Message.Quack(_eventPublisher, Author, MessageContent);
 
-            var evt = (MessageQuacked)_eventPublisher.Events.First();
+            var evt = (MessageQuacked) _eventPublisher.Events.First();
             Check.That(evt.Id).IsEqualTo(messageId);
         }
 
@@ -68,6 +68,18 @@ namespace Mixter.Domain.Tests.Core.Messages
             var message = CreateMessage(new MessageQuacked(MessageId, Author, MessageContent));
 
             message.Requack(_eventPublisher, Author);
+
+            Check.That(_eventPublisher.Events).IsEmpty();
+        }
+
+        [Fact]
+        public void WhenRequackTwoTimesSameMessageThenDoNotRaiseMessageRequacked()
+        {
+            var message = CreateMessage(
+                new MessageQuacked(MessageId, Author, MessageContent),
+                new MessageRequacked(MessageId, Requacker));
+
+            message.Requack(_eventPublisher, Requacker);
 
             Check.That(_eventPublisher.Events).IsEmpty();
         }
