@@ -19,7 +19,10 @@ namespace Mixter.Infrastructure
                 return null;
             }
 
-            return _projectionsById[sessionId].UserId;
+            var projectionOfSession = _projectionsById[sessionId];
+            return projectionOfSession.SessionState == SessionState.Enabled
+                ? projectionOfSession.UserId
+                : (UserId?)null;
         }
     }
 }
