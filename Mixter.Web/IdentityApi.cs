@@ -8,10 +8,11 @@ namespace Mixter.Web
 {
     public class IdentityApi : NancyModule
     {
-        public IdentityApi(IEventPublisher eventPublisher, IUserIdentitiesRepository userIdentitiesRepository)
+        public IdentityApi(IEventPublisher eventPublisher, IUserIdentitiesRepository userIdentitiesRepository, ISessionsRepository sessionsRepository)
         {
             Post("/api/identity/userIdentities/register", _ => Execute(eventPublisher, this.Bind<RegisterUser>()));
             Post("/api/identity/userIdentities/{id}/logIn", _ => Execute(eventPublisher, userIdentitiesRepository, new LogInUser { UserId = new UserId(_.Id)}));
+            Delete("/api/identity/sessions/{id}", _ => Execute(eventPublisher, sessionsRepository, new LogOutUser { SessionId = new SessionId(_.Id)}));
         }
 
         private dynamic Execute(IEventPublisher eventPublisher, RegisterUser command)
@@ -37,8 +38,17 @@ namespace Mixter.Web
             return Negotiate.WithStatusCode(HttpStatusCode.Created).WithModel(new
             {
                 Id = sessionId,
-                LogOut = "/api/identity/sessions/" + Uri.EscapeUriString(sessionId.ToString()) + "/logOut"
+                Url = "/api/identity/sessions/" + Uri.EscapeUriString(sessionId.ToString())
             });
+        }
+
+        private object Execute(IEventPublisher eventPublisher, ISessionsRepository sessionsRepository, LogOutUser command)
+        {
+            var session = sessionsRepository.GetSession(command.SessionId);
+
+            session.Logout(eventPublisher);
+
+            return Negotiate.WithStatusCode(HttpStatusCode.NoContent);
         }
 
         private class RegisterUser
@@ -49,6 +59,11 @@ namespace Mixter.Web
         private class LogInUser
         {
             public UserId UserId { get; set; }
+        }
+
+        private class LogOutUser
+        {
+            public SessionId SessionId { get; set; }
         }
     }
 }

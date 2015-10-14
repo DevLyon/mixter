@@ -36,6 +36,7 @@ namespace Mixter.Web
 
             container.Register<IEventPublisher>(eventPublisherWithStorage);
             container.Register<IUserIdentitiesRepository>(new UserIdentitiesRepository(eventsStore));
+            container.Register<ISessionsRepository>(sessionsRepository);
         }
     }
 }
