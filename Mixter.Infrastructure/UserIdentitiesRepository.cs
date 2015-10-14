@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Mixter.Domain;
 using Mixter.Domain.Identity;
 
 namespace Mixter.Infrastructure

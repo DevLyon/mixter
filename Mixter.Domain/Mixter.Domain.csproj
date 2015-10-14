@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Messages\Events\MessageQuacked.cs" />
+    <Compile Include="Core\Messages\Message.cs" />
     <Compile Include="Core\Messages\MessageId.cs" />
     <Compile Include="DecisionProjectionBase.cs" />
     <Compile Include="DomainException.cs" />
