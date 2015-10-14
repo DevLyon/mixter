@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Mixter.Domain.Core.Messages.Events;
 using Mixter.Domain.Identity;
 
@@ -28,7 +29,7 @@ namespace Mixter.Domain.Core.Messages
         [Command]
         public void Requack(IEventPublisher eventPublisher, UserId requacker)
         {
-            if (_projection.Author.Equals(requacker))
+            if (_projection.Quackers.Contains(requacker))
             {
                 return;
             }
@@ -40,19 +41,33 @@ namespace Mixter.Domain.Core.Messages
         [Projection]
         private class DecisionProjection : DecisionProjectionBase
         {
+            private readonly IList<UserId> _quackers = new List<UserId>();
+
             public MessageId Id { get; private set; }
 
             public UserId Author { get; private set; }
 
+            public IEnumerable<UserId> Quackers
+            {
+                get { return _quackers; }
+            }
+
             public DecisionProjection()
             {
                 AddHandler<MessageQuacked>(When);
+                AddHandler<MessageRequacked>(When);
             }
-            
+
             private void When(MessageQuacked evt)
             {
                 Id = evt.Id;
                 Author = evt.Author;
+                _quackers.Add(evt.Author);
+            }
+
+            private void When(MessageRequacked evt)
+            {
+                _quackers.Add(evt.Requacker);
             }
         }
     }
