@@ -16,5 +16,10 @@ namespace Mixter.Domain.Identity
         {
             return new SessionId(Guid.NewGuid().ToString());
         }
+
+        public override string ToString()
+        {
+            return Id;
+        }
     }
 }

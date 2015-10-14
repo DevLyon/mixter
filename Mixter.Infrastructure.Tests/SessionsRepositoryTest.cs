@@ -1,4 +1,6 @@
-﻿using Mixter.Domain.Identity;
+﻿using System;
+using Mixter.Domain.Identity;
+using Mixter.Domain.Identity.Events;
 using NFluent;
 using Xunit;
 
@@ -9,7 +11,14 @@ namespace Mixter.Infrastructure.Tests
         private static readonly SessionId SessionId = SessionId.Generate();
         private static readonly UserId UserId = new UserId("user1@mix-it.fr");
 
-        private readonly SessionsRepository _repository = new SessionsRepository();
+        private readonly SessionsRepository _repository;
+        private readonly EventsStore _eventsStore;
+
+        public SessionsRepositoryTest()
+        {
+            _eventsStore = new EventsStore();
+            _repository = new SessionsRepository(_eventsStore);
+        }
 
         [Fact]
         public void GivenNoProjectionsWhenGetUserIdOfSessionThenReturnNone()
@@ -44,6 +53,22 @@ namespace Mixter.Infrastructure.Tests
             _repository.Save(new SessionProjection(SessionId, UserId, SessionState.Disabled));
 
             Check.That(_repository.GetUserIdOfSession(SessionId).HasValue).IsFalse();
+        }
+
+        [Fact]
+        public void GivenUserConnectedWhenGetSessionThenReturnSessionAggregate()
+        {
+            _eventsStore.Store(new UserConnected(SessionId, UserId, DateTime.Now));
+
+            var session = _repository.GetSession(SessionId);
+
+            Check.That(session).IsNotNull();
+        }
+
+        [Fact]
+        public void GivenNoEventsWhenGetSessionThenThrowUnknownSession()
+        {
+            Check.ThatCode(() => _repository.GetSession(SessionId)).Throws<UnknownSession>();
         }
     }
 }
