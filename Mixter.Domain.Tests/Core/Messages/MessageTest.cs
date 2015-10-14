@@ -12,6 +12,8 @@ namespace Mixter.Domain.Tests.Core.Messages
         private const string MessageContent = "Hello miixit";
 
         private static readonly UserId Author = new UserId("pierre@mixit.fr");
+        private static readonly UserId Requacker = new UserId("alfred@mixit.fr");
+        private static readonly MessageId MessageId = MessageId.Generate();
 
         private readonly EventPublisherFake _eventPublisher;
 
@@ -47,6 +49,22 @@ namespace Mixter.Domain.Tests.Core.Messages
 
             var evt = (MessageQuacked)_eventPublisher.Events.First();
             Check.That(evt.Id).IsEqualTo(messageId);
+        }
+
+        [Fact]
+        public void WhenRequackMessageThenRaiseMessageRequacked()
+        {
+            var message = CreateMessage(new MessageQuacked(MessageId, Author, MessageContent));
+
+            message.Requack(_eventPublisher, Requacker);
+
+            Check.That(_eventPublisher.Events)
+                .ContainsExactly(new MessageRequacked(MessageId, Requacker));
+        }
+
+        private Message CreateMessage(params IDomainEvent[] events)
+        {
+            return new Message(events);
         }
     }
 }
