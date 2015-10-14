@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DecisionProjectionBase.cs" />
     <Compile Include="Identity\Events\UserConnected.cs" />
     <Compile Include="Identity\Events\UserDisconnected.cs" />
     <Compile Include="Identity\Events\UserRegistered.cs" />

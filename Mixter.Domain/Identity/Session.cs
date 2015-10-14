@@ -31,7 +31,7 @@ namespace Mixter.Domain.Identity
             eventPublisher.Publish(new UserDisconnected(_projection.Id, _projection.UserId));
         }
 
-        private class DecisionProjection
+        private class DecisionProjection : DecisionProjectionBase
         {
             public SessionId Id { get; private set; }
 
@@ -39,20 +39,21 @@ namespace Mixter.Domain.Identity
 
             public bool IsDisconnected { get; private set; }
 
-            public void Apply(IDomainEvent @event)
+            public DecisionProjection()
             {
-                When((dynamic)@event);
+                AddHandler<UserConnected>(When);
+                AddHandler<UserDisconnected>(When);
+            }
+
+            private void When(UserDisconnected evt)
+            {
+                IsDisconnected = true;
             }
 
             private void When(UserConnected evt)
             {
                 Id = evt.SessionId;
                 UserId = evt.UserId;
-            }
-
-            private void When(UserDisconnected evt)
-            {
-                IsDisconnected = true;
             }
         }
     }
