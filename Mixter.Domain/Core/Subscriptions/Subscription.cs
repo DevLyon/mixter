@@ -32,7 +32,10 @@ namespace Mixter.Domain.Core.Subscriptions
 
         public void NotifyFollower(IEventPublisher eventPublisher, MessageId messageId)
         {
-            eventPublisher.Publish(new FolloweeMessageQuacked(_projection.Id, messageId));
+            if (_projection.IsActive)
+            {
+                eventPublisher.Publish(new FolloweeMessageQuacked(_projection.Id, messageId));
+            }
         }
 
         private class DecisionProjection : DecisionProjectionBase
@@ -40,13 +43,22 @@ namespace Mixter.Domain.Core.Subscriptions
             public DecisionProjection()
             {
                 AddHandler<UserFollowed>(When);
+                AddHandler<UserUnfollowed>(When);
             }
 
             public SubscriptionId Id { get; private set; }
 
+            public bool IsActive { get; private set; }
+
             private void When(UserFollowed evt)
             {
                 Id = evt.SubscriptionId;
+                IsActive = true;
+            }
+
+            private void When(UserUnfollowed evt)
+            {
+                IsActive = false;
             }
         }
     }
