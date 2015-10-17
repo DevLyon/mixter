@@ -40,7 +40,10 @@ namespace Mixter.Domain.Core.Messages
         [Command]
         public void Delete(IEventPublisher eventPublisher, UserId deleter)
         {
-            eventPublisher.Publish(new MessageDeleted(_projection.Id, deleter));
+            if (_projection.Author.Equals(deleter))
+            {
+                eventPublisher.Publish(new MessageDeleted(_projection.Id, deleter));
+            }
         }
 
         [Projection]
