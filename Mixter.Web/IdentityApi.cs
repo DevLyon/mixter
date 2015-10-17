@@ -9,10 +9,11 @@ namespace Mixter.Web
     public class IdentityApi : NancyModule
     {
         public IdentityApi(IEventPublisher eventPublisher, IUserIdentitiesRepository userIdentitiesRepository, ISessionsRepository sessionsRepository)
+            : base("/api/identity")
         {
-            Post("/api/identity/userIdentities/register", _ => Execute(eventPublisher, this.Bind<RegisterUser>()));
-            Post("/api/identity/userIdentities/{id}/logIn", _ => Execute(eventPublisher, userIdentitiesRepository, new LogInUser { UserId = new UserId(_.Id)}));
-            Delete("/api/identity/sessions/{id}", _ => Execute(eventPublisher, sessionsRepository, new LogOutUser { SessionId = new SessionId(_.Id)}));
+            Post("/userIdentities/register", _ => Execute(eventPublisher, this.Bind<RegisterUser>()));
+            Post("/userIdentities/{id}/logIn", _ => Execute(eventPublisher, userIdentitiesRepository, new LogInUser { UserId = new UserId(_.Id)}));
+            Delete("/sessions/{id}", _ => Execute(eventPublisher, sessionsRepository, new LogOutUser { SessionId = new SessionId(_.Id)}));
         }
 
         private dynamic Execute(IEventPublisher eventPublisher, RegisterUser command)
