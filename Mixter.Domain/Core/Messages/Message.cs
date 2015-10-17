@@ -26,7 +26,7 @@ namespace Mixter.Domain.Core.Messages
 
         public void Requack(IEventPublisher eventPublisher, UserId requacker)
         {
-            if (_projection.Quackers.Contains(requacker))
+            if (_projection.Quackers.Contains(requacker) || _projection.IsDeleted)
             {
                 return;
             }
