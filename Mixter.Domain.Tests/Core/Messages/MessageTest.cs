@@ -105,6 +105,18 @@ namespace Mixter.Domain.Tests.Core.Messages
             Check.That(_eventPublisher.Events).IsEmpty();
         }
 
+        [Fact]
+        public void GivenDeletedMessageWhenDeleteThenNothing()
+        {
+            var message = CreateMessage(
+                new MessageQuacked(MessageId, Author, MessageContent),
+                new MessageDeleted(MessageId, Author));
+
+            message.Delete(_eventPublisher, Author);
+
+            Check.That(_eventPublisher.Events).IsEmpty();
+        }
+
         private Message CreateMessage(params IDomainEvent[] events)
         {
             return new Message(events);
