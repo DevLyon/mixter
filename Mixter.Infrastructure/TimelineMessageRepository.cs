@@ -7,7 +7,7 @@ namespace Mixter.Infrastructure
 {
     public class TimelineMessageRepository : ITimelineMessageRepository
     {
-        private readonly List<TimelineMessageProjection> _messages = new List<TimelineMessageProjection>();
+        private readonly HashSet<TimelineMessageProjection> _messages = new HashSet<TimelineMessageProjection>();
 
         public void Save(TimelineMessageProjection messageProjection)
         {
