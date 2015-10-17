@@ -26,5 +26,20 @@ namespace Mixter.Domain.Tests.Core.Subscriptions
 
             Check.That(_eventPublisher.Events).Contains(new UserFollowed(SubscriptionId));
         }
+
+        [Fact]
+        public void WhenUnfollowThenUserUnfollowedIsRaised()
+        {
+            var subscription = Create(new UserFollowed(SubscriptionId));
+
+            subscription.Unfollow(_eventPublisher);
+
+            Check.That(_eventPublisher.Events).Contains(new UserUnfollowed(SubscriptionId));
+        }
+
+        private Subscription Create(params IDomainEvent[] events)
+        {
+            return new Subscription(events);
+        }
     }
 }
