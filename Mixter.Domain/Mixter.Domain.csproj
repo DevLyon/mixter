@@ -47,6 +47,7 @@
     <Compile Include="Core\Messages\Handlers\UpdateTimeline.cs" />
     <Compile Include="Core\Messages\ITimelineMessageRepository.cs" />
     <Compile Include="Core\Messages\Message.cs" />
+    <Compile Include="Core\Messages\MessageDescription.cs" />
     <Compile Include="Core\Messages\MessageId.cs" />
     <Compile Include="Core\Messages\TimelineMessageProjection.cs" />
     <Compile Include="Core\Subscriptions\Events\FolloweeMessageQuacked.cs" />
