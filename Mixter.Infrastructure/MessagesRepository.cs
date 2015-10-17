@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Mixter.Domain;
 using Mixter.Domain.Core.Messages;
 using Mixter.Domain.Core.Messages.Events;
 
@@ -15,14 +17,24 @@ namespace Mixter.Infrastructure
 
         public Message Get(MessageId id)
         {
-            return new Message(_eventsStore.GetEventsOfAggregate(id));
+            var events = _eventsStore.GetEventsOfAggregate(id).ToArray();
+            if (!events.Any())
+            {
+                throw new UnknownMessage(id);
+            }
+
+            return new Message(events);
         }
 
         public MessageDescription GetDescription(MessageId id)
         {
-            var creationEvent = _eventsStore.GetEventsOfAggregate(id).OfType<MessageQuacked>().First();
+            var creationEvent = _eventsStore.GetEventsOfAggregate(id).OfType<MessageQuacked?>().FirstOrDefault();
+            if (!creationEvent.HasValue)
+            {
+                throw new UnknownMessage(id);
+            }
 
-            return new MessageDescription(creationEvent);
+            return new MessageDescription(creationEvent.Value);
         }
     }
 }

@@ -43,5 +43,17 @@ namespace Mixter.Infrastructure.Tests
             Check.That(description.Author).IsEqualTo(messageQuacked.Author);
             Check.That(description.Content).IsEqualTo(messageQuacked.Content);
         }
+
+        [Fact]
+        public void GivenNoEventsThenGetMessageThenThrowUnknownMessage()
+        {
+            Check.ThatCode(() => _repository.Get(MessageId.Generate())).Throws<UnknownMessage>();
+        }
+
+        [Fact]
+        public void GivenNoEventsThenGetDescriptionThenThrowUnknownMessage()
+        {
+            Check.ThatCode(() => _repository.GetDescription(MessageId.Generate())).Throws<UnknownMessage>();
+        }
     }
 }
