@@ -1,4 +1,5 @@
-﻿using Mixter.Domain.Core.Subscriptions;
+﻿using Mixter.Domain.Core.Messages;
+using Mixter.Domain.Core.Subscriptions;
 using Mixter.Domain.Core.Subscriptions.Events;
 using Mixter.Domain.Identity;
 using NFluent;
@@ -35,6 +36,17 @@ namespace Mixter.Domain.Tests.Core.Subscriptions
             subscription.Unfollow(_eventPublisher);
 
             Check.That(_eventPublisher.Events).Contains(new UserUnfollowed(SubscriptionId));
+        }
+
+        [Fact]
+        public void WhenNotifyFollowerThenFolloweeMessageQuacked()
+        {
+            var subscription = Create(new UserFollowed(SubscriptionId));
+
+            var messageId = MessageId.Generate();
+            subscription.NotifyFollower(_eventPublisher, messageId);
+
+            Check.That(_eventPublisher.Events).Contains(new FolloweeMessageQuacked(SubscriptionId, messageId));
         }
 
         private Subscription Create(params IDomainEvent[] events)
