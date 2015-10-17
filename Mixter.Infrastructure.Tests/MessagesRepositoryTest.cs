@@ -31,5 +31,17 @@ namespace Mixter.Infrastructure.Tests
             message.Requack(eventsPublisher, new UserId("joe@mitit.fr"));
             Check.That(eventsPublisher.Events.Cast<MessageRequacked>().Single().Id).IsEqualTo(messageQuacked.Id);
         }
+
+        [Fact]
+        public void GivenMessageQuackedThenGetDescriptionThenReturnMessageDescription()
+        {
+            var messageQuacked = new MessageQuacked(MessageId.Generate(), new UserId("bob@mixit.fr"), "Hello");
+            _eventsStore.Store(messageQuacked);
+
+            var description = _repository.GetDescription(messageQuacked.Id);
+
+            Check.That(description.Author).IsEqualTo(messageQuacked.Author);
+            Check.That(description.Content).IsEqualTo(messageQuacked.Content);
+        }
     }
 }
