@@ -83,7 +83,7 @@ namespace Mixter.Domain.Tests.Core.Messages
 
             Check.That(_eventPublisher.Events).IsEmpty();
         }
-        
+
         [Fact]
         public void WhenDeleteThenRaiseMessageDeleted()
         {
@@ -93,6 +93,16 @@ namespace Mixter.Domain.Tests.Core.Messages
 
             Check.That(_eventPublisher.Events)
                 .ContainsExactly(new MessageDeleted(MessageId, Author));
+        }
+
+        [Fact]
+        public void WhenDeleteBySomeoneElseThanAuthorThenDoNotRaiseMessageDeleted()
+        {
+            var message = CreateMessage(new MessageQuacked(MessageId, Author, MessageContent));
+
+            message.Delete(_eventPublisher, new UserId("clement@mix-it.fr"));
+
+            Check.That(_eventPublisher.Events).IsEmpty();
         }
 
         private Message CreateMessage(params IDomainEvent[] events)
