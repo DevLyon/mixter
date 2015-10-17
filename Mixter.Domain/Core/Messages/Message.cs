@@ -34,8 +34,13 @@ namespace Mixter.Domain.Core.Messages
                 return;
             }
 
-            var evt = new MessageRequacked(_projection.Id, requacker);
-            eventPublisher.Publish(evt);
+            eventPublisher.Publish(new MessageRequacked(_projection.Id, requacker));
+        }
+
+        [Command]
+        public void Delete(IEventPublisher eventPublisher, UserId deleter)
+        {
+            eventPublisher.Publish(new MessageDeleted(_projection.Id, deleter));
         }
 
         [Projection]
