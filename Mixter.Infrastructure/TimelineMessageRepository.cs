@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Mixter.Domain.Core.Messages;
 using Mixter.Domain.Identity;
 
@@ -15,7 +16,7 @@ namespace Mixter.Infrastructure
 
         public IEnumerable<TimelineMessageProjection> GetMessagesOfUser(UserId userId)
         {
-            return _messages;
+            return _messages.Where(o => o.OwnerId.Equals(userId));
         }
     }
 }
