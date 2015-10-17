@@ -38,5 +38,18 @@ namespace Mixter.Infrastructure.Tests
             Check.That(messagesOfUser).HasSize(1);
             Check.That(messagesOfUser.First().Content).IsEqualTo(messageA);
         }
+
+        [Fact]
+        public void WhenSaveTwoSameMessagesThenOnlyOneIsSaved()
+        {
+            const string messageA = "MessageA";
+
+            var timelineMessage = new TimelineMessageProjection(_ownerId, _authorId, messageA, MessageId.Generate());
+            _repository.Save(timelineMessage);
+            _repository.Save(timelineMessage);
+
+            var messagesOfUser = _repository.GetMessagesOfUser(_ownerId).ToList();
+            Check.That(messagesOfUser).HasSize(1);
+        }
     }
 }
