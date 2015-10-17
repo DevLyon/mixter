@@ -44,6 +44,7 @@
     <Compile Include="Core\Messages\Events\MessageDeleted.cs" />
     <Compile Include="Core\Messages\Events\MessageQuacked.cs" />
     <Compile Include="Core\Messages\Events\MessageRequacked.cs" />
+    <Compile Include="Core\Messages\Handlers\UpdateTimeline.cs" />
     <Compile Include="Core\Messages\ITimelineMessageRepository.cs" />
     <Compile Include="Core\Messages\Message.cs" />
     <Compile Include="Core\Messages\MessageId.cs" />
