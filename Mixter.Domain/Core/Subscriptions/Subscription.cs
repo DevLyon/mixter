@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Mixter.Domain.Core.Messages;
 using Mixter.Domain.Core.Subscriptions.Events;
 using Mixter.Domain.Identity;
 
@@ -30,6 +31,12 @@ namespace Mixter.Domain.Core.Subscriptions
         public void Unfollow(IEventPublisher eventPublisher)
         {
             eventPublisher.Publish(new UserUnfollowed(_projection.Id));
+        }
+
+        [Command]
+        public void NotifyFollower(IEventPublisher eventPublisher, MessageId messageId)
+        {
+            eventPublisher.Publish(new FolloweeMessageQuacked(_projection.Id, messageId));
         }
 
         [Projection]
