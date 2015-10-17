@@ -6,7 +6,7 @@ using Mixter.Domain.Core.Messages.Events;
 
 namespace Mixter.Infrastructure
 {
-    public class MessagesRepository
+    public class MessagesRepository : IMessagesRepository
     {
         private readonly EventsStore _eventsStore;
 
