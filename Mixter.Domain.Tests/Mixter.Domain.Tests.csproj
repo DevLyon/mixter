@@ -81,6 +81,10 @@
       <Project>{A63F9DDB-B5DD-4591-BEF4-4FBFD084298A}</Project>
       <Name>Mixter.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Mixter.Infrastructure\Mixter.Infrastructure.csproj">
+      <Project>{E1A73846-D856-43CC-A22A-85934442FD95}</Project>
+      <Name>Mixter.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
