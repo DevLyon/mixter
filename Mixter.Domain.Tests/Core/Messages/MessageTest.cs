@@ -117,6 +117,18 @@ namespace Mixter.Domain.Tests.Core.Messages
             Check.That(_eventPublisher.Events).IsEmpty();
         }
 
+        [Fact]
+        public void GivenDeletedMessageWhenRequackThenDoNotRaiseMessageRequacked()
+        {
+            var message = CreateMessage(
+                new MessageQuacked(MessageId, Author, MessageContent),
+                new MessageDeleted(MessageId, Author));
+
+            message.Requack(_eventPublisher, new UserId("emilien@mix-it.fr"));
+
+            Check.That(_eventPublisher.Events).IsEmpty();
+        }
+
         private Message CreateMessage(params IDomainEvent[] events)
         {
             return new Message(events);
