@@ -1,4 +1,5 @@
 using Mixter.Domain;
+using Mixter.Domain.Core.Messages;
 using Mixter.Domain.Identity;
 using Mixter.Infrastructure;
 using Nancy;
@@ -37,6 +38,7 @@ namespace Mixter.Web
             container.Register<IEventPublisher>(eventPublisherWithStorage);
             container.Register<IUserIdentitiesRepository>(new UserIdentitiesRepository(eventsStore));
             container.Register<ISessionsRepository>(sessionsRepository);
+            container.Register<ITimelineMessageRepository>(new TimelineMessageRepository());
         }
     }
 }

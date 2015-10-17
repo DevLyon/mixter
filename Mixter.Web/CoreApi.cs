@@ -9,10 +9,11 @@ namespace Mixter.Web
 {
     public class CoreApi : NancyModule
     {
-        public CoreApi(IEventPublisher eventPublisher)
+        public CoreApi(IEventPublisher eventPublisher, ITimelineMessageRepository timelineMessageRepository)
             : base("/api/core")
         {
-            Post["/messages/quack"] = _ => Execute(eventPublisher, this.Bind<QuackMessage>());
+            Post("/messages/quack", _ => Execute(eventPublisher, this.Bind<QuackMessage>()));
+            Get("/timelineMessages/{author}", _ => Execute(eventPublisher, timelineMessageRepository, (string)_.author));
         }
 
         private dynamic Execute(IEventPublisher eventPublisher, QuackMessage command)
@@ -24,6 +25,13 @@ namespace Mixter.Web
                 Id = messageId,
                 Url = "/api/core/messages/" + Uri.EscapeUriString(messageId.ToString())
             });
+        }
+
+        private dynamic Execute(IEventPublisher eventPublisher, ITimelineMessageRepository timelineMessageRepository, string author)
+        {
+            var messages = timelineMessageRepository.GetMessagesOfUser(new UserId(author));
+
+            return Negotiate.WithStatusCode(HttpStatusCode.OK).WithModel(messages);
         }
 
         private class QuackMessage
