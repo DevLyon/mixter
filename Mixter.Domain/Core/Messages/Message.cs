@@ -36,7 +36,10 @@ namespace Mixter.Domain.Core.Messages
 
         public void Delete(IEventPublisher eventPublisher, UserId deleter)
         {
-            eventPublisher.Publish(new MessageDeleted(_projection.Id, deleter));
+            if (_projection.Author.Equals(deleter))
+            {
+                eventPublisher.Publish(new MessageDeleted(_projection.Id, deleter));
+            }
         }
 
         private class DecisionProjection : DecisionProjectionBase
