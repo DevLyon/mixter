@@ -31,8 +31,12 @@ namespace Mixter.Domain.Core.Messages
                 return;
             }
 
-            var evt = new MessageRequacked(_projection.Id, requacker);
-            eventPublisher.Publish(evt);
+            eventPublisher.Publish(new MessageRequacked(_projection.Id, requacker));
+        }
+
+        public void Delete(IEventPublisher eventPublisher, UserId deleter)
+        {
+            eventPublisher.Publish(new MessageDeleted(_projection.Id, deleter));
         }
 
         private class DecisionProjection : DecisionProjectionBase
