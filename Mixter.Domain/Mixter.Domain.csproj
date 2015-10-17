@@ -50,6 +50,7 @@
     <Compile Include="Core\Messages\MessageDescription.cs" />
     <Compile Include="Core\Messages\MessageId.cs" />
     <Compile Include="Core\Messages\TimelineMessageProjection.cs" />
+    <Compile Include="Core\Messages\UnknownMessage.cs" />
     <Compile Include="Core\Subscriptions\Events\FolloweeMessageQuacked.cs" />
     <Compile Include="Core\Subscriptions\Events\UserFollowed.cs" />
     <Compile Include="Core\Subscriptions\Events\UserUnfollowed.cs" />
