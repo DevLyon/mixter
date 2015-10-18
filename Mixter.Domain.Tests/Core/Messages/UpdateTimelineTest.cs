@@ -32,5 +32,15 @@ namespace Mixter.Domain.Tests.Core.Messages
             Check.That(_repository.GetMessagesOfUser(Author))
                  .ContainsExactly(new TimelineMessageProjection(Author, Author, Content, MessageId));
         }
+
+        [Fact]
+        public void WhenHandleMessageDeletedThenRemoveThisMessageInTimelineMessageProjections()
+        {
+            _handler.Handle(new MessageQuacked(MessageId, Author, Content));
+
+            _handler.Handle(new MessageDeleted(MessageId, Author));
+
+            Check.That(_repository.GetMessagesOfUser(Author)).IsEmpty();
+        }
     }
 }
