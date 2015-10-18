@@ -62,6 +62,7 @@
     <Compile Include="Core\Messages\MessageTest.cs" />
     <Compile Include="Core\Messages\UpdateTimelineTest.cs" />
     <Compile Include="Core\Subscriptions\SubscriptionTest.cs" />
+    <Compile Include="Core\Subscriptions\UpdateFollowersTest.cs" />
     <Compile Include="EventPublisherFake.cs" />
     <Compile Include="Identity\SessionHandlerTest.cs" />
     <Compile Include="Identity\SessionTest.cs" />
