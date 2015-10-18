@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Mixter.Domain.Core.Subscriptions;
 using Mixter.Domain.Identity;
@@ -13,6 +12,11 @@ namespace Mixter.Infrastructure
         public void Save(FollowerProjection projection)
         {
             _projections.Add(projection);
+        }
+
+        public void Remove(FollowerProjection projection)
+        {
+            _projections.Remove(projection);
         }
 
         public IEnumerable<UserId> GetFollowers(UserId followee)
