@@ -4,7 +4,7 @@ namespace Mixter.Domain.Core.Messages
 {
     public struct MessageId
     {
-        private MessageId(string id)
+        public MessageId(string id)
             : this()
         {
             Id = id;
