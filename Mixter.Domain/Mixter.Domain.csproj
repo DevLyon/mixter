@@ -57,6 +57,7 @@
     <Compile Include="Core\Subscriptions\Events\UserUnfollowed.cs" />
     <Compile Include="Core\Subscriptions\FollowerProjection.cs" />
     <Compile Include="Core\Subscriptions\IFollowersRepository.cs" />
+    <Compile Include="Core\Subscriptions\ISubscriptionsRepository.cs" />
     <Compile Include="Core\Subscriptions\Subscription.cs" />
     <Compile Include="Core\Subscriptions\SubscriptionId.cs" />
     <Compile Include="Core\Subscriptions\UnknownSubscription.cs" />
