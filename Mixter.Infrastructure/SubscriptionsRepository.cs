@@ -1,4 +1,5 @@
-﻿using Mixter.Domain.Core.Subscriptions;
+﻿using System.Linq;
+using Mixter.Domain.Core.Subscriptions;
 
 namespace Mixter.Infrastructure
 {
@@ -13,7 +14,13 @@ namespace Mixter.Infrastructure
 
         public Subscription GetSubscription(SubscriptionId id)
         {
-            return new Subscription(_eventsStore.GetEventsOfAggregate(id));
+            var events = _eventsStore.GetEventsOfAggregate(id).ToArray();
+            if (!events.Any())
+            {
+                throw new UnknownSubscription(id);
+            }
+
+            return new Subscription(events);
         }
     }
 }
