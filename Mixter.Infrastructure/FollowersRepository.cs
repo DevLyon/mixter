@@ -17,7 +17,7 @@ namespace Mixter.Infrastructure
 
         public IEnumerable<UserId> GetFollowers(UserId followee)
         {
-            return _projections.Select(o => o.Follower);
+            return _projections.Where(o => o.Followee.Equals(followee)).Select(o => o.Follower);
         }
     }
 }
