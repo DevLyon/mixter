@@ -40,5 +40,18 @@ namespace Mixter.Infrastructure.Tests
 
             Check.That(followers).ContainsExactly(follower1);
         }
+
+        [Fact]
+        public void WhenRemoveFollowerThenGetFollowersReturnEmpty()
+        {
+            var followee = new UserId("followee@mixit.fr");
+            var follower = new UserId("follower@mixit.fr");
+            _repository.Save(new FollowerProjection(followee, follower));
+            _repository.Remove(new FollowerProjection(followee, follower));
+
+            var followers = _repository.GetFollowers(followee);
+
+            Check.That(followers).IsEmpty();
+        }
     }
 }
