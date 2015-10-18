@@ -5,7 +5,7 @@ using Mixter.Domain.Identity;
 
 namespace Mixter.Infrastructure
 {
-    public class SubscriptionsRepository
+    public class SubscriptionsRepository : ISubscriptionsRepository
     {
         private readonly EventsStore _eventsStore;
         private readonly FollowersRepository _followersRepository;
