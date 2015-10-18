@@ -9,11 +9,16 @@ referenceBranch=""
 
 function askLanguage() {
   while true; do
-    read -p "Language (js) ?  " response
+    read -p "Language (js, csharp) ?  " response
     case "$response" in
     "js")
       selectedLanguage=$response
       referenceBranch="js/v2/full"
+      break
+      ;;
+    "csharp")
+      selectedLanguage=$response
+      referenceBranch="csharp/v2"
       break
       ;;
     esac
