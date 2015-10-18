@@ -1,15 +1,19 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Mixter.Domain.Core.Subscriptions;
+using Mixter.Domain.Identity;
 
 namespace Mixter.Infrastructure
 {
     public class SubscriptionsRepository
     {
         private readonly EventsStore _eventsStore;
+        private readonly FollowersRepository _followersRepository;
 
-        public SubscriptionsRepository(EventsStore eventsStore)
+        public SubscriptionsRepository(EventsStore eventsStore, FollowersRepository followersRepository)
         {
             _eventsStore = eventsStore;
+            _followersRepository = followersRepository;
         }
 
         public Subscription GetSubscription(SubscriptionId id)
@@ -21,6 +25,13 @@ namespace Mixter.Infrastructure
             }
 
             return new Subscription(events);
+        }
+
+        public IEnumerable<Subscription> GetSubscriptionsOfUser(UserId userId)
+        {
+            return _followersRepository.GetFollowers(userId)
+                                        .Select(follower => new SubscriptionId(follower, userId))
+                                        .Select(GetSubscription);
         }
     }
 }
