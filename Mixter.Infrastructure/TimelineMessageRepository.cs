@@ -18,5 +18,10 @@ namespace Mixter.Infrastructure
         {
             return _messages.Where(o => o.OwnerId.Equals(userId));
         }
+
+        public void Delete(MessageId messageId)
+        {
+            _messages.RemoveWhere(o => o.MessageId.Equals(messageId));
+        }
     }
 }
