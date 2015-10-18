@@ -51,5 +51,24 @@ namespace Mixter.Infrastructure.Tests
             var messagesOfUser = _repository.GetMessagesOfUser(_ownerId).ToList();
             Check.That(messagesOfUser).HasSize(1);
         }
+
+        [Fact]
+        public void GivenAMessageSavedForSeveralUsersWhenRemoveThisMessageThenRemoveThisMessageOfAllUsers()
+        {
+            const string messageA = "MessageA";
+
+            var messageId = MessageId.Generate();
+            _repository.Save(new TimelineMessageProjection(_ownerId, _authorId, messageA, messageId));
+            var message2 = new TimelineMessageProjection(_ownerId, _authorId, messageA, MessageId.Generate());
+            _repository.Save(message2);
+            var ownerId2 = new UserId("owner2@mix-it.fr");
+            _repository.Save(new TimelineMessageProjection(ownerId2, _authorId, messageA, messageId));
+
+            _repository.Delete(messageId);
+
+            var messagesOfOwner1 = _repository.GetMessagesOfUser(_ownerId);
+            Check.That(messagesOfOwner1).HasSize(1).And.ContainsExactly(message2);
+            Check.That(_repository.GetMessagesOfUser(ownerId2)).IsEmpty();
+        }
     }
 }
