@@ -7,5 +7,6 @@ namespace Mixter.Domain.Core.Messages
     {
         void Save(TimelineMessageProjection messageProjection);
         IEnumerable<TimelineMessageProjection> GetMessagesOfUser(UserId userId);
+        void Delete(MessageId messageId);
     }
 }
