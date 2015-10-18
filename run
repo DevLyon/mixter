@@ -13,7 +13,7 @@ function askLanguage() {
     case "$response" in
     "js")
       selectedLanguage=$response
-      referenceBranch="js/v2/full"
+      referenceBranch="js/v2"
       break
       ;;
     "csharp")
