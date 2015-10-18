@@ -1,4 +1,6 @@
-﻿using Mixter.Domain.Core.Messages.Events;
+﻿using Mixter.Domain.Core.Messages;
+using Mixter.Domain.Core.Messages.Events;
+using Mixter.Domain.Identity;
 
 namespace Mixter.Domain.Core.Subscriptions.Handlers
 {
@@ -17,10 +19,20 @@ namespace Mixter.Domain.Core.Subscriptions.Handlers
 
         public void Handle(MessageQuacked evt)
         {
-            foreach (var follower in _followersRepository.GetFollowers(evt.Author))
+            NotifyAllFollowers(evt.Author, evt.Id);
+        }
+
+        public void Handle(MessageRequacked evt)
+        {
+            NotifyAllFollowers(evt.Requacker, evt.Id);
+        }
+
+        private void NotifyAllFollowers(UserId followee, MessageId messageId)
+        {
+            foreach (var follower in _followersRepository.GetFollowers(followee))
             {
-                var subscription = _subscriptionsRepository.GetSubscription(new SubscriptionId(follower, evt.Author));
-                subscription.NotifyFollower(_eventPublisher, evt.Id);
+                var subscription = _subscriptionsRepository.GetSubscription(new SubscriptionId(follower, followee));
+                subscription.NotifyFollower(_eventPublisher, messageId);
             }
         }
     }
