@@ -59,6 +59,7 @@
     <Compile Include="EventPublisherTest.cs" />
     <Compile Include="EventPublisherWithStorageTest.cs" />
     <Compile Include="EventsStoreTest.cs" />
+    <Compile Include="FollowersRepositoryTest.cs" />
     <Compile Include="MessagesRepositoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SessionsRepositoryTest.cs" />
