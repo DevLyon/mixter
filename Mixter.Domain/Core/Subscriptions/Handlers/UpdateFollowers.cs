@@ -3,7 +3,9 @@
 namespace Mixter.Domain.Core.Subscriptions.Handlers
 {
     [Handler]
-    public class UpdateFollowers
+    public class UpdateFollowers : 
+        IEventHandler<UserFollowed>,
+        IEventHandler<UserUnfollowed>
     {
         private readonly IFollowersRepository _repository;
 
