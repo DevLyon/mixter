@@ -12,12 +12,14 @@ namespace Mixter.Infrastructure.Tests
         private static readonly SubscriptionId SubscriptionId = new SubscriptionId(new UserId("follower@mix-it.fr"), new UserId("followee@mix-it.fr"));
 
         private readonly EventsStore _eventsStore;
-        private readonly SubscriptionsRepository _repository;
+        private readonly SubscriptionsRepository _subscriptionsRepository;
+        private readonly FollowersRepository _followersRepository;
 
         public SubscriptionsRepositoryTest()
         {
             _eventsStore = new EventsStore();
-            _repository = new SubscriptionsRepository(_eventsStore);
+            _followersRepository = new FollowersRepository();
+            _subscriptionsRepository = new SubscriptionsRepository(_eventsStore, _followersRepository);
         }
 
         [Fact]
@@ -25,7 +27,7 @@ namespace Mixter.Infrastructure.Tests
         {
             _eventsStore.Store(new UserFollowed(SubscriptionId));
 
-            var subscription = _repository.GetSubscription(SubscriptionId);
+            var subscription = _subscriptionsRepository.GetSubscription(SubscriptionId);
 
             var eventPublisher = new EventPublisherFake();
             subscription.Unfollow(eventPublisher);
@@ -35,7 +37,23 @@ namespace Mixter.Infrastructure.Tests
         [Fact]
         public void GivenNotEventWhenGetSubscriptionThenThrowUnknownSubscription()
         {
-            Check.ThatCode(() => _repository.GetSubscription(SubscriptionId)).Throws<UnknownSubscription>();
+            Check.ThatCode(() => _subscriptionsRepository.GetSubscription(SubscriptionId)).Throws<UnknownSubscription>();
+        }
+
+        [Fact]
+        public void WhenGetSubscriptionsOfUserThenReturnAllSubscriptionAggregatesOfUser()
+        {
+            var followee = new UserId("followee@mix-it.fr");
+            var follower1 = new UserId("follower1@mix-it.fr");
+            var follower2 = new UserId("follower2@mix-it.fr");
+            _followersRepository.Save(new FollowerProjection(followee, follower1));
+            _followersRepository.Save(new FollowerProjection(followee, follower2));
+            _eventsStore.Store(new UserFollowed(new SubscriptionId(follower1, followee)));
+            _eventsStore.Store(new UserFollowed(new SubscriptionId(follower2, followee)));
+
+            var subscriptions = _subscriptionsRepository.GetSubscriptionsOfUser(followee);
+
+            Check.That(subscriptions).HasSize(2);
         }
     }
 }
