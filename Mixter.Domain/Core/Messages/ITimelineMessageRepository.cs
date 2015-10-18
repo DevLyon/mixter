@@ -10,5 +10,7 @@ namespace Mixter.Domain.Core.Messages
 
         [Query]
         IEnumerable<TimelineMessageProjection> GetMessagesOfUser(UserId userId);
+
+        void Delete(MessageId messageId);
     }
 }
