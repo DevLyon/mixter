@@ -39,6 +39,19 @@ namespace Mixter.Domain.Tests.Core.Subscriptions
             Check.That(_eventPublisher.Events).Contains(new FolloweeMessageQuacked(SubscriptionId, messageQuacked.Id));
         }
 
+        [Fact]
+        public void WhenMessageRequackedByFolloweeThenRaiseFolloweeMessageQuacked()
+        {
+            AddFollower(SubscriptionId);
+            var author = new UserId("author@mixit.fr");
+            var messageQuacked = new MessageQuacked(MessageId.Generate(), author, "hello");
+            var messageRequacked = new MessageRequacked(messageQuacked.Id, SubscriptionId.Followee);
+
+            _handler.Handle(messageRequacked);
+
+            Check.That(_eventPublisher.Events).Contains(new FolloweeMessageQuacked(SubscriptionId, messageQuacked.Id));
+        }
+
         private void AddFollower(SubscriptionId subscriptionId)
         {
             _followersRepository.Save(new FollowerProjection(SubscriptionId.Followee, subscriptionId.Follower));
