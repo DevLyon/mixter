@@ -4,7 +4,9 @@ using Mixter.Domain.Identity;
 
 namespace Mixter.Domain.Core.Subscriptions.Handlers
 {
-    public class NotifyFollowerOfFolloweeMessage
+    public class NotifyFollowerOfFolloweeMessage :
+        IEventHandler<MessageQuacked>,
+        IEventHandler<MessageRequacked>
     {
         private readonly IFollowersRepository _followersRepository;
         private readonly ISubscriptionsRepository _subscriptionsRepository;
