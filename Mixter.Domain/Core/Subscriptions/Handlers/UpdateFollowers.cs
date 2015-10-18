@@ -16,5 +16,11 @@ namespace Mixter.Domain.Core.Subscriptions.Handlers
             var subscriptionId = evt.SubscriptionId;
             _repository.Save(new FollowerProjection(subscriptionId.Followee, subscriptionId.Follower));
         }
+
+        public void Handle(UserUnfollowed evt)
+        {
+            var subscriptionId = evt.SubscriptionId;
+            _repository.Remove(new FollowerProjection(subscriptionId.Followee, subscriptionId.Follower));
+        }
     }
 }
