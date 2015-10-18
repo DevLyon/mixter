@@ -34,11 +34,13 @@ namespace Mixter.Web
             var sessionsRepository = new SessionsRepository(eventsStore);
             var timelineMessageRepository = new TimelineMessageRepository();
             var followersRepository = new FollowersRepository();
+            var subscriptionsRepository = new SubscriptionsRepository(eventsStore, followersRepository);
 
             var eventPublisher = new EventPublisher();
             var eventPublisherWithStorage = new EventPublisherWithStorage(eventsStore, eventPublisher);
             eventPublisher.Subscribe(new SessionHandler(sessionsRepository));
             eventPublisher.Subscribe(new UpdateTimeline(timelineMessageRepository));
+            eventPublisher.Subscribe(new NotifyFollowerOfFolloweeMessage(followersRepository, subscriptionsRepository, eventPublisherWithStorage));
             eventPublisher.Subscribe(new UpdateFollowers(followersRepository));
 
             container.Register<IEventPublisher>(eventPublisherWithStorage);
