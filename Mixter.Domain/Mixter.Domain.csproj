@@ -55,6 +55,7 @@
     <Compile Include="Core\Subscriptions\Events\FolloweeMessageQuacked.cs" />
     <Compile Include="Core\Subscriptions\Events\UserFollowed.cs" />
     <Compile Include="Core\Subscriptions\Events\UserUnfollowed.cs" />
+    <Compile Include="Core\Subscriptions\FollowerProjection.cs" />
     <Compile Include="Core\Subscriptions\Subscription.cs" />
     <Compile Include="Core\Subscriptions\SubscriptionId.cs" />
     <Compile Include="DecisionProjectionBase.cs" />
