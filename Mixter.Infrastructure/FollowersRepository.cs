@@ -5,7 +5,7 @@ using Mixter.Domain.Identity;
 
 namespace Mixter.Infrastructure
 {
-    public class FollowersRepository
+    public class FollowersRepository : IFollowersRepository
     {
         private readonly HashSet<FollowerProjection> _projections = new HashSet<FollowerProjection>();
 
