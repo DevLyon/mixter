@@ -56,6 +56,7 @@
     <Compile Include="Core\Subscriptions\Events\UserFollowed.cs" />
     <Compile Include="Core\Subscriptions\Events\UserUnfollowed.cs" />
     <Compile Include="Core\Subscriptions\FollowerProjection.cs" />
+    <Compile Include="Core\Subscriptions\Handlers\NotifyFollowerOfFolloweeMessage.cs" />
     <Compile Include="Core\Subscriptions\Handlers\UpdateFollowers.cs" />
     <Compile Include="Core\Subscriptions\IFollowersRepository.cs" />
     <Compile Include="Core\Subscriptions\ISubscriptionsRepository.cs" />
