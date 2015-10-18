@@ -7,7 +7,7 @@ namespace Mixter.Infrastructure
 {
     public class FollowersRepository
     {
-        private readonly IList<FollowerProjection> _projections = new List<FollowerProjection>();
+        private readonly HashSet<FollowerProjection> _projections = new HashSet<FollowerProjection>();
 
         public void Save(FollowerProjection projection)
         {
