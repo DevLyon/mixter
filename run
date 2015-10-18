@@ -28,6 +28,7 @@ function askLanguage() {
 function clean() {
   echo "Clean repository..."
 
+  git clean -d -x -f > /dev/null
   git reset --hard HEAD > /dev/null
   git checkout master > /dev/null
   git branch -D $testBranch > /dev/null 2>&1 

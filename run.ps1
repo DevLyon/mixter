@@ -87,6 +87,7 @@ function hasNextStep(){
 function clean(){
 	Write-Host "Clean repository..."
 
+	git clean -d -x -f > $null
 	git reset --hard HEAD > $null
 	git checkout master > $null
 	git branch -D $testBranch *> $null
