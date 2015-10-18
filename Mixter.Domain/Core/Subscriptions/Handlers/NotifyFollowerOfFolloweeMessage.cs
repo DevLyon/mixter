@@ -5,9 +5,9 @@ namespace Mixter.Domain.Core.Subscriptions.Handlers
     [Handler]
     public class NotifyFollowerOfFolloweeMessage
     {
-        private IFollowersRepository _followersRepository;
-        private ISubscriptionsRepository _subscriptionsRepository;
-        private IEventPublisher _eventPublisher;
+        private readonly IFollowersRepository _followersRepository;
+        private readonly ISubscriptionsRepository _subscriptionsRepository;
+        private readonly IEventPublisher _eventPublisher;
 
         public NotifyFollowerOfFolloweeMessage(IFollowersRepository followersRepository, ISubscriptionsRepository subscriptionsRepository, IEventPublisher eventPublisher)
         {
@@ -18,7 +18,11 @@ namespace Mixter.Domain.Core.Subscriptions.Handlers
 
         public void Handle(MessageQuacked evt)
         {
-            throw new System.NotImplementedException();
+            foreach (var follower in _followersRepository.GetFollowers(evt.Author))
+            {
+                var subscription = _subscriptionsRepository.GetSubscription(new SubscriptionId(follower, evt.Author));
+                subscription.NotifyFollower(_eventPublisher, evt.Id);
+            }
         }
     }
 }
