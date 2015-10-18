@@ -31,5 +31,11 @@ namespace Mixter.Infrastructure.Tests
             subscription.Unfollow(eventPublisher);
             Check.That(eventPublisher.Events).ContainsExactly(new UserUnfollowed(SubscriptionId));
         }
+
+        [Fact]
+        public void GivenNotEventWhenGetSubscriptionThenThrowUnknownSubscription()
+        {
+            Check.ThatCode(() => _repository.GetSubscription(SubscriptionId)).Throws<UnknownSubscription>();
+        }
     }
 }

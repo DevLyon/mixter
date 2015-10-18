@@ -59,6 +59,7 @@
     <Compile Include="Core\Subscriptions\IFollowersRepository.cs" />
     <Compile Include="Core\Subscriptions\Subscription.cs" />
     <Compile Include="Core\Subscriptions\SubscriptionId.cs" />
+    <Compile Include="Core\Subscriptions\UnknownSubscription.cs" />
     <Compile Include="DecisionProjectionBase.cs" />
     <Compile Include="DomainException.cs" />
     <Compile Include="Identity\Events\UserConnected.cs" />
