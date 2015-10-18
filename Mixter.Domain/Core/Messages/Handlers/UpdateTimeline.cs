@@ -4,7 +4,8 @@ namespace Mixter.Domain.Core.Messages.Handlers
 {
     [Handler]
     public class UpdateTimeline : 
-        IEventHandler<MessageQuacked>
+        IEventHandler<MessageQuacked>,
+        IEventHandler<MessageDeleted>
     {
         private readonly ITimelineMessageRepository _repository;
 
