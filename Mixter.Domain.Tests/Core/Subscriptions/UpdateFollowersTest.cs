@@ -10,6 +10,9 @@ namespace Mixter.Domain.Tests.Core.Subscriptions
 {
     public class UpdateFollowersTest
     {
+        private static readonly UserId Follower = new UserId("follower@mixit.fr");
+        private static readonly UserId Followee = new UserId("followee@mixit.fr");
+
         private readonly FollowersRepository _followersRepository;
         private readonly UpdateFollowers _handler;
 
@@ -22,12 +25,19 @@ namespace Mixter.Domain.Tests.Core.Subscriptions
         [Fact]
         public void WhenUserFollowedThenSaveFollower()
         {
-            var follower = new UserId("follower@mixit.fr");
-            var followee = new UserId("followee@mixit.fr");
+            _handler.Handle(new UserFollowed(new SubscriptionId(Follower, Followee)));
 
-            _handler.Handle(new UserFollowed(new SubscriptionId(follower, followee)));
+            Check.That(_followersRepository.GetFollowers(Followee)).ContainsExactly(Follower);
+        }
 
-            Check.That(_followersRepository.GetFollowers(followee)).ContainsExactly(follower);
+        [Fact]
+        public void WhenUserUnfollowedThenRemoveFollower()
+        {
+            _handler.Handle(new UserFollowed(new SubscriptionId(Follower, Followee)));
+
+            _handler.Handle(new UserUnfollowed(new SubscriptionId(Follower, Followee)));
+
+            Check.That(_followersRepository.GetFollowers(Followee)).IsEmpty();
         }
     }
 }
