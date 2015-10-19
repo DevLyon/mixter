@@ -224,6 +224,19 @@ printf '$CancelMessageColor'
 echo ""
 echo ""
 EOF
+  else
+	cat << EOF >> ./next
+
+printf '$MessageColor'
+echo ""
+echo ""
+echo "========================"
+echo "===  STEP $(($stepNum - 1)) - Test $testNum ==="
+echo "========================"
+echo ""
+echo ""
+printf '$CancelMessageColor'
+EOF
   fi
   
   chmod +x ./next
