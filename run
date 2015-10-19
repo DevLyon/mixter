@@ -148,6 +148,9 @@ echo ""
 printf '$MessageColor'
 cat stepsDoc/step${stepNum}.txt
 printf '$CancelMessageColor'
+
+echo ""
+echo ""
 EOF
   
   chmod +x ./jumpToNextStep
@@ -279,10 +282,11 @@ initializeSolutionBranch
 initializeTestBranch
 initializeWorkflow
 
+printf $MessageColor
 echo "Koan OK"
 echo ""
 echo ""
-
-printf $MessageColor
 cat stepsDoc/step1.txt
+echo ""
+echo ""
 printf $CancelMessageColor
