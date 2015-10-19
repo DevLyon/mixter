@@ -27,6 +27,24 @@ git add .
 git commit -m "Merge with test branch" 
 "@
 
+$displayNextStepMessageTemplate = @"
+Write-Host ""
+Write-Host ""
+Get-Content stepsDoc/step@@stepNum@@.txt | Write-Host -f green
+Write-Host ""
+Write-Host ""
+"@
+
+$displayNextTestMessageTemplate = @"
+Write-Host ""
+Write-Host ""
+Write-Host -f green "========================"
+Write-Host -f green "===  STEP @@stepNum@@ - Test @@testNum@@ ==="
+Write-Host -f green "========================"
+Write-Host ""
+Write-Host ""
+"@
+
 function AskParametreWithValues($name, $values){
     do {
         $value = Read-Host ($name + " (" + ($values -join ", ") + ")")
@@ -59,6 +77,14 @@ function getNextTestTag(){
 		"step" + ($currentStep + 1) + "-test1"
 	} else {
 		"step" + $currentStep + "-test" + ($currentTestOfStep + 1)
+	}
+}
+
+function getNextTestNum(){
+	if($testsNbByStep.$currentStep -le $currentTestOfStep){
+		return 1
+	} else {
+		return ($currentTestOfStep + 1)
 	}
 }
 
@@ -114,8 +140,10 @@ function isFailedTestCommit($line){
 	$line -like '* KO]*'
 }
 
-function addStepNavigationCommand($nextStepTag){
-	$jumpToNextStepCommandTemplate.Replace("@@nexttag@@", $nextStepTag) | out-file 'jumpToNextStep.ps1' -enc ascii
+function addStepNavigationCommand($nextStepTag, $nextStepNum){
+	$nextCommandContent = $jumpToNextStepCommandTemplate.Replace("@@nexttag@@", $nextStepTag) + "`r`n" + $displayNextStepMessageTemplate.Replace("@@stepNum@@", $nextStepNum)
+	
+	$nextCommandContent | out-file 'jumpToNextStep.ps1' -enc ascii
 	git add jumpToNextStep.ps1 > $null
 
 	git commit -m "Add step navigation commands" > $null
@@ -129,7 +157,7 @@ function pickCommitForSolution($line){
 	$isKoTest = isFailedTestCommit $line
 	$isFirstTestOfStep = $currentTestOfStep -eq 1
 	if($isKoTest -and $isFirstTestOfStep -and (hasNextStep)){
-		addStepNavigationCommand (getNextStepTag)
+		addStepNavigationCommand (getNextStepTag) ($currentStep + 1)
 	}
 
 	git cherry-pick $hash > $null
@@ -171,8 +199,15 @@ function initializeSolutionBranch($referenceBranch){
 	Write-Host "Done"
 }
 
-function addNavigationCommand($nextTestTag){
-	$nextCommandTemplate.Replace("@@nexttag@@", $nextTestTag) | out-file 'next.ps1' -enc ascii
+function addNavigationCommand($nextTestTag, $nextTestNum, $currentStepNum){
+	$nextCommandContent = $nextCommandTemplate.Replace("@@nexttag@@", $nextTestTag)
+	if((getNextTestNum) -eq 1) {
+		$nextCommandContent += "`r`n" + $displayNextStepMessageTemplate.Replace("@@stepNum@@", $currentStepNum + 1)
+	} else {
+		$nextCommandContent += "`r`n" + $displayNextTestMessageTemplate.Replace("@@stepNum@@", $currentStepNum).Replace("@@testNum@@", $nextTestNum)
+	}
+
+	$nextCommandContent | out-file 'next.ps1' -enc ascii
 	git add next.ps1 > $null
 
 	git commit -m "Add test navigation commands" > $null
@@ -187,7 +222,7 @@ function pickCommitForTest($line){
 
 	if (isFailedTestCommit $line) {
 		if((hasNextStep) -or (hasNextTestForCurrentStep)) {
-			addNavigationCommand (getNextTestTag)
+			addNavigationCommand (getNextTestTag) (getNextTestNum) ($currentStep)
 		}
 
 		git tag (getCurrentTestTag) > $null
@@ -230,5 +265,6 @@ InitializeWorkflow
 Write-Host "Koan OK"
 Write-Host ""
 Write-Host ""
-
-Get-Content welcome.txt | Write-Host -f green
+Get-Content stepsDoc/step1.txt | Write-Host -f green
+Write-Host ""
+Write-Host ""
