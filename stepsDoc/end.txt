@@ -1,9 +1,3 @@
-=====================
-===     END       ===
-=====================
-
-Thank to submit feedback on github : https://github.com/DevLyon/mixter
-
 CQRS
 
  +----+                     |                                
@@ -48,3 +42,10 @@ Event Sourcing
   |     +--------+               |  
   |                              |  
   +------------------------------+  
+
+
+=====================
+===     END       ===
+=====================
+
+Thank to submit feedback on github : https://github.com/DevLyon/mixter

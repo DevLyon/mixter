@@ -172,6 +172,11 @@ echo ""
 printf '$CancelMessageColor'
 
 EOF
+
+  chmod +x ./jumpToNextStep
+  git add jumpToNextStep > /dev/null
+
+  git commit -m "Add end commands" > /dev/null
 }
 
 function pickCommitForSolution(){
@@ -187,7 +192,7 @@ function pickCommitForSolution(){
 		addStepNavigationCommand $nextStepTag $nextStep
 	else
 		addEndStepNavigationCommand
-	if
+	fi
   fi
 
   git cherry-pick $hash > /dev/null
@@ -278,6 +283,11 @@ echo ""
 printf '$CancelMessageColor'
 
 EOF
+  
+  chmod +x ./next
+  git add next > /dev/null
+  
+  git commit -m "Add end navigation commands" > /dev/null
 }
 
 function pickCommitForTest(){
