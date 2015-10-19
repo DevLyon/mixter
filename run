@@ -64,6 +64,7 @@ function updateNextTestTag(){
   if [ $currentStep -le $stepNb ] && [ ${testsNbByStep[$currentStep-1]} -le $currentTestOfStep ]
   then
     nextStep=$(($currentStep + 1))
+	nextTestOfStep=1
     nextTestTag="step${nextStep}-test1"
   else
     nextTestOfStep=$(($currentTestOfStep + 1))
