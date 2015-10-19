@@ -5,18 +5,26 @@ $testBranch = "test"
 $solutionBranch = "solution"
 $workshopBranch = "workshop"
 
-$nextCommandTemplate = @"
+$batWrapperTemplate = @"
 @echo off
 
+PowerShell -ExecutionPolicy Bypass -File @@scriptname@@.ps1
+"@
+
+$nextCommandTemplate = @"
 git add -A 
 git commit -m "Resolve test"
 git merge @@nexttag@@
 "@
 
 $jumpToNextStepCommandTemplate = @"
-@echo off
-
-git add -A & git commit -m "Abort test" & git checkout -b $workshopBranch-@@nexttag@@ @@nexttag@@ & git merge @@nexttag@@-test1 >nul 2>&1 & git checkout --ours . & git add . & git commit -m "Merge with test branch" 
+git add -A
+git commit -m "Abort test"
+git checkout -b $workshopBranch-@@nexttag@@ @@nexttag@@ 
+git merge @@nexttag@@-test1 *> `$null`
+git checkout --ours . 
+git add . 
+git commit -m "Merge with test branch" 
 "@
 
 function AskParametreWithValues($name, $values){
@@ -107,8 +115,8 @@ function isFailedTestCommit($line){
 }
 
 function addStepNavigationCommand($nextStepTag){
-	$jumpToNextStepCommandTemplate.Replace("@@nexttag@@", $nextStepTag) | out-file 'jumpToNextStep.bat' -enc ascii
-	git add jumpToNextStep.bat > $null
+	$jumpToNextStepCommandTemplate.Replace("@@nexttag@@", $nextStepTag) | out-file 'jumpToNextStep.ps1' -enc ascii
+	git add jumpToNextStep.ps1 > $null
 
 	git commit -m "Add step navigation commands" > $null
 }
@@ -141,20 +149,31 @@ function getCommitLog($branch){
 	git log $branch --pretty=tformat:'%h %s' --reverse -E HEAD..
 }
 
+function initializeNavigationScript(){
+	$batWrapperTemplate.Replace("@@scriptname@@", 'jumpToNextStep') | out-file 'jumpToNextStep.bat' -enc ascii
+	$batWrapperTemplate.Replace("@@scriptname@@", 'next') | out-file 'next.bat' -enc ascii
+	
+	git add jumpToNextStep.bat > $null
+	git add next.bat > $null
+	
+	git commit -m "Add bat wrapper to navigation commands" > $null
+}
+
 function initializeSolutionBranch($referenceBranch){
 	Write-Host "Initialize solution branch"
 
 	resetTestCounter
 
 	git checkout -b $solutionBranch origin/master > $null
+	initializeNavigationScript
 	getCommitLog $referenceBranch | %{ pickCommitForSolution $_ }
 
 	Write-Host "Done"
 }
 
 function addNavigationCommand($nextTestTag){
-	$nextCommandTemplate.Replace("@@nexttag@@", $nextTestTag) | out-file 'next.bat' -enc ascii
-	git add next.bat > $null
+	$nextCommandTemplate.Replace("@@nexttag@@", $nextTestTag) | out-file 'next.ps1' -enc ascii
+	git add next.ps1 > $null
 
 	git commit -m "Add test navigation commands" > $null
 }
