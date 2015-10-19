@@ -45,6 +45,14 @@ Write-Host ""
 Write-Host ""
 "@
 
+$displayEndMessageTemplate = @"
+Write-Host ""
+Write-Host ""
+Get-Content stepsDoc/end.txt | Write-Host -f green
+Write-Host ""
+Write-Host ""
+"@
+
 function AskParametreWithValues($name, $values){
     do {
         $value = Read-Host ($name + " (" + ($values -join ", ") + ")")
@@ -149,6 +157,13 @@ function addStepNavigationCommand($nextStepTag, $nextStepNum){
 	git commit -m "Add step navigation commands" > $null
 }
 
+function addEndStepNavigationCommand(){
+	$displayEndMessageTemplate | out-file 'jumpToNextStep.ps1' -enc ascii
+	git add jumpToNextStep.ps1 > $null
+
+	git commit -m "Add end step navigation commands" > $null
+}
+
 function pickCommitForSolution($line){
 	$hash = extraCommitHashOfLog $line
 
@@ -156,8 +171,12 @@ function pickCommitForSolution($line){
 
 	$isKoTest = isFailedTestCommit $line
 	$isFirstTestOfStep = $currentTestOfStep -eq 1
-	if($isKoTest -and $isFirstTestOfStep -and (hasNextStep)){
-		addStepNavigationCommand (getNextStepTag) ($currentStep + 1)
+	if($isKoTest -and $isFirstTestOfStep){
+		if((hasNextStep)) {
+			addStepNavigationCommand (getNextStepTag) ($currentStep + 1)
+		} else {
+			addEndStepNavigationCommand
+		}
 	}
 
 	git cherry-pick $hash > $null
@@ -213,6 +232,13 @@ function addNavigationCommand($nextTestTag, $nextTestNum, $currentStepNum){
 	git commit -m "Add test navigation commands" > $null
 }
 
+function addEndNavigationCommand(){
+	$displayEndMessageTemplate | out-file 'next.ps1' -enc ascii
+	git add next.ps1 > $null
+
+	git commit -m "Add end test navigation commands" > $null
+}
+
 function pickCommitForTest($line){
 	$hash = extraCommitHashOfLog $line
 	
@@ -223,6 +249,8 @@ function pickCommitForTest($line){
 	if (isFailedTestCommit $line) {
 		if((hasNextStep) -or (hasNextTestForCurrentStep)) {
 			addNavigationCommand (getNextTestTag) (getNextTestNum) ($currentStep)
+		} else {
+			addEndNavigationCommand
 		}
 
 		git tag (getCurrentTestTag) > $null
