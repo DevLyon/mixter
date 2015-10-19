@@ -1,0 +1,51 @@
+======================
+===     STEP 2     ===
+===    Timeline    ===
+===    messages    ===
+===   Projection   ===
+======================
+	   
+EventStorming : 
+
+  +---------+                           
+  | (core)  |                           
+  | Mixter  |         +---------+       
+  | context |         | Requack |       
+  +---------+         | message |       
+                      +----+----+------+
+           +---------+     |  Message  |
+           | Message |     | Requacked |
+           +---------+     +-----------+
++---------+                             
+|  Quack  |                             
+| Message |            +------------+   
++----+----+----+       || Timeline ||   
+     | Message |       || Messages ||   
+     | quacked |       +------------+   
+     +---------+                        
+	 
+
+CQRS Principle (query) : 	 
+                           
+                      |             |    
+         |       +----v---+      +--+---+
+          - - - -| Events | - - -| CQRS |
+         |       +----+---+      +--+---+
+                      |             |    
+         |   +--------v----+        |    
+             | Projections |        |    
+         |   +-------+-----+        |    
+                     |              |    
+  +-----------+      |          +---+---+
+--+ Interface <------+          | QUERY |
+  +-----------+                 +-------+
+  
+
+Subject :
+
+What we will learn
+ - Create another model for Query (Projection, TimelineMessageProjection)
+ - Transform events in a projection model through an EventHandler
+ - A projection repository (in-memory) with its interface is given
+
+In brief : Q of CQRS

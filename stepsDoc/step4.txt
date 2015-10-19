@@ -1,0 +1,37 @@
+=======================
+===     STEP 4      ===
+===   Aggregates    ===
+===   interaction   ===
+=======================
+
+EventStorming :
+
+       +------------+                              
+       || Timeline ||                              
+       || messages ||                              
+       +------------+                              
+                                                   
+ +---------+           +------------------+        
+ | Message +------+    | Followee Message |        
+ | quacked |      |    | Quacked          |        
+ +---------+  +---v----+-+----------------+        
+              | Notify   |                         
+              | follower |                         
++-----------+ +-----^----+                         
+|  Message  |       |          +--------------+    
+| requacked +-------+          | Subscription |    
++-----------+                  +--------------+    
+                    +-----------------+            
+ +---------+        | User unfollowed |            
+ | Message |        +-----------------+            
+ +---------+                      +---------------+
+               +-------------+    | User followed |
+               || Followers ||    +---------------+
+               +-------------+                   
+
+
+Subject :
+
+What we will learn
+ - Coordinate several aggregates to limit coupling
+ - Concept of "Eventual consistency"

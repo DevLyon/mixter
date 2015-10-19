@@ -1,0 +1,64 @@
+Mixter - EventSourcing/CQRS Koan
+https://github.com/DevLyon/mixter/
+
+=======================
+===      STEP 1     ===
+=== DELETE COMMAND  ===
+=======================
+
+EventStorming : 
+
+      +---------+        
+      | (core)  |        
+      | Mixter  |        
+      | context |        
+      +---------+        
+                         
++---------+              
+| Message |  +----------+
++---------+  | Message  |
+             | deleted  |
+       +---------+      |
+       |     +----------+
+       | Delete  |       
+       | message |       
+       +---------+       
+	   
+  
+CQRS Principle (command) : 
+                         
+                            +---------+
+ +---------+                | COMMAND |
+-> Command +-------+        +----+----+
+ +----+----+       |             |     
+      |      +-----v-----+       |     
+             | Aggregate |       |     
+      |      +-----+-----+       |     
+                   |             |     
+      |       +----v---+      +--+---+ 
+       - - - -+ Events | - -  | CQRS | 
+      |       +--------+      +------+ 
+
+	  
+Subject :
+
+What we will learn
+ - publish events from aggregate,
+ - use projection for decision inside aggregate (contains only "state" for future decision, DO NOT keep all state like in an entity)
+ - Implement "business rules" that insure aggregate consistency (based on decision projection and command=method parameters)
+
+In brief : the C of CQRS
+
+
+
+Welcome
+
+1 test failed... It's normal :)
+It's your first exercice. You should implement the failing test.
+When it's green, then call "next" command to jump to next test
+
+If you cannot find the solution, DON'T PANIC. You can go to the next step with the "jumpToNextStep" command. But only use it if you are short on time.
+
+Feel free to use issues in this repo to give your feedback, to propose some improvements, to ask for other languages...and even better to submit pull requests.
+
+Enjoy

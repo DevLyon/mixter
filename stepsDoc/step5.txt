@@ -1,0 +1,35 @@
+=====================
+===     STEP 5    ===
+===    Command    ===
+===    Handler    ===
+=====================
+
+CQRS Principle : 
+
+ +----+                     |                                
+ | UX |                                           +---------+
+ +----+                +---------+                | COMMAND |
+              +--------> Command +-------+        +----+----+
+   XXXXXXX    |        +----+----+       |             |     
+   X X X X    |             |      +-----v-----+       |     
+   XXXXXXX +--+                    | Aggregate |       |     
+      X                     |      +-----+-----+       |     
+     XXX                                 |             |     
+    X X X                   |       +----v---+      +--+---+ 
+   X  X  X                   - - - -+ Events | - -  | CQRS | 
+  X   X   X                 |       +----+---+      +--+---+ 
+     XXX                                 |             |     
+    XX XX   <-----+         |   +--------v----+        |     
+  XX    XX        |             | Projections |        |     
+ XX      XX       |         |   +-------+-----+        |     
+XX        XX      |                     |              |     
+        ^         |  +-----------+      |          +---+---+ 
+        |         +--+ Interface <------+          | QUERY | 
+        |            +-----------+                 +-------+ 
+  +-----+------+                                             
+  | MONDE REEL |            |       
+	
+	
+Subject :
+	  
+Request Rest to execute delete Message command, with session validity verification
