@@ -2,6 +2,7 @@
 
 testsNbByStep=( 4 1 4 4 2 )
 
+masterBranch="origin/master"
 testBranch="test"
 solutionBranch="solution"
 workshopBranch="workshop"
@@ -181,7 +182,7 @@ function initializeSolutionBranch() {
 
   resetTestCounter
 
-  git checkout -b $solutionBranch origin/master > /dev/null
+  git checkout -b $solutionBranch $masterBranch > /dev/null
   git log origin/$referenceBranch --pretty=tformat:'%h %s' --reverse -E HEAD.. | while read line
       do pickCommitForSolution "$line"
   done
@@ -250,7 +251,7 @@ function initializeTestBranch(){
 
   resetTestCounter
 
-  git checkout -b $testBranch origin/master > /dev/null
+  git checkout -b $testBranch $masterBranch > /dev/null
   git log $solutionBranch --pretty=tformat:'%h %s' --grep '[^K]\][^\[]' --grep '^[^\[]' --reverse -E HEAD.. | while read line
     do pickCommitForTest "$line"
   done
