@@ -47,6 +47,8 @@ function clean() {
 stepNb=${#testsNbByStep[@]}
 currentStep=1
 currentTestOfStep=1
+nextStep=1
+nextTestOfStep=1
 currentTestTag=""
 nextTestTag=""
 currentStepTag=""
@@ -61,8 +63,8 @@ function updateCurrentTestTag(){
 function updateNextTestTag(){
   if [ $currentStep -le $stepNb ] && [ ${testsNbByStep[$currentStep-1]} -le $currentTestOfStep ]
   then
-    nextStepNum=$(($currentStep + 1))
-    nextTestTag="step${nextStepNum}-test1"
+    nextStep=$(($currentStep + 1))
+    nextTestTag="step${nextStep}-test1"
   else
     nextTestOfStep=$(($currentTestOfStep + 1))
     nextTestTag="step${currentStep}-test${nextTestOfStep}"
@@ -74,8 +76,8 @@ function updateCurrentStepTag(){
 }
 
 function updateNextStepTag(){
-  nextStepNum=$(($currentStep + 1))
-  nextStepTag="step${nextStepNum}"
+  nextStep=$(($currentStep + 1))
+  nextStepTag="step${nextStep}"
 }
 
 function updateHasNextTestForCurrentStep(){
@@ -161,7 +163,7 @@ function pickCommitForSolution(){
 
   if [[ $line == *" KO]"* ]] && [ $currentTestOfStep -eq 1 ] && [ $hasNextStep = true ]
   then 
-    addStepNavigationCommand $nextStepTag $currentStep
+    addStepNavigationCommand $nextStepTag $nextStep
   fi
 
   git cherry-pick $hash > /dev/null
@@ -238,7 +240,7 @@ function pickCommitForTest(){
   then
       if [ $hasNextStep = true ] || [ $hasNextTestForCurrentStep = true ]
       then
-        addNavigationCommand $nextTestTag $currentStep $currentTestOfStep
+        addNavigationCommand $nextTestTag $nextStep $nextTestOfStep
       fi
        
       git tag $currentTestTag > /dev/null
