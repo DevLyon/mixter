@@ -8,6 +8,9 @@ solutionBranch="solution"
 workshopBranch="workshop"
 referenceBranch=""
 
+MessageColor='\033[0;32m'
+CancelMessageColor='\033[0m'
+
 function askLanguage() {
   while true; do
     read -p "Language (js, csharp) ?  " response
@@ -139,11 +142,9 @@ git commit -m "Merge with test branch"
 echo ""
 echo ""
 
-GREEN='\033[0;32m'
-NC='\033[0m'
-printf $GREEN
+printf '$MessageColor'
 cat stepsDoc/step${stepNum}.txt
-printf $NC
+printf '$CancelMessageColor'
 EOF
   
   chmod +x ./jumpToNextStep
@@ -205,16 +206,17 @@ EOF
   
   if [ $testNum -eq 1 ]
   then 
-	cat << EOF > ./next
+	cat << EOF >> ./next
 
 echo ""
 echo ""
 
-GREEN='\033[0;32m'
-NC='\033[0m'
-printf $GREEN
+printf '$MessageColor'
 cat stepsDoc/step${stepNum}.txt
-printf $NC
+printf '$CancelMessageColor'
+
+echo ""
+echo ""
 EOF
   fi
   
@@ -278,8 +280,6 @@ echo "Koan OK"
 echo ""
 echo ""
 
-GREEN='\033[0;32m'
-NC='\033[0m'
-printf $GREEN
+printf $MessageColor
 cat stepsDoc/step1.txt
-printf $NC
+printf $CancelMessageColor
