@@ -1,6 +1,7 @@
 $languages = @{ "js"="origin/js/v2"; "csharp"="origin/csharp/v2" }
 $testsNbByStep = @{ 1=4; 2=1; 3=4; 4=4; 5=2 }
 
+$masterBranch = "origin/master"
 $testBranch = "test"
 $solutionBranch = "solution"
 $workshopBranch = "workshop"
@@ -211,7 +212,7 @@ function initializeSolutionBranch($referenceBranch){
 
 	resetTestCounter
 
-	git checkout -b $solutionBranch origin/master > $null
+	git checkout -b $solutionBranch $masterBranch > $null
 	initializeNavigationScript
 	getCommitLog $referenceBranch | %{ pickCommitForSolution $_ }
 
@@ -269,7 +270,7 @@ function initializeTestBranch(){
 
 	resetTestCounter
 
-	git checkout -b $testBranch origin/master > $null
+	git checkout -b $testBranch $masterBranch > $null
 	getCommitLogWithoutGreenTest $solutionBranch | %{ pickCommitForTest $_ }
 
 	Write-Host "Done"
