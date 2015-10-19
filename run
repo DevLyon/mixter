@@ -159,15 +159,35 @@ EOF
   git commit -m "Add step navigation commands" > /dev/null
 }
 
+function addEndStepNavigationCommand(){
+	cat << EOF > ./jumpToNextStep
+#!/bin/bash
+
+printf '$MessageColor'
+echo ""
+echo ""
+cat stepsDoc/end.txt
+echo ""
+echo ""
+printf '$CancelMessageColor'
+
+EOF
+}
+
 function pickCommitForSolution(){
   line="$1"
   hash="$(echo $line | cut -d' ' -f1)"
 
   printf "."
 
-  if [[ $line == *" KO]"* ]] && [ $currentTestOfStep -eq 1 ] && [ $hasNextStep = true ]
+  if [[ $line == *" KO]"* ]] && [ $currentTestOfStep -eq 1 ]
   then 
-    addStepNavigationCommand $nextStepTag $nextStep
+	if [ $hasNextStep = true ]
+	then
+		addStepNavigationCommand $nextStepTag $nextStep
+	else
+		addEndStepNavigationCommand
+	if
   fi
 
   git cherry-pick $hash > /dev/null
@@ -245,6 +265,21 @@ EOF
   git commit -m "Add test navigation commands" > /dev/null
 }
 
+function addEndNavigationCommand(){
+	cat << EOF > ./next
+#!/bin/bash
+
+printf '$MessageColor'
+echo ""
+echo ""
+cat stepsDoc/end.txt
+echo ""
+echo ""
+printf '$CancelMessageColor'
+
+EOF
+}
+
 function pickCommitForTest(){
   line=$1
   hash="$(echo $line | cut -d' ' -f1)"
@@ -258,6 +293,8 @@ function pickCommitForTest(){
       if [ $hasNextStep = true ] || [ $hasNextTestForCurrentStep = true ]
       then
         addNavigationCommand $nextTestTag $nextStep $nextTestOfStep
+	  else
+		addEndNavigationCommand
       fi
        
       git tag $currentTestTag > /dev/null
