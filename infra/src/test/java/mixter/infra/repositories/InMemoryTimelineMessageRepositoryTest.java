@@ -49,5 +49,19 @@ public class InMemoryTimelineMessageRepositoryTest {
         assertThat(repository.getMessageOfUser(OWNER_ID)).toIterable().containsOnlyOnce(joeMessage);
     }
 
+    @Test
+    public void giventAMessageSavedForSeveralUsersWhenRemoveThisMessageThenRemoveForAllUsers() throws Exception {
+        TimelineMessageRepository repository = new InMemoryTimelineMessageRepository();
+        MessageId messageId = MessageId.generate();
 
+        TimelineMessageProjection joeMessage = new TimelineMessageProjection(OWNER_ID, AUTHOR_ID, "Hello", messageId);
+        TimelineMessageProjection aliceMessage = new TimelineMessageProjection(ALICE_ID, AUTHOR_ID, "Hello", messageId);
+        repository.save(joeMessage);
+        repository.save(aliceMessage);
+
+        repository.delete(messageId);
+
+        assertThat(repository.getMessageOfUser(OWNER_ID)).toIterable().isEmpty();
+        assertThat(repository.getMessageOfUser(ALICE_ID)).toIterable().isEmpty();
+    }
 }
