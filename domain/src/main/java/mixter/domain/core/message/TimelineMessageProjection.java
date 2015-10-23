@@ -19,6 +19,11 @@ public class TimelineMessageProjection {
         return messageId;
     }
 
+
+    public UserId getOwnerId() {
+        return ownerId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -41,4 +46,5 @@ public class TimelineMessageProjection {
         result = 31 * result + (messageId != null ? messageId.hashCode() : 0);
         return result;
     }
+
 }

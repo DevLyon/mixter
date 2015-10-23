@@ -5,10 +5,12 @@ import mixter.domain.core.message.TimelineMessageProjection;
 import mixter.domain.core.message.TimelineMessageRepository;
 import mixter.domain.core.message.events.MessageQuacked;
 import mixter.domain.identity.UserId;
+import org.apache.commons.lang3.NotImplementedException;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,6 +52,11 @@ public class UpdateTimelineTest {
             messages.removeIf(timelineMessage -> timelineMessage.getMessageId().equals(message.getMessageId()));
             messages.add(message);
             return message;
+        }
+
+        @Override
+        public Iterator<TimelineMessageProjection> getMessageOfUser(UserId ownerId) {
+            throw new NotImplementedException();
         }
 
     }
