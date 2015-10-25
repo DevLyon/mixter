@@ -56,6 +56,7 @@ If you want to fork with your preferred language, you only need to follow some r
 The KoanCli script is based on a naming convention in commit message.
  * Failing tests should contain `[Test KO]`
  * Resolving tests should contain `[Test OK]`
+
 Currently the KoanCli script isn't dynamic and tests number must be static to know the correspondence between a test and a step.
 Here number of tests per step:
  * Step 1, delete command: 4 tests
