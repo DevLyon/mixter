@@ -79,5 +79,10 @@ public class UpdateTimelineTest {
         public Iterator<TimelineMessageProjection> getMessageOfUser(UserId ownerId) {
             throw new NotImplementedException();
         }
+
+        @Override
+        public void delete(MessageId messageId) {
+            deletedMessageIds.add(messageId);
+        }
     }
 }
