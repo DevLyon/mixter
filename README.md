@@ -10,8 +10,7 @@ Starting
 1. Checkout `master` branch
 2. Execute `./run` script
 
-You can checkout `Slide` branch, where you can find slides used for Mix-IT workshop.
-It explains the main steps and goals for each (only the title is in French ;)).
+Slide file explains the main steps and goals for each (only the title is in French ;)).
 
 Feedback is required
 --------------------
