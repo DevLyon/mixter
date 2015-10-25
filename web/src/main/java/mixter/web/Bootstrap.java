@@ -3,7 +3,9 @@ package mixter.web;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
+import mixter.domain.core.message.MessageRepository;
 import mixter.domain.core.message.TimelineMessageRepository;
+import mixter.domain.core.message.events.MessageDeleted;
 import mixter.domain.core.message.events.MessageQuacked;
 import mixter.domain.core.message.events.MessageRequacked;
 import mixter.domain.core.message.handlers.UpdateTimeline;
@@ -46,10 +48,12 @@ public class Bootstrap {
 
         //Message
         TimelineMessageRepository timelineMessageRepository = new InMemoryTimelineMessageRepository();
-        MessageResource messageResource = new MessageResource(sessionProjectionRepository, timelineMessageRepository, eventPublisher);
+        MessageRepository messageRepository=new InMemoryMessageRepository(eventStore);
+        MessageResource messageResource = new MessageResource(sessionProjectionRepository, timelineMessageRepository, messageRepository, eventPublisher);
         UpdateTimeline updateTimeline = new UpdateTimeline(timelineMessageRepository);
 
         dispatcher.register(MessageQuacked.class, updateTimeline::apply);
+        dispatcher.register(MessageDeleted.class, updateTimeline::apply);
 
         //Subscription
         FollowerRepository followerRepository= new InMemoryFollowerRepository();
