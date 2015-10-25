@@ -7,6 +7,7 @@ import mixter.domain.identity.SessionProjection;
 import mixter.domain.identity.SessionProjectionRepository;
 import mixter.domain.identity.UserId;
 import net.codestory.http.Request;
+import net.codestory.http.annotations.Delete;
 import net.codestory.http.annotations.Get;
 import net.codestory.http.annotations.Post;
 import net.codestory.http.annotations.Prefix;
@@ -21,11 +22,13 @@ import static net.codestory.http.constants.HttpStatus.UNAUTHORIZED;
 public class MessageResource {
     private SessionProjectionRepository sessionRepository;
     private TimelineMessageRepository timelineMessageRepository;
+    private MessageRepository messageRepository;
     private EventPublisher eventPublisher;
 
-    public MessageResource(SessionProjectionRepository sessionRepository, TimelineMessageRepository timelineMessageRepository, EventPublisher eventPublisher) {
+    public MessageResource(SessionProjectionRepository sessionRepository, TimelineMessageRepository timelineMessageRepository, MessageRepository messageRepository, EventPublisher eventPublisher) {
         this.sessionRepository = sessionRepository;
         this.timelineMessageRepository = timelineMessageRepository;
+        this.messageRepository = messageRepository;
         this.eventPublisher = eventPublisher;
     }
 
@@ -38,6 +41,21 @@ public class MessageResource {
             UserId userId = session.getUserId();
             MessageId messageId = Message.quack(userId,content, eventPublisher);
             return Payload.created("/api/" + userId.toString() + "/messages/" + messageId.toString());
+        }).orElse(
+                new Payload(UNAUTHORIZED).withHeader(Headers.LOCATION, "/api/sessions")
+        );
+    }
+
+    @Delete("/:id")
+    public Payload delete(String ownerIdStr, String messageId, Request request) {
+        String sessionId = request.header("X-App-Session");
+        UserId ownerId = new UserId(ownerIdStr);
+        Optional<SessionProjection> maybeSession = sessionRepository.getById(new SessionId(sessionId));
+        return maybeSession.filter(s -> s.getUserId().equals(ownerId)).map(session -> {
+            UserId userId = session.getUserId();
+            Message message = messageRepository.getById(new MessageId(messageId));
+            message.delete(userId, eventPublisher);
+            return Payload.created().withCode(204);
         }).orElse(
                 new Payload(UNAUTHORIZED).withHeader(Headers.LOCATION, "/api/sessions")
         );
