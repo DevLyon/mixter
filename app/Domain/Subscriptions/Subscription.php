@@ -9,5 +9,6 @@ class Subscription
 {
     public static function followUser(IEventPublisher $eventPublisher, UserId $followerId, UserId $followeeId)
     {
+        $eventPublisher->publish(new UserFollowed(new SubscriptionId($followerId, $followeeId)));
     }
 }
