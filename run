@@ -13,7 +13,7 @@ CancelMessageColor='\033[0m'
 
 function askLanguage() {
   while true; do
-    read -p "Language (js, csharp, java) ?  " response
+    read -p "Language (js, csharp, java, php) ?  " response
     case "$response" in
     "js")
       selectedLanguage=$response
@@ -28,6 +28,11 @@ function askLanguage() {
     "java")
       selectedLanguage=$response
       referenceBranch="java/v2"
+      break
+      ;;
+    "php")
+      selectedLanguage=$response
+      referenceBranch="php/v2"
       break
       ;;
     esac
