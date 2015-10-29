@@ -3,6 +3,7 @@ package mixter.domain.core.message.handlers;
 import mixter.domain.core.message.MessageId;
 import mixter.domain.core.message.TimelineMessageProjection;
 import mixter.domain.core.message.TimelineMessageRepository;
+import mixter.domain.core.message.events.MessageDeleted;
 import mixter.domain.core.message.events.MessageQuacked;
 import mixter.domain.identity.UserId;
 import org.junit.Before;
@@ -40,11 +41,31 @@ public class UpdateTimelineTest {
         assertThat(timelineRepository.getMessages()).containsExactly(new TimelineMessageProjection(AUTHOR_ID, AUTHOR_ID, CONTENT, messageId));
     }
 
+    @Test
+    public void whenUpdateTimelineAppliesAMessageDeletedThenItRemovesAllTimelineMessageProjectionsForTheMessageId() throws Exception {
+        // Given
+        MessageId messageId = MessageId.generate();
+        UpdateTimeline handler = new UpdateTimeline(timelineRepository);
+        MessageQuacked messageQuacked = new MessageQuacked(messageId, CONTENT, AUTHOR_ID);
+        MessageDeleted messageDeleted= new MessageDeleted(messageId);
+        handler.apply(messageQuacked);
+        // When
+        handler.apply(messageDeleted);
+        // Then
+        assertThat(timelineRepository.getDeletedMessageIds()).containsExactly(messageId);
+
+    }
+
     class TimelineMessageRepositoryFake implements TimelineMessageRepository {
         List<TimelineMessageProjection> messages = new ArrayList<>();
+        private List<MessageId> deletedMessageIds=new ArrayList<>();
 
         public List<TimelineMessageProjection> getMessages() {
             return messages;
+        }
+
+        public List<MessageId> getDeletedMessageIds() {
+            return deletedMessageIds;
         }
 
         @Override
@@ -58,6 +79,5 @@ public class UpdateTimelineTest {
         public Iterator<TimelineMessageProjection> getMessageOfUser(UserId ownerId) {
             throw new NotImplementedException();
         }
-
     }
 }
