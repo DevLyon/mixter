@@ -17,22 +17,22 @@ function askLanguage() {
     case "$response" in
     "js")
       selectedLanguage=$response
-      referenceBranch="js/v2"
+      referenceBranch="origin/js/v2"
       break
       ;;
     "csharp")
       selectedLanguage=$response
-      referenceBranch="csharp/v2"
+      referenceBranch="origin/csharp/v2"
       break
       ;;
     "java")
       selectedLanguage=$response
-      referenceBranch="java/v2"
+      referenceBranch="origin/java/v2"
       break
       ;;
     "php")
       selectedLanguage=$response
-      referenceBranch="php/v2"
+      referenceBranch="origin/php/v2"
       break
       ;;
     esac
@@ -225,7 +225,7 @@ function initializeSolutionBranch() {
   resetTestCounter
 
   git checkout -b $solutionBranch $masterBranch > /dev/null
-  git log origin/$referenceBranch --pretty=tformat:'%h %s' --reverse -E HEAD.. | while read line
+  git log $referenceBranch --pretty=tformat:'%h %s' --reverse -E HEAD.. | while read line
       do pickCommitForSolution "$line"
   done
 
