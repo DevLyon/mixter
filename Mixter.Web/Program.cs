@@ -1,9 +1,17 @@
-﻿namespace Mixter.Web
+﻿using System;
+using Microsoft.Owin.Hosting;
+
+namespace Mixter.Web
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
+            using (WebApp.Start<Startup>("http://localhost:12345"))
+            {
+                Console.WriteLine("Server web démarré: http://localhost:12345");
+                Console.ReadLine();
+            }
         }
     }
 }
