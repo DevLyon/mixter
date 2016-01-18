@@ -49,7 +49,7 @@ function clean() {
   git branch -D $solutionBranch > /dev/null 2>&1
   git branch -D $workshopBranch > /dev/null 2>&1
 
-  git branch --list | grep -e '^\s*workshop-step[0-9]$' | xargs git branch -D > /dev/null 2>&1
+  git branch | grep -e '^\s*workshop-step[0-9]$' | xargs git branch -D > /dev/null 2>&1
   git tag --list | grep -e '^step[0-9]$' | xargs git tag -d > /dev/null 2>&1
   git tag --list | grep -e '^step[0-9]-test[0-9]$' | xargs git tag -d > /dev/null 2>&1
 }
