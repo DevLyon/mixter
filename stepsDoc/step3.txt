@@ -1,0 +1,54 @@
+========================
+===      STEP 3      ===
+===   Subscription   ===
+===    Aggregate     ===
+========================
+
+EventStorming : 
+
+       +---------------+         
+       | Unfollow user |         
+       +------+--------+--------+
+              | User unfollowed |
+              +-----------------+
+                                 
+       +--------------+          
+       | Subscription |          
+       +--------------+          
+                                 
++-------------+                  
+| Follow user |                  
++-----+-------+-------+          
+      | User followed |          
+      +---------------+          
+	   
+	   
+Event Sourcing Principle :
+                           
+   Aggregate                        
+  +------------------------------+  
+  |                              |  
+  | Commands +---------+  Events |  
++------------>         +-----+----->
+  |          | Decide  |     |   |  
+  |     +---->         |     |   |  
+  |     |    +---------+     |   |  
+  |     |                    |   |  
+  |     |    +---------+     |   |  
+  |     +----+ Apply   <-----+   |  
+  |     |    +---^-----+         |  
+  |     |        |               |  
+  |     +--------+               |  
+  |                              |  
+  +------------------------------+  
+
+  
+Subject :
+	  
+What we will learn
+ - Create a new aggregate (Subscription)
+ - Raise events from it : UserFollowed and UserUnfollowed
+ - Create a decision projection for it
+ - Implement replay of events (event sourced aggregate)
+
+In brief : C of CQRS + Event Sourcing

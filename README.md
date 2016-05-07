@@ -1,26 +1,16 @@
 Mixter
 ======
-Mixter is a project to discover CQRS/Event sourcing through koans in multiple
-languages.
+Mixter is a project to discover CQRS/Event sourcing through koans in multiple languages.
 
-At this point the koans have been ported to 4 languages: C#, Java 8, PHP and
-Javascript.
+At this point the koans have been ported to 4 languages: C#, Java 8, PHP and Javascript.
 
 Starting
 -------
 
-Checkout `Slide` branch, where you can find slides used for Mix-IT workshop.
-It explains the main steps and goals for each (only the title is in French ;)).
+1. Checkout `master` branch
+2. Execute `./run` script
 
-1. Choose a language and checkout `{language}-workshop`, for `java` that would be
-`java-workshop`.
-2. Implement the failing test
-3. merge and implement the next test : `{language}-test-{step}.{test number}` [1]
-
-[1] to see the list of available tags you can use `git tag -l | grep {language}`
-
-If you somehow get lost or stuck, you can `git merge {language}-solution-{step}`
-or `git checkout {language}-solution-{step}` and see what our solution looks like.
+Slide file explains the main steps and goals for each (only the title is in French ;)).
 
 Feedback is required
 --------------------
@@ -56,3 +46,34 @@ Any questions ?
 ---------------
 
 You can contact us through GitHub or on Twitter : @clem_bouillier, @florentpellet, @jeanhelou, @ouarzy.
+
+
+Add new languages
+---------
+If you want to fork with your preferred language, you only need to follow some rules.
+
+The KoanCli script is based on a naming convention in commit message.
+ * Failing tests should contain `[Test KO]`
+ * Resolving tests should contain `[Test OK]`
+
+Currently the KoanCli script isn't dynamic and tests number must be static to know the correspondence between a test and a step.
+Here number of tests per step:
+ * Step 1, delete command: 4 tests
+ * Step 2, timeline messages: 1 tests
+ * Step 3, subscription aggregate: 4 tests
+ * Step 4, aggregates interaction: 4 tests
+ * Step 5, command handler: 2 tests
+
+
+Changelog
+---------
+
+### V2
+ * Create KoanCli: no git knowledge required. You simply call run script to starting, and next to jump at next step. (#3)
+ * Remove reply message (#7)
+ * Rename publish to quack (#16)
+ * Fix several bug specific at languages (#15, #5, #4)
+
+### V1 (obsolete)
+First version, use during a Mix-IT workshop 2015 : http://www.mix-it.fr/session/1041/agilite-par-le-code-grace-a-cqrs-et-eventsourcing
+
