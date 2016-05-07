@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+
+		<title>Workshop CQRS & EventSourcing discovery - Slides</title>
+
+		<meta name="description" content="Workshop CQRS & EventSourcing discovery">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="slideResources/reveal.css">
+		<link rel="stylesheet" href="slideResources/black.css" id="theme">
+		<style>
+			.reveal .right {
+				text-align: right;
+			}
+			
+			.reveal .left {
+				text-align: left;
+			}
+			
+			.reveal .small {
+				font-size: 0.7em;
+			}
+			
+			.reveal .pictures {
+				display: inline-flex;
+				justify-content: space-between;
+				list-style-type: none;
+				text-align: center;
+				margin: 0;
+				width: 100%;
+				align-items: center;
+			}
+			
+			.reveal .bigPicture {
+				max-width: 80%;
+			}
+			
+			.reveal .legend {
+				position: absolute;
+				bottom: 0;
+				margin: 0;
+				width: 100%;
+				font-size: 0.7em;
+			}
+			
+			.reveal .learnStep {
+				line-height: 1.4em;
+				font-size: 0.7em;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h1>CQRS & EventSourcing discovery</h1>
+					<p>Workshop</p>
+					<br />
+					<p class="right small">Florent @florentpellet</p>
+					<p class="right small">Clément @clem_bouiller</p>
+					<p class="right small">Jean @jeanhelou</p>
+					<p class="right small">Emilien @ouarzy</p>
+				</section>
+				<section>
+					<h1>Who are we ?</h1>
+					<ul>
+						<li>4 passionate guys initiated this workshop in 2015</li>
+						<li>Feel free to give some feedback on GitHub</li>
+					</ul>
+					<ul class="pictures small" style="margin-top: 2em;">
+						<li>
+							<div><img src="slideResources/clement_bouillier.jpg" alt="Clément" /></div>
+							<div>Clément</div>
+							<div>@clem_bouiller</div>
+						</li>
+						<li>
+							<div><img src="slideResources/emilien_pecoul.jpg" alt="Emilien" /></div>
+							<div>Emilien</div>
+							<div>@ouarzy</div>
+						</li>
+						<li>
+							<div><img src="slideResources/florent_pellet.jpg" alt="Florent" /></div>
+							<div>Florent</div>
+							<div>@florentpellet</div>
+						</li>
+						<li>
+							<div><img src="slideResources/jean_helou.jpg" alt="Jean" /></div>
+							<div>Jean</div>
+							<div>@jeanhelou</div>
+						</li>
+					</ul>
+				</section>
+				<section>
+					<h2>CQRS Concept</h2>
+					<img class="bigPicture" src="slideResources/cqrs.png" alt="CQRS" />
+					<p class="right legend">Ref. "Conceptual CQRS" - Alberto Brandolini</p>
+				</section>
+				<section>
+					<h2>Event Sourcing Concept</h2>
+					<img class="bigPicture" src="slideResources/eventsourcing.jpg" alt="Event Sourcing" />
+					<p class="left legend">NB: DecisionProjection is also called State</p>
+					<p class="right legend">Ref. Jérémie Chassaing</p>
+				</section>
+				<section>
+					<h2>The new unicorn</h2>
+					<p>We’ll revolutionize the web!</p>
+					<p>We’ll create a product like Twitter but better ...</p>
+					<h4>A revolution!</h4>
+					<img src="slideResources/unicorn.jpg" alt="unicorn" />
+				</section>
+				<section>
+					<h2>Mixter</h2>
+					<p>Instead tweet...</p>
+					<p>we'll quack!</p>
+					<img src="slideResources/unicorn2.jpg" alt="unicorn" />
+				</section>
+				<section style="height: 90%">
+					<h2>Event Storming mixter</h2>
+					<img src="slideResources/eventstorming_prepa_2.jpg" alt="eventstorming 2" style="position: absolute;bottom: 1em;left: -1em;height: 8em;" />
+					<img src="slideResources/eventstorming_prepa_1.jpg" alt="eventstorming 1" style="position: absolute;top: 2.4em;left: 0;" />
+					<img src="slideResources/eventstorming_prepa_3.jpg" alt="eventstorming 3" style="position: absolute;bottom: 2em;top: 2em;" />
+					<img src="slideResources/eventstorming_prepa_4.jpg" alt="eventstorming 4" style="position: absolute;bottom: 0;right: -0.5em;width: 13em;" />
+					<p class="left legend">Ref. "Event Storming" - Alberto Brandolini</p>
+				</section>
+				<section data-background="url(slideResources/eventstorming.jpg) center center no-repeat fixed white" data-background-size="contain">
+				</section>
+				<section data-background="url(slideResources/eventstorming_workshop.jpg) center center no-repeat fixed white" data-background-size="contain">
+				</section>
+				<section>
+					<h2>Test Driven Workshop</h2>
+					<ul>
+						<li>Working in pairs</li>
+						<li>Execute "run" script and read instructions</li>
+						<br />
+						<li><span style="color: #ff2c2d">Red Test</span> => <span style="color: #98E04C">Green Test</span></li>
+						<br />
+						<li>
+							3 steps (+2 Bonus)
+							<ul>
+								<li><b>C</b>ommand DeleteMessage</li>
+								<li><b>Q</b>uery Timeline Message</li>
+								<li><b>E</b>vents in aggregate</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+				<section>
+					<h2>Focus on Core Domain</h2>
+					<ul>
+						<li>
+							Do not change
+							<ul>
+								<li>Tests code</li>
+								<li>Infrastructure code</li>
+							</ul>
+						</li>
+						<br />
+						<li>You can see Identity context implementation as example</li>
+					</ul>
+				</section>
+				<section>
+					<h2>GIT Repository</h2>
+					<p class="left">git clone https://github.com/DevLyon/mixter.git</p>
+					<p class="left">./run</p>
+					<br />
+					<p class="left">Slide : https://github.com/devlyon/mixter/raw/master/slide.pdf</p>
+				</section>
+				<section>
+					<h2>1. Delete Command</h2>
+					<p class="left">What we will learn :</p>
+					<ul class="learnStep">
+						<li>publish events from aggregate,</li>
+						<li>use projection for decision inside aggregate (contains only "state" for future decision, DO NOT keep all state like in an entity)</li>
+						<li>Implement "business rules" that insure aggregate consistency (based on decision projection and command=method parameters)</li>
+					</ul>
+					<p class="left"><b>In brief : the C of CQRS</b></p>
+					<ul class="pictures">
+						<li><img src="slideResources/step1_1.jpg" alt="eventstorming" /></li>
+						<li><img src="slideResources/step1_2.png" alt="cqrs" /></li>
+					</ul>
+				</section>
+				<section>
+					<h2>2. Timeline messages Projection</h2>
+					<p class="left">What we will learn :</p>
+					<ul class="learnStep">
+						<li>Create another model for Query (Projection, TimelineMessageProjection)</li>
+						<li>Transform events in a projection model through an EventHandler</li>
+						<li>A projection repository (in-memory) with its interface is given</li>
+					</ul>
+					<p class="left"><b>In brief : Q of CQRS</b></p>
+					<ul class="pictures">
+						<li><img src="slideResources/step2_1.jpg" alt="eventstorming" /></li>
+						<li><img src="slideResources/step2_2.png" alt="cqrs" /></li>
+					</ul>
+				</section>
+				<section>
+					<h2>3. Subscription Aggregate</h2>
+					<p class="left">What we will learn :</p>
+					<ul class="learnStep">
+						<li>Create a new aggregate (Subscription)</li>
+						<li>Raise events from it : UserFollowed and UserUnfollowed</li>
+						<li>Create a decision projection for it</li>
+						<li>Implement replay of events (event sourced aggregate)</li>
+					</ul>
+					<p class="left"><b>In brief : C of CQRS + Event Sourcing</b></p>
+					<ul class="pictures">
+						<li><img src="slideResources/step3_1.jpg" alt="eventstorming" /></li>
+						<li><img src="slideResources/step3_2.jpg" alt="eventsourcing" /></li>
+					</ul>
+				</section>
+				<section>
+					<h2>4. Aggregates interaction</h2>
+					<p class="left">What we will learn :</p>
+					<ul class="learnStep">
+						<li>Coordinate several aggregates to limit coupling</li>
+						<li>Concept of " Eventual consistency"</li>
+					</ul>
+					<ul class="pictures">
+						<li><img src="slideResources/step4.jpg" alt="eventstorming" /></li>
+					</ul>
+				</section>
+				<section>
+					<h2>5. Command Handler</h2>
+					<p class="left">What we will learn :</p>
+					<ul class="learnStep">
+						<li>Integrate previous code from Message & Identity contexts in a command</li>
+						<li>Write some web infrastructure code executing the command</li>
+					</ul>
+					<p class="small left">
+						=> Request Rest to execute delete Message command, with session validity verification<br />
+						NB : no tests for this step for now…
+					</p>
+					<ul class="pictures">
+						<li><img src="slideResources/step5.png" alt="cqrs" /></li>
+					</ul>
+				</section>
+				<section>
+					<h1>CQRS & EventSourcing discovery</h1>
+					<p>Thanks!</p>
+					<br />
+					<p class="right small">Florent @florentpellet</p>
+					<p class="right small">Clément @clem_bouiller</p>
+					<p class="right small">Jean @jeanhelou</p>
+					<p class="right small">Emilien @ouarzy</p>
+				</section>
+			</div>
+		</div>
+
+		<script src="slideResources/head.min.js"></script>
+		<script src="slideResources/reveal.min.js"></script>
+
+		<script>
+			Reveal.initialize({
+				history: true,
+				transition: 'convex'
+			});
+		</script>
+	</body>
+</html>
