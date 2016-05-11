@@ -22,7 +22,7 @@ function askLanguage() {
       ;;
     "csharp")
       selectedLanguage=$response
-      referenceBranch="origin/csharp/v2"
+      referenceBranch="origin/csharp/v2.1"
       break
       ;;
     "java")
