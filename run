@@ -27,7 +27,7 @@ function askLanguage() {
       ;;
     "java")
       selectedLanguage=$response
-      referenceBranch="origin/java/v2"
+      referenceBranch="origin/java/v2.1"
       break
       ;;
     "php")
