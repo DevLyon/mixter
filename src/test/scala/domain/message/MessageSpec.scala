@@ -1,7 +1,7 @@
 package domain.message
 
-import domain.SpyEventPublisher
-import domain.message.event.{MessageQuacked, MessageRequacked}
+import domain.{SpyEventPublisher}
+import domain.message.event.{MessageEvent, MessageQuacked, MessageRequacked}
 import org.scalatest.{Matchers, WordSpec}
 
 class MessageSpec extends WordSpec with Matchers {
@@ -26,10 +26,42 @@ class MessageSpec extends WordSpec with Matchers {
       val history = MessageQuacked(messageId, message, author)
       implicit val eventPublisher=new SpyEventPublisher()
 
-      Message(history).requack(requacker, author, message)
+      Message(history, List.empty).requack(requacker, author, message)
 
       val expected = MessageRequacked(messageId, requacker, author, message)
       eventPublisher.publishedEvents should contain theSameElementsAs Seq(expected)
+    }
+
+    "not raise MessageRequacked when requacked by its author" in {
+      val message="a message"
+      val author=UserId("john@example.com")
+      val requacker=author
+      val messageId = MessageId("id")
+      implicit val eventPublisher=new SpyEventPublisher()
+
+      val messageQuacked = MessageQuacked(messageId, message, author)
+      val history = List.empty[MessageEvent]
+
+
+      val requacked = Message(messageQuacked, history).requack(requacker,author, message)
+
+      eventPublisher.publishedEvents shouldBe empty
+    }
+    "not raise MessageRequacked when already requacked by requacker" in {
+      val message="a message"
+      val messageId = MessageId("id")
+      val author=UserId("john@example.com")
+      val requacker=UserId("jane@example.com")
+      implicit val eventPublisher=new SpyEventPublisher()
+
+      val messageQuacked = MessageQuacked(messageId, message, author)
+      val history:List[MessageEvent] = List(
+        MessageRequacked(messageId,requacker, author, message)
+      )
+
+      val requacked = Message(messageQuacked, history).requack(requacker, author, message)
+
+      eventPublisher.publishedEvents shouldBe empty
     }
   }
 }
