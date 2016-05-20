@@ -10,5 +10,10 @@ class UserIdSpec extends WordSpec with Matchers {
       val actualUserId = UserId.of(AN_EMAIL)
       actualUserId shouldBe Some(expectedUserId)
     }
+    "not be created from an empty email" in {
+      val expectedUserId = None
+      val actualUserId = UserId.of("")
+      actualUserId shouldBe expectedUserId
+    }
   }
 }
