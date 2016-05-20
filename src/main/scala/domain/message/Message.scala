@@ -1,6 +1,7 @@
 package domain.message
 
 import domain.EventPublisher
+import domain.identity.UserId
 import domain.message.event.{MessageEvent, MessageQuacked, MessageRequacked}
 import domain.message.Message.DecisionProjection
 
