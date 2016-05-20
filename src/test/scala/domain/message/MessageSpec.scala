@@ -1,6 +1,8 @@
 package domain.message
 
-import domain.{SpyEventPublisher}
+
+import domain.SpyEventPublisher
+import domain.identity.UserId
 import domain.message.event.{MessageEvent, MessageQuacked, MessageRequacked}
 import org.scalatest.{Matchers, WordSpec}
 
