@@ -9,8 +9,11 @@ Starting
 
 1. Checkout `master` branch
 2. Execute `./run` script
+3. You will have to make tests pass green, then to go to next test, execute `./next`
 
-Slide file explains the main steps and goals for each (only the title is in French ;)).
+See few slides on http://devlyon.fr/mixter, it explains the main steps and goals for each.
+
+You can view one solution for each language with a small Web API on branches [lang]-solution.
 
 Feedback is required
 --------------------
