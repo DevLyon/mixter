@@ -276,7 +276,7 @@ function initializeTestBranch(){
 	Write-Host "Done"
 }
 
-function InitializeWorkflow(){
+function initializeWorkflow(){
 	Write-Host "Initialize workspace"
 	
 	resetTestCounter
@@ -284,12 +284,20 @@ function InitializeWorkflow(){
 	git checkout -b $workshopBranch (getCurrentTestTag)
 }
 
+function customInitialize(){
+	if (Test-Path ./initialize.bat) {
+		& ./initialize.bat
+	}
+}
+
 $selectedLanguage = askLanguage
 
 clean
 initializeSolutionBranch $languages.$selectedLanguage
 initializeTestBranch
-InitializeWorkflow
+initializeWorkflow
+
+customInitialize
 
 Write-Host "Koan OK"
 Write-Host ""
