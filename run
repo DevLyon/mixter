@@ -355,6 +355,10 @@ function initializeWorkflow(){
   git checkout -b $workshopBranch $currentTestTag
 }
 
+function customInitialize(){
+  [ -f ./initialize ] && ./initialize
+}
+
 function displayWarningIfNotMaster(){
   currentBranchName="$(git name-rev --name-only HEAD)"
   if [[ $currentBranchName != "master" ]] 
@@ -376,6 +380,8 @@ clean
 initializeSolutionBranch
 initializeTestBranch
 initializeWorkflow
+
+customInitialize
 
 printf $MessageColor
 echo "Koan OK"
