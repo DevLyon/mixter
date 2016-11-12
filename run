@@ -355,8 +355,21 @@ function initializeWorkflow(){
   git checkout -b $workshopBranch $currentTestTag
 }
 
+function displayWarningIfNotMaster(){
+  currentBranchName="$(git name-rev --name-only HEAD)"
+  if [[ $currentBranchName != "master" ]] 
+  then
+    read -p "Are you sure you want to reinit everything? All your work will be lost! (y/N) : " response
+    case $response in
+      [Yy]* ) ;;
+      * ) exit;;
+    esac
+  fi
+}
+
 switchRunnerIfWindows
 
+displayWarningIfNotMaster
 askLanguage
 
 clean
