@@ -290,6 +290,18 @@ function customInitialize(){
 	}
 }
 
+function displayWarningIfNotMaster(){
+	$currentBranch = git name-rev --name-only HEAD
+	if($currentBranch -ne "master") {
+		$confirmation = Read-Host "Are you sure you want to reinit everything? All your work will be lost! (y/N)"
+		if ($confirmation.ToLower() -ne 'y') {
+			exit  
+		}
+	}
+}
+
+displayWarningIfNotMaster
+
 $selectedLanguage = askLanguage
 
 clean
