@@ -1,0 +1,8 @@
+#!/bin/bash
+
+sed -e
+
+xbuild ./Mixter.sln /verbosity:m
+
+mono ./packages/xunit.runner.console.2.1.0/tools/xunit.console.exe Mixter.Domain.Tests/bin/Debug/Mixter.Domain.Tests.dll Mixter.Infrastructure.Tests/bin/Debug/Mixter.Infrastructure.Tests.dll
+
