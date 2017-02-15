@@ -23,4 +23,11 @@ class SessionIdSpec extends WordSpec with Matchers {
       }
     }
   }
+  "Creating a session id" should{
+    "have a random default value" in {
+      val id1 = SessionId()
+      val id2 = SessionId()
+      id1 should not equal(id2)
+    }
+  }
 }
