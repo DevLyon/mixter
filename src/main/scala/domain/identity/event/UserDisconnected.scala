@@ -1,5 +1,6 @@
 package domain.identity.event
 
-class UserDisconnected {
+import domain.Event
+import domain.identity.{SessionId, UserId}
 
-}
+case class UserDisconnected(sessionId:SessionId, userId:UserId) extends Event
