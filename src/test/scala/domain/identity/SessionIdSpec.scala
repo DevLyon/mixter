@@ -17,5 +17,10 @@ class SessionIdSpec extends WordSpec with Matchers {
         SessionId("")
       }
     }
+    "raise an IllegalArgumentException when created from null" in {
+      an[IllegalArgumentException] should be thrownBy{
+        SessionId(null)
+      }
+    }
   }
 }
