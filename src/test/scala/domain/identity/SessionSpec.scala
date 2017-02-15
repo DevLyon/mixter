@@ -17,7 +17,7 @@ class SessionSpec extends WordSpec with Matchers {
       userIdentity.logIn()
 
       eventPublisher.publishedEvents should matchPattern {
-        case Seq(UserConnected(_:SessionId, USER_ID, _:LocalDateTime)) =>
+        case Seq(UserConnected(SessionId(_), USER_ID, _:LocalDateTime)) =>
       }
     }
   }
