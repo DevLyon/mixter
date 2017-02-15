@@ -1,3 +1,3 @@
 package domain.identity
 
-class SessionId()
+case class SessionId(value:String)

@@ -1,6 +1,7 @@
 package domain.identity
 
 import java.time.{LocalDateTime, ZoneOffset}
+import java.util.UUID
 
 import domain.EventPublisher
 import domain.identity.event.{UserConnected, UserRegistered}
@@ -9,8 +10,9 @@ case class UserIdentity(userRegistered: UserRegistered) {
   import UserIdentity._
 
   private val projection=DecisionProjection.of(userRegistered)
+
   def logIn()(implicit ep:EventPublisher):Unit= {
-    val sessionId = new SessionId()
+    val sessionId = SessionId(UUID.randomUUID().toString)
     ep.publish(UserConnected(sessionId, projection.userId, LocalDateTime.now(ZoneOffset.UTC)))
   }
 }
