@@ -22,6 +22,11 @@ class SessionIdSpec extends WordSpec with Matchers {
         SessionId(null)
       }
     }
+    "be serialized to its value" in {
+      val string="id"
+      val id1 = SessionId(string)
+      id1.toString should be(string)
+    }
   }
   "Creating a session id" should{
     "have a random default value" in {
