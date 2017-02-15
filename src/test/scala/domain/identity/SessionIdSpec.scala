@@ -11,4 +11,11 @@ class SessionIdSpec extends WordSpec with Matchers {
       id1 should equal(id2)
     }
   }
+  "A SessionId" should {
+    "raise an IllegalArgumentException when created from an empty string" in {
+      an[IllegalArgumentException] should be thrownBy{
+        SessionId("")
+      }
+    }
+  }
 }
