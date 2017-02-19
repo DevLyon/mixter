@@ -22,17 +22,31 @@ class SessionSpec extends WordSpec with Matchers {
       }
     }
   }
+  private val userConnected = UserConnected(SESSION_ID, USER_ID, LocalDateTime.now())
+  private val userDisconnected = UserDisconnected(SESSION_ID, USER_ID)
+
   "A session" should{
     "raise UserDisconnected when logging out" in {
       // Given
-      val session: Session= Session(UserConnected(SESSION_ID, USER_ID, LocalDateTime.now()))
+      val session: Session= Session(userConnected)
       implicit val eventPublisher=new SpyEventPublisher()
       // When
       session.logout()
       // Then
       eventPublisher.publishedEvents should matchPattern {
-        case Seq(UserDisconnected(SESSION_ID, USER_ID)) =>
+        case Seq(`userDisconnected`) =>
       }
+    }
+  }
+  "A disconnected session" should{
+    "not raise UserDisconnected when logging out" in {
+      // Given
+      val session: Session= Session(userConnected, Seq(userDisconnected))
+      implicit val eventPublisher=new SpyEventPublisher()
+      // When
+      session.logout()
+      // Then
+      eventPublisher.publishedEvents shouldBe empty
     }
   }
 }
