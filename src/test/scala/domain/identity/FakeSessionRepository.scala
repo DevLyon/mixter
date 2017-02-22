@@ -13,11 +13,15 @@ trait WithSessionRepository extends SuiteMixin { this: Suite =>
 }
 
 private[identity] class FakeSessionRepository() extends SessionRepository {
-  var sessions = Set.empty[SessionProjection]
+  var sessions = Map.empty[SessionId,SessionProjection]
 
   def getSessions:Set[SessionProjection] =
-    sessions
+    sessions.values.toSet
 
   override def save(sessionProjection: SessionProjection): Unit =
-    sessions+=sessionProjection
+    sessions+=sessionProjection.sessionId -> sessionProjection
+
+  override def replaceBy(sessionProjection: SessionProjection): Unit =
+    save(sessionProjection)
+
 }

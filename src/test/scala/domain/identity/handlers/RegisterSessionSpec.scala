@@ -3,7 +3,7 @@ package domain.identity.handlers
 import java.time.LocalDateTime
 
 import domain.identity._
-import domain.identity.event.UserConnected
+import domain.identity.event.{UserConnected, UserDisconnected}
 import org.scalatest._
 
 class RegisterSessionSpec extends WordSpec with Matchers with WithSessionRepository{
@@ -19,7 +19,17 @@ class RegisterSessionSpec extends WordSpec with Matchers with WithSessionReposit
       val sessionProjection = SessionProjection(userConnected.sessionId, userConnected.userId, SessionStatus.CONNECTED)
       sessionRepository.getSessions should contain only(sessionProjection)
     }
-  }
 
+    "save a disconnected SessionProjection when it receives UserDisconnected event" in withSessionRepository { sessionRepository =>
+      // Given
+      val userDisconnected = UserDisconnected(SessionId(), UserId("user@mixit.fr"))
+      val handler = new RegisterSession(sessionRepository)
+      // When
+      handler.apply(userDisconnected)
+      // Then
+      val sessionProjection = SessionProjection(userDisconnected.sessionId, userDisconnected.userId, SessionStatus.DISCONNECTED)
+      sessionRepository.getSessions should contain only(sessionProjection)
+    }
+  }
 
 }
