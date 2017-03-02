@@ -1,0 +1,3 @@
+package domain
+
+trait AggregateId
