@@ -1,6 +1,8 @@
 package domain.identity
 
-case class UserId(email: String)
+import domain.AggregateId
+
+case class UserId(email: String) extends AggregateId
 
 object UserId {
   def of(email: String): Option[UserId] =

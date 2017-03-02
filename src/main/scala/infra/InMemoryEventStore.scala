@@ -2,12 +2,12 @@ package infra
 import domain.{AggregateId, Event}
 
 private[infra] class InMemoryEventStore extends EventStore {
-  var events = Seq.empty[Event]
+  private var events = Map.empty[AggregateId, Seq[Event]].withDefaultValue(Seq.empty[Event])
 
   override def store(event: Event): Unit =
-    events = events :+ event
+    events = events + (event.id -> (events(event.id) :+ event))
 
-  override def eventsOfAggregate(aggregateId: AggregateId): Seq[Event] =
-    events
+  override def eventsOfAggregate(id: AggregateId): Seq[Event] =
+    events(id)
 
 }

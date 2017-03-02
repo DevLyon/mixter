@@ -11,7 +11,7 @@ object Session {
     }
   }
   private object DecisionProjection{
-    def of(userConnected: UserConnected)=DecisionProjection(userConnected.userId, userConnected.sessionId, active = true)
+    def of(userConnected: UserConnected)=DecisionProjection(userConnected.id, userConnected.sessionId, active = true)
   }
 }
 

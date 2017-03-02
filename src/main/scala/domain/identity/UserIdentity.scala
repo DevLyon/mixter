@@ -23,6 +23,6 @@ object UserIdentity {
   private case class DecisionProjection(userId: UserId)
 
   private object DecisionProjection{
-    def of(userRegistered: UserRegistered)=DecisionProjection(userRegistered.userId)
+    def of(userRegistered: UserRegistered)=DecisionProjection(userRegistered.id)
   }
 }
