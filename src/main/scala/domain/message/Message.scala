@@ -27,6 +27,6 @@ object Message {
     }
   }
   object DecisionProjection{
-    def of(messageQuacked: MessageQuacked) = DecisionProjection(messageQuacked.messageId, Set(messageQuacked.author))
+    def of(messageQuacked: MessageQuacked) = DecisionProjection(messageQuacked.id, Set(messageQuacked.author))
   }
 }
