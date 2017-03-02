@@ -26,9 +26,9 @@ class MessageSpec extends WordSpec with Matchers {
       val history = MessageQuacked(messageId, message, author)
       implicit val eventPublisher=new SpyEventPublisher()
 
-      Message(history).requack(requacker)
+      Message(history).requack(requacker, author, message)
 
-      val expected = MessageRequacked(messageId, requacker)
+      val expected = MessageRequacked(messageId, requacker, author, message)
       eventPublisher.publishedEvents should contain theSameElementsAs Seq(expected)
     }
   }

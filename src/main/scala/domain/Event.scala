@@ -1,0 +1,5 @@
+package domain
+
+trait Event {
+
+}

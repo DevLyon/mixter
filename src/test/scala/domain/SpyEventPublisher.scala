@@ -1,10 +1,8 @@
 package domain
 
-import domain.message.event.MessageQuacked
-
 class SpyEventPublisher extends EventPublisher {
-  var publishedEvents:Seq[MessageQuacked]=Seq.empty
-  override def publish(messageQuacked:MessageQuacked): Unit = {
-    publishedEvents = publishedEvents :+ messageQuacked
+  var publishedEvents:Seq[Event]=Seq.empty
+  override def publish(event:Event): Unit = {
+    publishedEvents = publishedEvents :+ event
   }
 }
