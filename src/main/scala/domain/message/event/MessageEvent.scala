@@ -5,5 +5,5 @@ import domain.identity.UserId
 import domain.message.MessageId
 
 sealed trait MessageEvent extends Event
-case class MessageQuacked(messageId:MessageId, message:String, author:UserId) extends MessageEvent
-case class MessageRequacked(messageId:MessageId,requacker: UserId, author: UserId, message:String) extends MessageEvent
+case class MessageQuacked(id:MessageId, message:String, author:UserId) extends MessageEvent
+case class MessageRequacked(id:MessageId,requacker: UserId, author: UserId, message:String) extends MessageEvent
