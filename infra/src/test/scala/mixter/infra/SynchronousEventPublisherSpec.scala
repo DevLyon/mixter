@@ -20,6 +20,24 @@ class SynchronousEventPublisherSpec extends WordSpec with Matchers {
      handler should haveBeenCalled
    }
  }
+ "A SyncrhonousEventPublisher with 2 registered handler" should {
+    "call both handlers when an event is published" in {
+      // Given
+      val handler1=new SpyEventHandler()
+      val handler2=new SpyEventHandler()
+      val publisher = new SynchronousEventPublisher()
+      val event = EventA(AnAggregateId("id"))
+      publisher.register[EventA](handler1)
+      publisher.register[EventA](handler2)
+
+      // When
+      publisher.publish(event)
+
+      // Then
+      handler1 should haveBeenCalled
+      handler2 should haveBeenCalled
+    }
+  }
   val haveBeenCalled= new Matcher[SpyEventHandler]{
     override def apply(left: SpyEventHandler): MatchResult = {
       MatchResult(
