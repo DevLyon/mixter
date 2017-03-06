@@ -81,6 +81,18 @@ class MessageSpec extends WordSpec with Matchers with SpyEventPublisherFixture{
       // Then
       eventPublisher.publishedEvents shouldBe empty
     }
+    "not raise a MessageRequacked event when it was previously deleted" in  withSpyEventPublisher { implicit eventPublisher =>
+      // Given
+      val history = A_MESSAGE_BY_JOHN
+      val message = Message(history, List(MessageDeleted(MESSAGE_ID)))
+
+      // When
+      message.requack(USERID_JANE, USERID_JOHN, A_MESSAGE)
+
+
+      // Then
+      eventPublisher.publishedEvents shouldBe empty
+    }
   }
   private val MESSAGE_ID = MessageId("id")
   private val USERID_JOHN = UserId("john@example.com")
@@ -88,10 +100,3 @@ class MessageSpec extends WordSpec with Matchers with SpyEventPublisherFixture{
   private val A_MESSAGE = "a message"
   private val A_MESSAGE_BY_JOHN = MessageQuacked(MESSAGE_ID, A_MESSAGE, USERID_JOHN)
 }
-
-
-
-
-
-
-
