@@ -20,7 +20,9 @@ case class Message(messageQuacked: MessageQuacked, events:Traversable[MessageEve
     }
 
   def delete(userId: UserId)(implicit ep:EventPublisher):Unit =
-    ep.publish(MessageDeleted(projection.messageId))
+    if(projection.authorId==userId){
+      ep.publish(MessageDeleted(projection.messageId))
+    }
 }
 
 object Message {
@@ -29,7 +31,7 @@ object Message {
   : Unit = {
     ep.publish(MessageQuacked(idGen(),message, author))
   }
-  case class DecisionProjection(messageId:MessageId, publishers:Set[UserId]){
+  case class DecisionProjection(messageId:MessageId, authorId:UserId, publishers:Set[UserId]){
     def apply(messageEvent:MessageEvent):DecisionProjection = messageEvent match {
       case MessageRequacked(_,requacker, _, _)=> copy(publishers=publishers+requacker)
       case MessageDeleted(_) => this // effectless for now
@@ -37,6 +39,6 @@ object Message {
     }
   }
   object DecisionProjection{
-    def of(messageQuacked: MessageQuacked) = DecisionProjection(messageQuacked.id, Set(messageQuacked.author))
+    def of(messageQuacked: MessageQuacked) = DecisionProjection(messageQuacked.id, messageQuacked.author, Set(messageQuacked.author))
   }
 }
