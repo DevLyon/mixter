@@ -70,6 +70,17 @@ class MessageSpec extends WordSpec with Matchers with SpyEventPublisherFixture{
       // Then
       eventPublisher.publishedEvents shouldBe empty
     }
+    "not raise a MessageDeleted event when deleted by its author a second time" in withSpyEventPublisher { implicit eventPublisher=>
+      // Given
+      val history = A_MESSAGE_BY_JOHN
+      val message = Message(history, List(MessageDeleted(MESSAGE_ID)))
+
+      // When
+      message.delete(USERID_JOHN)
+
+      // Then
+      eventPublisher.publishedEvents shouldBe empty
+    }
   }
   private val MESSAGE_ID = MessageId("id")
   private val USERID_JOHN = UserId("john@example.com")
