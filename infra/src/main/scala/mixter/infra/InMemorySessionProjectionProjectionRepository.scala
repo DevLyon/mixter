@@ -1,8 +1,8 @@
 package mixter.infra
 
-import mixter.domain.identity.{SessionId, SessionProjection, SessionRepository, SessionStatus}
+import mixter.domain.identity.{SessionId, SessionProjection, SessionProjectionRepository, SessionStatus}
 
-class InMemorySessionProjectionRepository extends SessionRepository{
+class InMemorySessionProjectionProjectionRepository extends SessionProjectionRepository{
   var sessions = Map.empty[SessionId,SessionProjection]
 
   override def save(sessionProjection: SessionProjection): Unit =
