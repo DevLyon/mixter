@@ -1,71 +1,58 @@
 package mixter.domain.message
 
 
-import mixter.domain.SpyEventPublisher
+import mixter.domain.SpyEventPublisherFixture
 import mixter.domain.identity.UserId
 import mixter.domain.message.event.{MessageEvent, MessageQuacked, MessageRequacked}
 import org.scalatest.{Matchers, WordSpec}
 
-class MessageSpec extends WordSpec with Matchers {
+class MessageSpec extends WordSpec with Matchers with SpyEventPublisherFixture{
   "Message" should{
-    "raise MessageQuacked when quacked" in {
-      val message="a message"
-      val author=UserId("john@example.com")
-      val eventPublisher=new SpyEventPublisher()
-      val expectedId = MessageId("id")
-      val messageIdGen = () => expectedId
+    "raise MessageQuacked when quacked" in withSpyEventPublisher { implicit eventPublisher=>
+      val author=USERID_JOHN
+      val messageIdGen = () => MESSAGE_ID
 
-      Message.quack(message, author)(messageIdGen, eventPublisher)
+      Message.quack(A_MESSAGE, author)(messageIdGen, eventPublisher)
 
-      val expected = MessageQuacked(expectedId, message, author)
+      val expected = MessageQuacked(MESSAGE_ID, A_MESSAGE, author)
       eventPublisher.publishedEvents should contain theSameElementsAs Seq(expected)
     }
-    "raise MessageRequacked when requacked" in {
-      val message="a message"
-      val author=UserId("john@example.com")
-      val requacker=UserId("jane@example.com")
-      val messageId = MessageId("id")
-      val history = MessageQuacked(messageId, message, author)
-      implicit val eventPublisher=new SpyEventPublisher()
+    "raise MessageRequacked when requacked" in withSpyEventPublisher { implicit eventPublisher=>
+      val requacker=USERID_JANE
+      val history = A_MESSAGE_BY_JOHN
 
-      Message(history, List.empty).requack(requacker, author, message)
+      Message(history, List.empty).requack(requacker, USERID_JOHN, A_MESSAGE)
 
-      val expected = MessageRequacked(messageId, requacker, author, message)
+      val expected = MessageRequacked(MESSAGE_ID, requacker, USERID_JOHN, A_MESSAGE)
       eventPublisher.publishedEvents should contain theSameElementsAs Seq(expected)
     }
 
-    "not raise MessageRequacked when requacked by its author" in {
-      val message="a message"
-      val author=UserId("john@example.com")
-      val requacker=author
-      val messageId = MessageId("id")
-      implicit val eventPublisher=new SpyEventPublisher()
-
-      val messageQuacked = MessageQuacked(messageId, message, author)
+    "not raise MessageRequacked when requacked by its author" in withSpyEventPublisher { implicit eventPublisher=>
+      val messageQuacked = A_MESSAGE_BY_JOHN
       val history = List.empty[MessageEvent]
 
-
-      val requacked = Message(messageQuacked, history).requack(requacker,author, message)
+      Message(messageQuacked, history).requack(USERID_JOHN,USERID_JOHN, A_MESSAGE)
 
       eventPublisher.publishedEvents shouldBe empty
     }
-    "not raise MessageRequacked when already requacked by requacker" in {
-      val message="a message"
-      val messageId = MessageId("id")
-      val author=UserId("john@example.com")
-      val requacker=UserId("jane@example.com")
-      implicit val eventPublisher=new SpyEventPublisher()
+    "not raise MessageRequacked when already requacked by requacker" in withSpyEventPublisher { implicit eventPublisher=>
+      val requacker=USERID_JANE
 
-      val messageQuacked = MessageQuacked(messageId, message, author)
+      val messageQuacked = A_MESSAGE_BY_JOHN
       val history:List[MessageEvent] = List(
-        MessageRequacked(messageId,requacker, author, message)
+        MessageRequacked(MESSAGE_ID,requacker, USERID_JOHN, A_MESSAGE)
       )
 
-      val requacked = Message(messageQuacked, history).requack(requacker, author, message)
+      Message(messageQuacked, history).requack(requacker, USERID_JOHN, A_MESSAGE)
 
       eventPublisher.publishedEvents shouldBe empty
     }
   }
+  private val MESSAGE_ID = MessageId("id")
+  private val USERID_JOHN = UserId("john@example.com")
+  private val USERID_JANE = UserId("jane@example.com")
+  private val A_MESSAGE = "a message"
+  private val A_MESSAGE_BY_JOHN = MessageQuacked(MESSAGE_ID, A_MESSAGE, USERID_JOHN)
 }
 
 
