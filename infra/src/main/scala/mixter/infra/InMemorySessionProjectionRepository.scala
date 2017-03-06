@@ -3,9 +3,13 @@ package mixter.infra
 import mixter.domain.identity.{SessionId, SessionProjection, SessionRepository}
 
 class InMemorySessionProjectionRepository extends SessionRepository{
-  override def save(sessionProjection: SessionProjection): Unit = ???
+  var sessions = Map.empty[SessionId,SessionProjection]
 
-  override def replaceBy(sessionProjection: SessionProjection): Unit = ???
+  override def save(sessionProjection: SessionProjection): Unit =
+    sessions+=sessionProjection.sessionId -> sessionProjection
 
-  override def getById(id: SessionId): Option[SessionProjection] = None
+  override def replaceBy(sessionProjection: SessionProjection): Unit = Unit
+
+  override def getById(id: SessionId): Option[SessionProjection] =
+    sessions.get(id)
 }
