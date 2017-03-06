@@ -60,6 +60,17 @@ class MessageSpec extends AnyWordSpec with Matchers with SpyEventPublisherFixtur
       val expected = MessageDeleted(MESSAGE_ID)
       eventPublisher.publishedEvents should contain theSameElementsAs Seq(expected)
     }
+    "not raise a MessageDeleted event when it is deleted by someone who isn't its author" in withSpyEventPublisher { implicit eventPublisher =>
+      // Given
+      val history = A_MESSAGE_BY_JOHN
+      val message = Message(history, List.empty)
+
+      // When
+      message.delete(USERID_JANE)
+
+      // Then
+      eventPublisher.publishedEvents shouldBe empty
+    }
   }
   private val MESSAGE_ID = MessageId("id")
   private val USERID_JOHN = UserId("john@example.com")
