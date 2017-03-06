@@ -8,7 +8,7 @@ import org.scalatest.wordspec.AnyWordSpec
 class InMemorySessionProjectionRepositorySpec extends AnyWordSpec with Matchers {
   "An empty in memory SessionProjectionRepository" should {
     "return an empty option when getting a session projection by id " in {
-      val repository = new InMemorySessionProjectionRepository()
+      val repository = new InMemorySessionProjectionProjectionRepository()
       val sessionId:SessionId = SessionId()
       val actual:Option[SessionProjection] = repository.getById(sessionId)
 
@@ -20,7 +20,7 @@ class InMemorySessionProjectionRepositorySpec extends AnyWordSpec with Matchers 
       //Given
       val sessionId:SessionId = SessionId()
       val sessionProjection = SessionProjection(sessionId, UserId("user@example.localhost"))
-      val repository = new InMemorySessionProjectionRepository()
+      val repository = new InMemorySessionProjectionProjectionRepository()
       repository.save(sessionProjection)
 
       //When
@@ -35,7 +35,7 @@ class InMemorySessionProjectionRepositorySpec extends AnyWordSpec with Matchers 
       val sessionId:SessionId = SessionId()
       val disconnected = SessionProjection(sessionId, UserId("user@example.localhost"), SessionStatus.DISCONNECTED)
       val connected = SessionProjection(sessionId, UserId("user@example.localhost"), SessionStatus.CONNECTED)
-      val repository = new InMemorySessionProjectionRepository()
+      val repository = new InMemorySessionProjectionProjectionRepository()
       repository.save(disconnected)
 
       //When
@@ -50,7 +50,7 @@ class InMemorySessionProjectionRepositorySpec extends AnyWordSpec with Matchers 
       //Given
       val sessionId:SessionId = SessionId()
       val sessionProjection = SessionProjection(sessionId, UserId("user@example.localhost"), SessionStatus.DISCONNECTED)
-      val repository = new InMemorySessionProjectionRepository()
+      val repository = new InMemorySessionProjectionProjectionRepository()
       repository.save(sessionProjection)
 
       //When

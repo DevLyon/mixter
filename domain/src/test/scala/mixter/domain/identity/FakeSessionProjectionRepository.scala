@@ -4,15 +4,15 @@ import org.scalatest.{Suite, SuiteMixin}
 
 
 trait WithSessionRepository extends SuiteMixin { this: Suite =>
-  def withSessionRepository(test: FakeSessionRepository=>Any): Any = {
-    val sessionRepository = new FakeSessionRepository()
+  def withSessionRepository(test: FakeSessionProjectionRepository=>Any): Any = {
+    val sessionRepository = new FakeSessionProjectionRepository()
     test(sessionRepository)
   }
 
 
 }
 
-private[identity] class FakeSessionRepository() extends SessionRepository {
+private[identity] class FakeSessionProjectionRepository() extends SessionProjectionRepository {
   var sessions = Map.empty[SessionId,SessionProjection]
 
   def getSessions:Set[SessionProjection] =

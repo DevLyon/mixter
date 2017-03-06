@@ -1,15 +1,15 @@
 package mixter.domain.identity.handlers
 
 import mixter.domain.identity.event.{UserConnected, UserDisconnected}
-import mixter.domain.identity.{SessionProjection, SessionRepository, SessionStatus}
+import mixter.domain.identity.{SessionProjection, SessionProjectionRepository, SessionStatus}
 
-class RegisterSession(sessionRepository:SessionRepository){
+class RegisterSession(repository:SessionProjectionRepository){
   def apply(event: UserConnected):Unit = {
     val projection = SessionProjection(event.sessionId,  event.id, SessionStatus.CONNECTED)
-    sessionRepository.save(projection)
+    repository.save(projection)
   }
   def apply(event: UserDisconnected):Unit = {
     val projection = SessionProjection(event.sessionId,  event.id, SessionStatus.DISCONNECTED)
-    sessionRepository.replaceBy(projection)
+    repository.replaceBy(projection)
   }
 }
