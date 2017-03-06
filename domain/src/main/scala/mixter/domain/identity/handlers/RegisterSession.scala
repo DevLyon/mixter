@@ -9,7 +9,7 @@ class RegisterSession(repository:SessionProjectionRepository){
     repository.save(projection)
   }
   def apply(event: UserDisconnected):Unit = {
-    val projection = SessionProjection(event.sessionId,  event.id, SessionStatus.DISCONNECTED)
+    val projection = SessionProjection(event.sessionId,  event.userId, SessionStatus.DISCONNECTED)
     repository.replaceBy(projection)
   }
 }

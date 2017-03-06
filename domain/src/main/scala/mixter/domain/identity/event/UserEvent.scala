@@ -6,9 +6,11 @@ import mixter.domain.identity.{SessionId, UserId}
 import mixter.domain.{AggregateId, Event}
 
 sealed trait UserEvent extends Event
-case class UserRegistered(id: UserId) extends UserEvent{}
+case class UserRegistered(id: UserId) extends UserEvent
 sealed trait UserSessionEvent extends UserEvent
 case class UserConnected(sessionId: SessionId, userId: UserId, since: LocalDateTime) extends UserSessionEvent{
   override def id: AggregateId = sessionId
 }
-case class UserDisconnected(sessionId:SessionId, id:UserId) extends UserSessionEvent
+case class UserDisconnected(sessionId:SessionId, userId:UserId) extends UserSessionEvent{
+  override def id: AggregateId = sessionId
+}
