@@ -24,4 +24,5 @@ private[identity] class FakeSessionRepository() extends SessionRepository {
   override def replaceBy(sessionProjection: SessionProjection): Unit =
     save(sessionProjection)
 
+  override def getById(id: SessionId): Option[SessionProjection] = sessions.get(id)
 }
