@@ -90,7 +90,6 @@ class MessageSpec extends AnyWordSpec with Matchers with SpyEventPublisherFixtur
       // When
       message.requack(USERID_JANE, USERID_JOHN, A_MESSAGE)
 
-
       // Then
       eventPublisher.publishedEvents shouldBe empty
     }
