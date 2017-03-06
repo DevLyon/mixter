@@ -27,7 +27,7 @@ class RegisterSessionSpec extends WordSpec with Matchers with WithSessionReposit
       // When
       handler.apply(userDisconnected)
       // Then
-      val sessionProjection = SessionProjection(userDisconnected.sessionId, userDisconnected.id, SessionStatus.DISCONNECTED)
+      val sessionProjection = SessionProjection(userDisconnected.sessionId, userDisconnected.userId, SessionStatus.DISCONNECTED)
       sessionRepository.getSessions should contain only(sessionProjection)
     }
   }
