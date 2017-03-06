@@ -2,10 +2,11 @@ package mixter.domain.message
 
 import mixter.domain.identity.UserId
 import mixter.domain.message.Message.DecisionProjection
-import mixter.domain.message.event.{MessageEvent, MessageQuacked, MessageRequacked}
+import mixter.domain.message.event.{MessageDeleted, MessageEvent, MessageQuacked, MessageRequacked}
 import mixter.domain.{Aggregate, EventPublisher}
 
 case class Message(messageQuacked: MessageQuacked, events:Traversable[MessageEvent]) extends Aggregate {
+
 
   override type Id = MessageId
   override type AggregateEvent = MessageEvent
@@ -17,6 +18,9 @@ case class Message(messageQuacked: MessageQuacked, events:Traversable[MessageEve
     if(!projection.publishers.contains(requacker)){
       ep.publish(MessageRequacked(projection.messageId,requacker, authorId, message))
     }
+
+  def delete(userId: UserId)(implicit ep:EventPublisher):Unit =
+    ep.publish(MessageDeleted(projection.messageId))
 }
 
 object Message {
@@ -28,7 +32,8 @@ object Message {
   case class DecisionProjection(messageId:MessageId, publishers:Set[UserId]){
     def apply(messageEvent:MessageEvent):DecisionProjection = messageEvent match {
       case MessageRequacked(_,requacker, _, _)=> copy(publishers=publishers+requacker)
-      case MessageQuacked(_,_,_) => this// invalid, a message can only be requacked once
+      case MessageDeleted(_) => this // effectless for now
+      case MessageQuacked(_,_,_) => this // invalid, a message can only be requacked once
     }
   }
   object DecisionProjection{
