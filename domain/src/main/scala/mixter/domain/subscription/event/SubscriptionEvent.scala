@@ -7,3 +7,6 @@ sealed trait SubscriptionEvent extends Event
 case class UserFollowed(subscriptionId: SubscriptionId) extends SubscriptionEvent{
   override def id: AggregateId = subscriptionId
 }
+case class UserUnfollowed(subscriptionId: SubscriptionId) extends SubscriptionEvent{
+  override def id: AggregateId = subscriptionId
+}
