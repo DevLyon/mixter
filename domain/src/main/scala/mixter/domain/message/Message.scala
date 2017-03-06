@@ -14,7 +14,7 @@ case class Message(messageQuacked: MessageQuacked, events:Traversable[MessageEve
   private val projection = events.foldLeft(DecisionProjection.of(messageQuacked))((acc,event)=> acc(event))
 
   def requack(requacker: UserId, authorId:UserId, message:String)(implicit ep:EventPublisher): Unit =
-    if(!projection.publishers.contains(requacker)){
+    if(!projection.publishers.contains(requacker) && !projection.deleted){
       ep.publish(MessageRequacked(projection.messageId,requacker, authorId, message))
     }
 
