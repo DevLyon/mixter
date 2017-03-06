@@ -1,11 +1,16 @@
 package mixter.domain.message
 
-import mixter.domain.EventPublisher
 import mixter.domain.identity.UserId
-import mixter.domain.message.event.{MessageEvent, MessageQuacked, MessageRequacked}
 import mixter.domain.message.Message.DecisionProjection
+import mixter.domain.message.event.{MessageEvent, MessageQuacked, MessageRequacked}
+import mixter.domain.{Aggregate, EventPublisher}
 
-case class Message(messageQuacked: MessageQuacked, events:Traversable[MessageEvent]) {
+case class Message(messageQuacked: MessageQuacked, events:Traversable[MessageEvent]) extends Aggregate {
+
+  override type Id = MessageId
+  override type AggregateEvent = MessageEvent
+  override type InitialEvent = MessageQuacked
+
   private val projection = events.foldLeft(DecisionProjection.of(messageQuacked))((acc,event)=> acc(event))
 
   def requack(requacker: UserId, authorId:UserId, message:String)(implicit ep:EventPublisher): Unit =
