@@ -14,7 +14,7 @@ class InMemorySessionProjectionRepositorySpec extends WordSpec with Matchers {
       actual should be(None)
     }
   }
-  "An memory SessionProjectionRepository with a saved SessionProjection" should {
+  "An in memory SessionProjectionRepository with a saved SessionProjection" should {
     "return the saved SessionProjection when getting a session projection by its id " in {
       //Given
       val sessionId:SessionId = SessionId()
@@ -28,8 +28,7 @@ class InMemorySessionProjectionRepositorySpec extends WordSpec with Matchers {
       //Then
       actual.value should be(sessionProjection)
     }
-  }
-  "A SessionProjectionRepository with a saved SessionProjection" should {
+
     "return the updated SessionProjection after it is replaced by an updated projection" in {
       //Given
       val sessionId:SessionId = SessionId()
@@ -43,6 +42,21 @@ class InMemorySessionProjectionRepositorySpec extends WordSpec with Matchers {
 
       //Then
       repository.getById(sessionId).value should be(connected)
+    }
+  }
+  "An in memory SessionProjectionRepository with a saved disconnected SessionProjection" should {
+    "return an empty option when getting the session projection by id" in {
+      //Given
+      val sessionId:SessionId = SessionId()
+      val sessionProjection = SessionProjection(sessionId, UserId("user@example.localhost"), SessionStatus.DISCONNECTED)
+      val repository = new InMemorySessionProjectionRepository()
+      repository.save(sessionProjection)
+
+      //When
+      val actual:Option[SessionProjection] = repository.getById(sessionId)
+
+      //Then
+      actual should be(None)
     }
   }
 }
