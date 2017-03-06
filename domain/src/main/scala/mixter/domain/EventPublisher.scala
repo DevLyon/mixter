@@ -1,5 +1,5 @@
 package mixter.domain
 
 trait EventPublisher {
-  def publish(messageQuacked:Event): Unit
+  def publish[T<:Event](event:T): Unit
 }
