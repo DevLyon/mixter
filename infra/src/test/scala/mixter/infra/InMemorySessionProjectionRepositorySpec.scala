@@ -1,6 +1,6 @@
 package mixter.infra
 
-import mixter.domain.identity.{SessionId, SessionProjection, UserId}
+import mixter.domain.identity.{SessionId, SessionProjection, SessionStatus, UserId}
 import org.scalatest.OptionValues._
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -28,6 +28,22 @@ class InMemorySessionProjectionRepositorySpec extends AnyWordSpec with Matchers 
 
       //Then
       actual.value should be(sessionProjection)
+    }
+  }
+  "A SessionProjectionRepository with a saved SessionProjection" should {
+    "return the updated SessionProjection after it is replaced by an updated projection" in {
+      //Given
+      val sessionId:SessionId = SessionId()
+      val disconnected = SessionProjection(sessionId, UserId("user@example.localhost"), SessionStatus.DISCONNECTED)
+      val connected = SessionProjection(sessionId, UserId("user@example.localhost"), SessionStatus.CONNECTED)
+      val repository = new InMemorySessionProjectionRepository()
+      repository.save(disconnected)
+
+      //When
+      repository.replaceBy(connected)
+
+      //Then
+      repository.getById(sessionId).value should be(connected)
     }
   }
 }
