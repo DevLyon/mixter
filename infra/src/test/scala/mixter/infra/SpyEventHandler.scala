@@ -1,9 +1,11 @@
 package mixter.infra
 
-class SpyEventHandler extends (EventA => Unit) {
+import mixter.domain.Event
+
+class SpyEventHandler[T<:Event] extends (T => Unit) {
   private var called: Boolean = false
 
-  def apply(event: EventA): Unit = {
+  def apply(event: T): Unit = {
     called = true
   }
 
