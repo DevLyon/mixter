@@ -3,7 +3,7 @@ package mixter.domain.message
 
 import mixter.domain.SpyEventPublisherFixture
 import mixter.domain.identity.UserId
-import mixter.domain.message.event.{MessageEvent, MessageQuacked, MessageRequacked}
+import mixter.domain.message.event.{MessageDeleted, MessageEvent, MessageQuacked, MessageRequacked}
 import org.scalatest.{Matchers, WordSpec}
 
 class MessageSpec extends WordSpec with Matchers with SpyEventPublisherFixture{
@@ -46,6 +46,18 @@ class MessageSpec extends WordSpec with Matchers with SpyEventPublisherFixture{
       Message(messageQuacked, history).requack(requacker, USERID_JOHN, A_MESSAGE)
 
       eventPublisher.publishedEvents shouldBe empty
+    }
+    "raise a MessageDeleted event when it is deleted by its author" in withSpyEventPublisher{ implicit eventPublisher=>
+      // Given
+      val history = A_MESSAGE_BY_JOHN
+      val message = Message(history, List.empty)
+
+      // When
+      message.delete(USERID_JOHN)
+
+      // Then
+      val expected = MessageDeleted(MESSAGE_ID)
+      eventPublisher.publishedEvents should contain theSameElementsAs Seq(expected)
     }
   }
   private val MESSAGE_ID = MessageId("id")
