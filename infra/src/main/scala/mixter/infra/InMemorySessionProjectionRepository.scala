@@ -1,6 +1,6 @@
 package mixter.infra
 
-import mixter.domain.identity.{SessionId, SessionProjection, SessionRepository}
+import mixter.domain.identity.{SessionId, SessionProjection, SessionRepository, SessionStatus}
 
 class InMemorySessionProjectionRepository extends SessionRepository{
   var sessions = Map.empty[SessionId,SessionProjection]
@@ -12,5 +12,5 @@ class InMemorySessionProjectionRepository extends SessionRepository{
     save(sessionProjection)
 
   override def getById(id: SessionId): Option[SessionProjection] =
-    sessions.get(id)
+    sessions.get(id).filterNot(_.status==SessionStatus.DISCONNECTED)
 }
