@@ -6,5 +6,6 @@ class PersistingEventPublisher(eventStore: EventStore, eventPublisher: EventPubl
 
   override def publish[T <: Event](event: T): Unit = {
     eventStore.store(event)
+    eventPublisher.publish(event)
   }
 }
