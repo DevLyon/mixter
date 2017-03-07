@@ -2,15 +2,21 @@ package mixter.domain.subscription
 
 import mixter.domain.EventPublisher
 import mixter.domain.identity.UserId
-import mixter.domain.subscription.event.{UserFollowed, UserUnfollowed}
+import mixter.domain.message.MessageId
+import mixter.domain.subscription.event.{FolloweeMessageQuacked, UserFollowed, UserUnfollowed}
 
 
 case class Subscription(initialEvent:UserFollowed) {
+
   import Subscription._
   private val projection = DecisionProjection.of(initialEvent)
 
   def unfollow()(implicit ep:EventPublisher):Unit = {
     ep.publish(UserUnfollowed(projection.subscriptionId))
+  }
+
+  def notifyFollower(messageId: MessageId)(implicit ep:EventPublisher):Unit = {
+    ep.publish(FolloweeMessageQuacked(projection.subscriptionId, messageId))
   }
 }
 
