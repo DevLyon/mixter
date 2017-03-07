@@ -1,7 +1,7 @@
 package mixter.domain.message.handlers
 
 import mixter.domain.identity.UserId
-import mixter.domain.message.event.MessageQuacked
+import mixter.domain.message.event.{MessageDeleted, MessageQuacked}
 import mixter.domain.message.{MessageId, TimelineMessageProjection}
 import org.scalatest.{Matchers, WordSpec}
 
@@ -18,6 +18,19 @@ class UpdateTimelineSpec extends WordSpec with Matchers with TimelineMessageRepo
 
       // Then
       timelineRepository.getMessages should contain theSameElementsAs Seq(TimelineMessageProjection(AUTHOR_ID, AUTHOR_ID, CONTENT, messageId))
+    }
+    "remove all TimelineMessageProjection for the message id when it receives a MessageDeleted" in withTimelineMessageRepository { timelineRepository =>
+      // Given
+      val messageId = MessageId.generate
+      val messageQuacked = MessageQuacked(messageId, CONTENT, AUTHOR_ID)
+      val messageDeleted= MessageDeleted(messageId)
+      val handler = new UpdateTimeline(timelineRepository)
+      handler(messageQuacked)
+
+      // When
+      handler(messageDeleted)
+      // Then
+      timelineRepository.deletedMessageIds should contain only messageId
     }
   }
 
