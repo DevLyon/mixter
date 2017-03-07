@@ -38,6 +38,16 @@ class SubscriptionSpec extends WordSpec with Matchers with SpyEventPublisherFixt
       val expected = FolloweeMessageQuacked(SUBSCRIPTION_ID, messageId)
       eventPublisher.publishedEvents should contain only expected
     }
+    "not raise FolloweeMessageQuacked when notifying a follower who unfollowed" in withSpyEventPublisher { implicit eventPublisher =>
+      //Given
+      val subscription = Subscription(UserFollowed(SUBSCRIPTION_ID), Seq(UserUnfollowed(SUBSCRIPTION_ID)))
+      val messageId = MessageId.generate()
+      //When
+      subscription.notifyFollower(messageId)
+      //Then
+
+      eventPublisher.publishedEvents shouldBe empty
+    }
   }
   private val FOLLOWER = UserId("follower@example.localhost")
   private val FOLLOWEE = UserId("followee@example.localhost")
