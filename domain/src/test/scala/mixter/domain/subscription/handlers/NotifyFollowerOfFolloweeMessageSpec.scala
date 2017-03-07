@@ -17,7 +17,7 @@ class NotifyFollowerOfFolloweeMessageSpec extends WordSpec with Matchers with Su
         // Given
         subscriptionRepository.add(Subscription(UserFollowed(ASubscriptionId)))
         followerRepository.saveFollower(AuthorId, AFollowerId)
-        val handler = new NotifyFollowerOfFolloweeMessage(followerRepository, subscriptionRepository, eventPublisher)
+        val handler = new NotifyFollowerOfFolloweeMessage(followerRepository, subscriptionRepository)(eventPublisher)
         val messageQuacked = MessageQuacked(AMessageId, Content, AuthorId)
 
         // When
