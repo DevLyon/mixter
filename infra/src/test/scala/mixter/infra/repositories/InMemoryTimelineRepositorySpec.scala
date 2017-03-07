@@ -42,7 +42,20 @@ class InMemoryTimelineRepositorySpec extends AnyWordSpec with Matchers {
 
       messages should contain theSameElementsAs Seq(timelineProjection)
     }
+
+    "delete a message for all users when a message is deleted" in {
+      val repository = new InMemoryTimelineRepository()
+      val messageId=MessageId.generate()
+      repository.save(TimelineMessageProjection(OwnerId, AuthorId, "Hello", messageId))
+      repository.save(TimelineMessageProjection(AliceId, AuthorId, "Hello", messageId))
+
+      repository.delete(messageId)
+
+      repository.getMessageOfUser(OwnerId) shouldBe empty
+      repository.getMessageOfUser(AliceId) shouldBe empty
+    }
   }
+
   private val OwnerId = UserId("owner@example.localhost")
   private val AuthorId = UserId("author@example.localhost")
   private val AliceId = UserId("alice@example.localhost")
