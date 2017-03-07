@@ -1,6 +1,8 @@
 package mixter.domain.subscription.handlers
 
 import mixter.domain.EventPublisher
+import mixter.domain.identity.UserId
+import mixter.domain.message.MessageId
 import mixter.domain.message.event.{MessageQuacked, MessageRequacked}
 import mixter.domain.subscription.{FollowerRepository, SubscriptionId, SubscriptionRepository}
 
@@ -8,17 +10,18 @@ class NotifyFollowerOfFolloweeMessage(followerRepository: FollowerRepository,
                                       subscriptionRepository: SubscriptionRepository
                                      )(implicit val ep: EventPublisher) {
 
-  def apply(messageQuacked: MessageQuacked): Unit = {
-    for {
-      follower <- followerRepository.getFollowers(messageQuacked.author)
-      subscription <- subscriptionRepository.getById(SubscriptionId(follower, messageQuacked.author))
-    } subscription.notifyFollower(messageQuacked.id)
-  }
-  def apply(messageRequacked: MessageRequacked): Unit = {
-    for {
-      follower <- followerRepository.getFollowers(messageRequacked.requacker)
-      subscription <- subscriptionRepository.getById(SubscriptionId(follower, messageRequacked.requacker))
-    } subscription.notifyFollower(messageRequacked.id)
+  def apply(event: MessageQuacked): Unit = {
+    notifyFollowers(event.author, event.id)
   }
 
+  def apply(event: MessageRequacked): Unit = {
+    notifyFollowers(event.requacker, event.id)
+  }
+
+  private def notifyFollowers(followee:UserId, messageId:MessageId) = {
+    for {
+      follower <- followerRepository.getFollowers(followee)
+      subscription <- subscriptionRepository.getById(SubscriptionId(follower, followee))
+    } subscription.notifyFollower(messageId)
+  }
 }
