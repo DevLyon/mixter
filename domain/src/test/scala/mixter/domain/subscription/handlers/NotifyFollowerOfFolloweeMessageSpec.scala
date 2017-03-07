@@ -2,7 +2,7 @@ package mixter.domain.subscription.handlers
 
 import mixter.domain.identity.UserId
 import mixter.domain.message.MessageId
-import mixter.domain.message.event.MessageQuacked
+import mixter.domain.message.event.{MessageQuacked, MessageRequacked}
 import mixter.domain.subscription._
 import mixter.domain.subscription.event.{FolloweeMessageQuacked, UserFollowed}
 import mixter.domain.{SpyEventPublisher, SpyEventPublisherFixture}
@@ -27,6 +27,24 @@ class NotifyFollowerOfFolloweeMessageSpec extends AnyWordSpec with Matchers with
         val followeeMessagePublished = FolloweeMessageQuacked(ASubscriptionId, AMessageId)
         eventPublisher.publishedEvents should contain only followeeMessagePublished
     }
+
+    "notify followers when a followee requacks a message" in withFixtures {
+      (subscriptionRepository, followerRepository, eventPublisher) =>
+        // Given
+        subscriptionRepository.add(Subscription(UserFollowed(ASubscriptionId)))
+        followerRepository.saveFollower(ASubscriptionId.followee, ASubscriptionId.follower)
+        val handler = new NotifyFollowerOfFolloweeMessage(followerRepository, subscriptionRepository)(eventPublisher)
+        val authorId = new UserId("author@example.localhost")
+        val messageRequacked = MessageRequacked(AMessageId, ASubscriptionId.followee, authorId, Content)
+
+        // When
+        handler(messageRequacked)
+
+        // Then
+        val followeeMessagePublished = FolloweeMessageQuacked(ASubscriptionId, AMessageId)
+        eventPublisher.publishedEvents should contain only followeeMessagePublished
+    }
+
   }
 
   private val Content = "Content"
