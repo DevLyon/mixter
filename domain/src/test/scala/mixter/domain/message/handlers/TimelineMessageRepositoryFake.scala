@@ -1,5 +1,6 @@
 package mixter.domain.message.handlers
 
+import mixter.domain.identity.UserId
 import mixter.domain.message.{TimelineMessageProjection, TimelineMessageRepository}
 import org.scalatest.{Suite, SuiteMixin}
 
@@ -21,4 +22,6 @@ class TimelineMessageRepositoryFake extends TimelineMessageRepository {
     messages = messages :+ message
     message
   }
+
+  override def getMessageOfUser(ownerId: UserId): Iterable[TimelineMessageProjection] = ???
 }
