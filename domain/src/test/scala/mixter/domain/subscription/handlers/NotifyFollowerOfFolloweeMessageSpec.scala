@@ -2,7 +2,7 @@ package mixter.domain.subscription.handlers
 
 import mixter.domain.identity.UserId
 import mixter.domain.message.MessageId
-import mixter.domain.message.event.MessageQuacked
+import mixter.domain.message.event.{MessageQuacked, MessageRequacked}
 import mixter.domain.subscription._
 import mixter.domain.subscription.event.{FolloweeMessageQuacked, UserFollowed}
 import mixter.domain.{SpyEventPublisher, SpyEventPublisherFixture}
@@ -27,10 +27,28 @@ class NotifyFollowerOfFolloweeMessageSpec extends WordSpec with Matchers with Su
         val followeeMessagePublished = FolloweeMessageQuacked(ASubscriptionId, AMessageId)
         eventPublisher.publishedEvents should contain only followeeMessagePublished
     }
+
+    "notify followers when a followee requacks a message" in withFixtures {
+      (subscriptionRepository, followerRepository, eventPublisher) =>
+        // Given
+        subscriptionRepository.add(Subscription(UserFollowed(ASubscriptionId)))
+        followerRepository.saveFollower(AuthorId, AFollowerId)
+        val handler = new NotifyFollowerOfFolloweeMessage(followerRepository, subscriptionRepository)(eventPublisher)
+        val messageQuacked = MessageRequacked(AMessageId, RequackerId, AuthorId, Content)
+
+        // When
+        handler(messageQuacked)
+
+        // Then
+        val followeeMessagePublished = FolloweeMessageQuacked(ASubscriptionId, AMessageId)
+        eventPublisher.publishedEvents should contain only followeeMessagePublished
+    }
+
   }
 
   private val Content = "Content"
   private val AuthorId = new UserId("author@example.localhost")
+  private val RequackerId = new UserId("requacker@example.localhost")
   private val AFollowerId = new UserId("follower@example.localhost")
   private val AMessageId = MessageId.generate()
   private val ASubscriptionId = SubscriptionId(AFollowerId, AuthorId)
