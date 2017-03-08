@@ -2,7 +2,7 @@ Mixter
 ======
 Mixter is a project to discover CQRS/Event sourcing through koans in multiple languages.
 
-At this point the koans have been ported to 4 languages: C#, Java 8, PHP and Javascript.
+At this point the koans have been ported to 5 languages: C#, Java 8, Scala, PHP and Javascript.
 
 Starting
 -------
