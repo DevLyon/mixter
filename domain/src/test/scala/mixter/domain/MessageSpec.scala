@@ -49,6 +49,13 @@ class MessageSpec extends WordSpec with Matchers {
       val requacked = message.requack(requacker)
       requacked should be(None)
     }
+
+    "raise message deleted when message delete" in {
+      val message = quackedMessageBy(John)
+
+      val deleted = message.delete()
+      deleted should be(Some(MessageDeleted))
+    }
   }
 
   def quackedMessageBy(author: UserId, message: String = MessageContent): Message = {
