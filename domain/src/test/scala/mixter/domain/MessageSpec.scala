@@ -38,7 +38,18 @@ class MessageSpec extends WordSpec with Matchers {
 
       requacked should be(None)
     }
-   }
+
+    "raise nothing when requacked twice by the same user" in {
+      val requacker = Jane
+      val message = Message.from(
+        MessageQuacked(MessageContent, John),
+        MessageRequacked(requacker)
+      )
+
+      val requacked = message.requack(requacker)
+      requacked should be(None)
+    }
+  }
 
   def quackedMessageBy(author: UserId, message: String = MessageContent): Message = {
     val history = MessageQuacked(MessageContent, author)
