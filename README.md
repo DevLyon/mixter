@@ -76,6 +76,7 @@ Changelog
  * Remove reply message (#7)
  * Rename publish to quack (#16)
  * Fix several bug specific at languages (#15, #5, #4)
+ * Make PHP version work with PHP 7.2 (#36)
 
 ### V1 (obsolete)
 First version, use during a Mix-IT workshop 2015 : http://www.mix-it.fr/session/1041/agilite-par-le-code-grace-a-cqrs-et-eventsourcing

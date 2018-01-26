@@ -47,7 +47,7 @@ function askLanguage() {
       ;;
     "php")
       selectedLanguage=$response
-      referenceBranch="origin/php/v2"
+      referenceBranch="origin/php/v2.1"
       break
       ;;
     esac
