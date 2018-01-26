@@ -10,7 +10,7 @@ class FakeEventPublisher implements IEventPublisher {
     /**
      * @var array
      */
-    public $events;
+    public $events = [];
 
     public function publish(IDomainEvent $event)
     {
