@@ -56,6 +56,16 @@ class MessageSpec extends WordSpec with Matchers {
       val deleted = message.delete()
       deleted should be(Some(MessageDeleted))
     }
+
+    "raise nothing when message deleted" in {
+      val message = Message.from(
+        MessageQuacked(MessageContent, John),
+        MessageDeleted)
+
+      val deleted = message.delete()
+      deleted should be(None)
+    }
+
   }
 
   def quackedMessageBy(author: UserId, message: String = MessageContent): Message = {
