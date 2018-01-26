@@ -17,16 +17,31 @@ class MessageSpec extends WordSpec with Matchers {
 
       quacked should equal(MessageQuacked(message, author))
     }
-    "raise MessageRequacked when requacked" in {
-      val requacker=UserId("jane@example.com")
-      val message = "a message"
-      val author = UserId("john@example.com")
-      val history =  MessageQuacked(message, author)
 
-      val requacked =  Message.from(history).requack(requacker)
+    "raise MessageRequacked when requacked" in {
+      val requacker = Jane
+      val author = John
+      val message = quackedMessageBy(John)
+
+      val requacked = message.requack(requacker)
 
       val expected = Some(MessageRequacked(requacker))
       requacked should equal(expected)
     }
+
+    "raise nothing when author requacks" in {
+      val author = John
+      val requacker = John
+      val message = quackedMessageBy(John)
+
+      val requacked = message.requack(requacker)
+
+      requacked should be(None)
+    }
+   }
+
+  def quackedMessageBy(author: UserId, message: String = MessageContent): Message = {
+    val history = MessageQuacked(MessageContent, author)
+    Message.from(history)
   }
 }
