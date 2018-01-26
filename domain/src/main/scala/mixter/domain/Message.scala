@@ -8,12 +8,10 @@ object Message {
     new Message(event, messageRequacked: _*)
 }
 
-class Message private[domain](event: MessageQuacked, messageRequacked: MessageRequacked*) {
+class Message private[domain](initialEvent: MessageQuacked, messageRequacked: MessageRequacked*) {
 
-  private val projection =
-    messageRequacked.foldLeft(DecisionProjection(event))((projection, event) =>
-      projection(event)
-    )
+  private val projection = DecisionProjection(initialEvent, messageRequacked:_*)
+
 
   def requack(requacker: UserId): Option[MessageRequacked] = requacker match {
     case projection.author => None
@@ -21,9 +19,19 @@ class Message private[domain](event: MessageQuacked, messageRequacked: MessageRe
     case _ => Some(MessageRequacked(requacker))
   }
 
+  def delete(): Option[MessageDeleted] = {
+    Some(MessageDeleted)
+  }
+
   private object DecisionProjection {
-    def apply(initialEvent: MessageQuacked): DecisionProjection =
+    def apply(initialEvent: MessageQuacked, events: MessageRequacked*):DecisionProjection={
+      events.foldLeft(DecisionProjection(initialEvent))((projection, event) =>
+        projection(event)
+      )
+    }
+    def apply(initialEvent: MessageQuacked):DecisionProjection={
       DecisionProjection(initialEvent.author)
+    }
   }
 
   case class DecisionProjection(author: UserId, requackers: Set[UserId] = Set.empty) {
