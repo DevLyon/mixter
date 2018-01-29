@@ -1,12 +1,13 @@
-﻿using Owin;
+﻿using Microsoft.AspNetCore.Builder;
+using Nancy.Owin;
 
 namespace Mixter.Web
 {
     public class Startup
     {
-        public void Configuration(IAppBuilder app)
+        public void Configure(IApplicationBuilder app)
         {
-            app.UseNancy(options => options.Bootstrapper = new Bootstrapper());
+            app.UseOwin(owin => owin.UseNancy(options => options.Bootstrapper = new Bootstrapper()));
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Mixter.Web
     {
         public IdentityApi(IEventPublisher eventPublisher)
         {
-            Post["/api/identity/userIdentities/register"] = _ => Execute(eventPublisher, this.Bind<RegisterUser>());
+            Post("/api/identity/userIdentities/register", _ => Execute(eventPublisher, this.Bind<RegisterUser>()));
         }
 
         private dynamic Execute(IEventPublisher eventPublisher, RegisterUser command)

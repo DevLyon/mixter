@@ -1,5 +1,6 @@
-﻿using System;
-using Microsoft.Owin.Hosting;
+﻿using System.IO;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Mixter.Web
 {
@@ -7,11 +8,13 @@ namespace Mixter.Web
     {
         public static void Main(string[] args)
         {
-            using (WebApp.Start<Startup>("http://localhost:12345"))
-            {
-                Console.WriteLine("Server web démarré: http://localhost:12345");
-                Console.ReadLine();
-            }
+            var host = new WebHostBuilder()
+                .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseKestrel()
+                .UseStartup<Startup>()
+                .Build();
+ 
+            host.Run();
         }
     }
 }

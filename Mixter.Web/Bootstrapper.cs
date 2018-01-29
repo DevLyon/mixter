@@ -5,19 +5,20 @@ using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Responses.Negotiation;
 using Nancy.TinyIoc;
+using System;
 
 namespace Mixter.Web
 {
     public class Bootstrapper : DefaultNancyBootstrapper
     {
-        protected override NancyInternalConfiguration InternalConfiguration
+        protected override Func<ITypeCatalog, NancyInternalConfiguration> InternalConfiguration
         {
             get
             {
-                return NancyInternalConfiguration.WithOverrides(config => {
-                    config.StatusCodeHandlers = new[] { typeof(NotFoundStatusCodeHandler), typeof(ExceptionStatusCodeHandler) };
-                    config.ResponseProcessors = new[] { typeof(JsonProcessor) };
-                });
+                return typeCatalog => NancyInternalConfiguration.WithOverrides(config => {
+                        config.StatusCodeHandlers = new[] { typeof(NotFoundStatusCodeHandler), typeof(ExceptionStatusCodeHandler) };
+                        config.ResponseProcessors = new[] { typeof(JsonProcessor) };
+                    })(typeCatalog);
             }
         }
 
