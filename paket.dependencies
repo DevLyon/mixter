@@ -1,0 +1,12 @@
+source https://api.nuget.org/v3/index.json
+
+framework: netstandard2.0, netcoreapp2.0
+
+nuget Newtonsoft.Json
+nuget Suave
+nuget FSharp.Core
+nuget Microsoft.NET.Test.Sdk
+nuget Unquote
+nuget xUnit
+nuget xunit.runner.visualstudio
+
