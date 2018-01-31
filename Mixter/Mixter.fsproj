@@ -3,5 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Documentation.fs" />
+  </ItemGroup>
   <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>
