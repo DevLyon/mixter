@@ -8,5 +8,8 @@
   <ItemGroup>
     <ProjectReference Include="../Mixter/Mixter.fsproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Domain.Identity.UserIdentity.fs" />
+  </ItemGroup>
   <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>
