@@ -1,0 +1,13 @@
+source https://api.nuget.org/v3/index.json
+
+storage: none
+framework: net7.0
+generate_load_scripts: true
+
+nuget Newtonsoft.Json
+nuget Suave
+nuget FSharp.Core
+nuget Microsoft.NET.Test.Sdk
+nuget Unquote
+nuget xUnit
+nuget xunit.runner.visualstudio
