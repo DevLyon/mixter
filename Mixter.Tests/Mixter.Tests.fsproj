@@ -8,6 +8,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain.Identity.UserIdentity.fs" />
+    <Compile Include="Domain.Identity.Session.fs" />
     <Compile Include="Mixter.Tests.fs" />
   </ItemGroup>
   <Import Project="..\.paket\Paket.Restore.targets" />
