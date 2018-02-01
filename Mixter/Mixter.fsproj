@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
@@ -6,6 +6,8 @@
     <Compile Include="Documentation.fs" />
     <Compile Include="Domain.Identity.UserIdentity.fs" />
     <Compile Include="Domain.Identity.Session.fs" />
+    <Compile Include="Domain.Identity.SessionDescription.fs" />
+    <Compile Include="Infrastructure.Identity.fs" />
   </ItemGroup>
   <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>
