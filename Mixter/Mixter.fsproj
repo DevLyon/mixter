@@ -9,6 +9,7 @@
     <Compile Include="Domain.Identity.SessionDescription.fs" />
     <Compile Include="Infrastructure.Identity.fs" />
     <Compile Include="Infrastructure.EventsStore.fs" />
+    <Compile Include="Api.fs" />
   </ItemGroup>
   <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>
