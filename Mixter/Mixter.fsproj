@@ -1,4 +1,3 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
@@ -7,6 +6,8 @@
     <Compile Include="Documentation.fs" />
     <Compile Include="Domain.Identity.UserIdentity.fs" />
     <Compile Include="Domain.Identity.Session.fs" />
+    <Compile Include="Domain.Identity.SessionDescription.fs" />
+    <Compile Include="Infrastructure.Identity.fs" />
   </ItemGroup>
   <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>
