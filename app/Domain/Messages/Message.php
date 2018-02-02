@@ -20,12 +20,22 @@ namespace App\Domain\Messages {
 
         public function requack(IEventPublisher $eventPublisher, UserId $requackerId)
         {
-            if($requackerId == $this->decisionProjection->getAuthorId()
+            if ($requackerId == $this->decisionProjection->getAuthorId()
                 || in_array($requackerId, $this->decisionProjection->getRequackers())) {
                 return;
             }
             $eventPublisher->publish(
                 new MessageRequacked($this->decisionProjection->getMessageId(), $requackerId));
+        }
+
+        public function delete(IEventPublisher $fakeEventPublisher, UserId $authorId): void
+        {
+            $fakeEventPublisher->publish(
+                new MessageDeleted(
+                    $this->decisionProjection->getMessageId(),
+                    $authorId
+                )
+            );
         }
     }
 }
