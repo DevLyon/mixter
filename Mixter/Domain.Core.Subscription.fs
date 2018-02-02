@@ -9,8 +9,30 @@ type SubscriptionId = { Follower: UserId; Followee: UserId }
 [<Event>]
 type Event = 
     | UserFollowed of UserFollowed
+    | UserUnfollowed of UserUnfollowed
 and UserFollowed = { SubscriptionId: SubscriptionId }
+and UserUnfollowed = { SubscriptionId: SubscriptionId }
+
+[<Projection>]
+type DecisionProjection =
+    | NoSubscription
+    | Active of SubscriptionId
+    | Disable of SubscriptionId
+
+let applyOne decisionProjection event =
+    match event with
+    | UserFollowed e -> Active e.SubscriptionId
+    | _ -> decisionProjection
+
+let apply events =
+    Seq.fold applyOne NoSubscription events
 
 [<Command>]
 let follow follower followee =
     [ UserFollowed { SubscriptionId = { Follower = follower; Followee = followee } } ]
+
+[<Command>]
+let unfollow history =
+    match history |> apply with
+    | Active subscriptionId -> [ UserUnfollowed { SubscriptionId = subscriptionId } ]
+    | _ -> []
