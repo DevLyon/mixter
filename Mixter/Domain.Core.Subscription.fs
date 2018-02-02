@@ -24,6 +24,7 @@ type DecisionProjection =
 let applyOne decisionProjection event =
     match event with
     | UserFollowed e -> Active e.SubscriptionId
+    | UserUnfollowed e -> Disable e.SubscriptionId
     | _ -> decisionProjection
 
 let apply events =
