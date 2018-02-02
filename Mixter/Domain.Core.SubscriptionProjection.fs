@@ -14,4 +14,5 @@ let private project (subscriptionId: SubscriptionId) =
 let handle save remove evt =
     match evt with
     | UserFollowed e -> project e.SubscriptionId |> save
+    | UserUnfollowed e -> project e.SubscriptionId |> remove
     | _ -> ()
