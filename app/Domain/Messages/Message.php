@@ -25,10 +25,15 @@ namespace App\Domain\Messages {
 
         public function requack(IEventPublisher $eventPublisher, UserId $requackerId)
         {
-            if ($requackerId == $this->decisionProjection->getAuthorId()
-                || in_array($requackerId, $this->decisionProjection->getRequackers())) {
+            if ($requackerId === $this->decisionProjection->getAuthorId()
+                || in_array($requackerId, $this->decisionProjection->getRequackers(), true)) {
                 return;
             }
+
+            if ($this->decisionProjection->isDeleted()) {
+                return;
+            }
+
             $eventPublisher->publish(
                 new MessageRequacked($this->decisionProjection->getMessageId(), $requackerId));
         }
