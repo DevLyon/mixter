@@ -10,8 +10,10 @@ type SubscriptionId = { Follower: UserId; Followee: UserId }
 type Event = 
     | UserFollowed of UserFollowed
     | UserUnfollowed of UserUnfollowed
+    | FolloweeMessageQuacked of FolloweeMessageQuacked
 and UserFollowed = { SubscriptionId: SubscriptionId }
 and UserUnfollowed = { SubscriptionId: SubscriptionId }
+and FolloweeMessageQuacked = { SubscriptionId: SubscriptionId; Message: MessageId }
 
 [<Projection>]
 type DecisionProjection =
@@ -35,4 +37,10 @@ let follow follower followee =
 let unfollow history =
     match history |> apply with
     | Active subscriptionId -> [ UserUnfollowed { SubscriptionId = subscriptionId } ]
+    | _ -> []
+
+[<Command>]
+let notifyFollower message history =
+    match history |> apply with
+    | Active subscriptionId -> [ FolloweeMessageQuacked { SubscriptionId = subscriptionId; Message = message } ]
     | _ -> []
