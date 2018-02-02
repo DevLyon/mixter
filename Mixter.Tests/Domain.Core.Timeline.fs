@@ -13,7 +13,7 @@ module ``Timeline should`` =
         let repository = MemoryTimelineMessageStore()
         let messageQuacked = { MessageId = MessageId.Generate(); AuthorId = { Email = "A" }; Content = "Hello" }
 
-        MessageQuacked messageQuacked |> handle repository.Save
+        MessageQuacked messageQuacked |> handle repository.Save repository.Delete
 
         test <@ repository.GetMessagesOfUser messageQuacked.AuthorId |> Seq.toList
                  = [{ 
@@ -22,3 +22,17 @@ module ``Timeline should`` =
                         Content = messageQuacked.Content
                         MessageId = messageQuacked.MessageId 
                     }] @>
+
+    [<Fact>] 
+    let ``When handle MessageDeleted Then remove this message in timeline`` () =
+        let repository = MemoryTimelineMessageStore()
+        let messageId = MessageId.Generate()
+        let author = { Email = "A" }
+
+        MessageQuacked { MessageId = messageId; AuthorId = author; Content = "Hello" } 
+        |> handle repository.Save repository.Delete
+
+        MessageDeleted { MessageId = messageId; Deleter = author }
+        |> handle repository.Save repository.Delete 
+
+        test <@ repository.GetMessagesOfUser author |> Seq.isEmpty @>
