@@ -15,4 +15,11 @@ interface ITimelineMessageRepository
      * @param TimelineMessage $timelineMessage
      */
     public function save(TimelineMessage $timelineMessage);
+
+    /**
+     * @return array of TimelineMessage
+     */
+    public function getAll();
+
+    public function getByOwnerId($ownerId);
 }
