@@ -25,5 +25,6 @@ let handle
 
     match evt with
     | MessageQuacked e -> notifyAllFollowers e.AuthorId e.MessageId
+    | MessageRequacked e -> notifyAllFollowers e.Requacker e.MessageId
     | _ -> Seq.empty
 
