@@ -18,3 +18,4 @@ Route::post('/api/user/logOut', 'IdentityController@logOut');
 Route::get('/api/user/session', 'IdentityController@getSessions');
 Route::post('/api/message/quack', 'MessageController@quack');
 Route::post('/api/message/requack', 'MessageController@requack');
+Route::post('/api/message/delete', 'MessageController@delete');
