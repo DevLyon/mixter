@@ -52,5 +52,6 @@ let requack requackerId history =
 [<Command>]
 let delete deleter history = 
     match history |> apply with
+    | QuackedMessage p when p.AuthorId <> deleter -> []
     | QuackedMessage p -> [ MessageDeleted { MessageId = p.MessageId; Deleter = deleter } ]
     | _ -> []
