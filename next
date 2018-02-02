@@ -2,13 +2,13 @@
  
 git add -A
 git commit -m "Resolve test"
-git merge step2-test1
+git merge step3-test1
 
 echo ""
 echo ""
 
 printf '\033[0;32m'
-cat stepsDoc/step2.txt
+cat stepsDoc/step3.txt
 printf '\033[0m'
 
 echo ""
