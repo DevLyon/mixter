@@ -32,3 +32,14 @@ module ``Subscription should`` =
 
         test <@ history |> notifyFollower message
                     = [FolloweeMessageQuacked { SubscriptionId = subscription; Message = message}] @>
+
+    [<Fact>] 
+    let ``Given unfollow When notify follower Then do not returned FollowerMessageQuacked`` () =
+        let subscription = { Follower = { Email = "follower@mix-it.fr"}; Followee = { Email = "followee@mix-it.fr"} }
+        let message = MessageId.Generate()
+        let history = [
+            UserFollowed { SubscriptionId = subscription}
+            UserUnfollowed { SubscriptionId = subscription }
+        ]   
+        
+        test <@ history |> notifyFollower message |> Seq.isEmpty @>
