@@ -47,7 +47,7 @@ function askLanguage() {
       ;;
     "scala")
       selectedLanguage=$response
-      referenceBranch="origin/scala/v1"
+      referenceBranch="origin/scala/v2.1"
       break
       ;;
     "php")
