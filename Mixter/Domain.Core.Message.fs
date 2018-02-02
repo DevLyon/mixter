@@ -54,6 +54,7 @@ let requack requackerId history =
     | QuackedMessage p when p.AuthorId = requackerId -> []
     | QuackedMessage p when p.Requackers |> List.exists (fun r -> r = requackerId) -> []
     | QuackedMessage p -> [ MessageRequacked { MessageId = p.MessageId; Requacker = requackerId } ]
+    | _ -> []
 
 [<Command>]
 let delete deleter history = 
