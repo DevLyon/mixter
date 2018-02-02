@@ -20,4 +20,9 @@ class UserId {
     {
         return $this->id;
     }
+
+    public function equals(UserId $anUserId): bool
+    {
+        return $this->id === $anUserId->getId();
+    }
 }

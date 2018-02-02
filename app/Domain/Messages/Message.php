@@ -3,6 +3,7 @@
 namespace App\Domain\Messages {
 
     use App\Domain\Identity\UserId;
+    use App\Domain\IDomainEvent;
     use App\Domain\IEventPublisher;
     use App\Domain\Messages\Message\DecisionProjection;
 
@@ -13,7 +14,11 @@ namespace App\Domain\Messages {
             $eventPublisher->publish(new MessageQuacked(MessageId::generate(), $messageContent, $authorId));
         }
 
-        public function __construct($events)
+        /**
+         * Message constructor.
+         * @param IDomainEvent[] $events
+         */
+        public function __construct(array $events)
         {
             $this->decisionProjection = new DecisionProjection($events);
         }
@@ -28,12 +33,17 @@ namespace App\Domain\Messages {
                 new MessageRequacked($this->decisionProjection->getMessageId(), $requackerId));
         }
 
-        public function delete(IEventPublisher $fakeEventPublisher, UserId $authorId): void
+        public function delete(IEventPublisher $fakeEventPublisher, UserId $anAuthorId): void
         {
+            $authorId = $this->decisionProjection->getAuthorId();
+            if (!$authorId->equals($anAuthorId)) {
+                return;
+            }
+
             $fakeEventPublisher->publish(
                 new MessageDeleted(
                     $this->decisionProjection->getMessageId(),
-                    $authorId
+                    $anAuthorId
                 )
             );
         }
