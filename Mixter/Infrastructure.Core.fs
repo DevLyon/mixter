@@ -17,6 +17,9 @@ type MemoryTimelineMessageStore() =
     member _.GetMessagesOfUser userId =
         store |> Seq.filter (fun p -> p.Owner = userId)
 
+    member _.Delete messageId =
+        store.RemoveWhere(fun p -> p.MessageId = messageId) |> ignore
+
 [<Repository>]
 type MemoryFollowersRepository() =
     let store = HashSet<SubscriptionProjection.SubscriptionProjection>()
