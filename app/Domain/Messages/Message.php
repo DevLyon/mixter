@@ -35,6 +35,10 @@ namespace App\Domain\Messages {
 
         public function delete(IEventPublisher $fakeEventPublisher, UserId $anAuthorId): void
         {
+            if ($this->decisionProjection->isDeleted()) {
+                return;
+            }
+
             $authorId = $this->decisionProjection->getAuthorId();
             if (!$authorId->equals($anAuthorId)) {
                 return;
@@ -54,6 +58,7 @@ namespace App\Domain\Messages\Message {
 
     use App\Domain\DecisionProjectionBase;
     use App\Domain\Identity\UserId;
+    use App\Domain\Messages\MessageDeleted;
     use App\Domain\Messages\MessageId;
     use App\Domain\Messages\MessageQuacked;
     use App\Domain\Messages\MessageRequacked;
@@ -66,6 +71,8 @@ namespace App\Domain\Messages\Message {
         /** @var UserId */
         private $authorId;
 
+        private $isDeleted = false;
+
         /** @var array */
         private $requackers = array();
 
@@ -73,6 +80,8 @@ namespace App\Domain\Messages\Message {
         {
             $this->registerMessageQuacked();
             $this->registerMessageRequacked();
+            $this->registerMessageDeleted();
+
             parent::__construct($events);
         }
 
@@ -113,6 +122,18 @@ namespace App\Domain\Messages\Message {
             $this->register('App\Domain\Messages\MessageRequacked', function (MessageRequacked $event) {
                 $this->requackers[] = $event->getRequackerId();
             });
+        }
+
+        private function registerMessageDeleted(): void
+        {
+            $this->register(MessageDeleted::class, function () {
+                $this->isDeleted = true;
+            });
+        }
+
+        public function isDeleted(): bool
+        {
+            return $this->isDeleted;
         }
     }
 }
