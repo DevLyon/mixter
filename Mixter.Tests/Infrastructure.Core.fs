@@ -30,6 +30,20 @@ module ``MemoryTimelineMessageStore should`` =
         test <@ repository.GetMessagesOfUser timelineMessage.Owner |> Seq.toList
                   = [timelineMessage] @>
 
+    [<Fact>]
+    let ``Remove message of all users when remove this message`` () =
+        let repository = MemoryTimelineMessageStore()
+        let messageId = MessageId.Generate()
+        let user1 = { Email = "A" }
+        let user2 = { Email = "B" }
+        repository.Save { Owner = user1; Author = user1; Content = "Hello"; MessageId = messageId }
+        repository.Save { Owner = user2; Author = user2; Content = "Hello"; MessageId = messageId }
+
+        repository.Delete messageId
+
+        test <@ repository.GetMessagesOfUser user1 |> Seq.isEmpty @>
+        test <@ repository.GetMessagesOfUser user2 |> Seq.isEmpty @>
+
 module ``MemoryFollowersRepository should`` =
     open Mixter.Domain.Identity.UserIdentity
     open Mixter.Domain.Core.SubscriptionProjection
