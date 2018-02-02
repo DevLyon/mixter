@@ -86,3 +86,17 @@ module ``Message should`` =
             |> delete deleterId
         
         test <@ result |> Seq.isEmpty @>
+            
+    [<Fact>] 
+    let ``return nothing When delete deleted message`` () =
+        let messageId = MessageId.Generate()
+        let authorId = { Email = "author@mix-it.fr" }
+
+        let result =
+            [ 
+                MessageQuacked { MessageId = messageId; AuthorId = authorId; Content = "hello world" }
+                MessageDeleted { MessageId = messageId; Deleter = authorId }
+            ]   
+            |> delete authorId
+
+        test <@ result |> Seq.isEmpty @>
