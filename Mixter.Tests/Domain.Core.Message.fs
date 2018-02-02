@@ -100,3 +100,18 @@ module ``Message should`` =
             |> delete authorId
 
         test <@ result |> Seq.isEmpty @>
+            
+    [<Fact>] 
+    let ``return nothing When requack deleted message`` () =
+        let messageId = MessageId.Generate()
+        let authorId = { Email = "author@mix-it.fr" }
+        let requacker = { Email = "otherUser@mix-it.fr" }
+
+        let result =
+            [ 
+                MessageQuacked { MessageId = messageId; AuthorId = authorId; Content = "hello world" }
+                MessageDeleted { MessageId = messageId; Deleter = authorId }
+            ]   
+            |> requack requacker
+            
+        test <@ result |> Seq.isEmpty @>
