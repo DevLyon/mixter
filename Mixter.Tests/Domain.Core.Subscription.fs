@@ -14,3 +14,12 @@ module ``Subscription should`` =
 
         test <@ follow follower followee
                     = [UserFollowed { SubscriptionId = { Follower = follower; Followee = followee } }] @>
+
+    [<Fact>] 
+    let ``When unfollow Then UserUnfollowed is returned`` () =
+        let subscription = { Follower = { Email = "follower@mix-it.fr" }; Followee = { Email = "followee@mix-it.fr" } }
+        let history = [UserFollowed { SubscriptionId = subscription }]
+
+        test 
+          <@ history |> unfollow
+                = [UserUnfollowed { SubscriptionId = subscription }] @>
