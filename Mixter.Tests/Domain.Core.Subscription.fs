@@ -23,3 +23,12 @@ module ``Subscription should`` =
         test 
           <@ history |> unfollow
                 = [UserUnfollowed { SubscriptionId = subscription }] @>
+
+    [<Fact>] 
+    let ``When notify follower Then FolloweeMessageQuacked`` () =
+        let subscription = { Follower = { Email = "follower@mix-it.fr" }; Followee = { Email = "followee@mix-it.fr"} }
+        let message = MessageId.Generate()
+        let history = [UserFollowed { SubscriptionId = subscription}]
+
+        test <@ history |> notifyFollower message
+                    = [FolloweeMessageQuacked { SubscriptionId = subscription; Message = message}] @>
