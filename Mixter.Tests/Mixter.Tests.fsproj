@@ -14,6 +14,7 @@
     <Compile Include="Domain.Identity.SessionDescription.fs" />
     <Compile Include="Domain.Core.Message.fs" />
     <Compile Include="Infrastructure.Identity.fs" />
+    <Compile Include="Infrastructure.Core.fs" />
     <Compile Include="Infrastructure.EventsStore.fs" />
   </ItemGroup>
   <Import Project="..\.paket\Paket.Restore.targets" />
