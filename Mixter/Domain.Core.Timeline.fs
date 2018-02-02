@@ -6,3 +6,7 @@ open Mixter.Domain.Core.Message
 
 [<Projection>]
 type TimelineMessage = { Owner: UserId; Author: UserId; Content: string; MessageId: MessageId }
+
+[<Handler>]
+let handle (save: TimelineMessage -> unit) (evt: Event) =
+    ()
