@@ -11,6 +11,7 @@
     <Compile Include="Domain.Core.Timeline.fs" />
     <Compile Include="Domain.Core.Subscription.fs" />
     <Compile Include="Domain.Core.SubscriptionProjection.fs" />
+    <Compile Include="Domain.Core.NotifyFollowerOfFolloweeMessage.fs" />
     <Compile Include="Infrastructure.Identity.fs" />
     <Compile Include="Infrastructure.Core.fs" />
     <Compile Include="Infrastructure.EventsStore.fs" />
