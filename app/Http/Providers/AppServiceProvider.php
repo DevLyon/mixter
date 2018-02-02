@@ -18,6 +18,7 @@ class AppServiceProvider extends ServiceProvider {
         $this->app->bind('App\Domain\Identity\ISessionRepository', 'App\Infrastructure\Identity\SessionRepository');
         $this->app->bind('App\Domain\Messages\IMessageRepository', 'App\Infrastructure\Messages\MessageRepository');
         $this->app->bind('App\Domain\Timeline\ITimelineMessageRepository', 'App\Infrastructure\Timeline\TimelineMessageRepository');
+        $this->app->bind('App\Domain\Subscriptions\ISubscriptionRepository', 'App\Infrastructure\Subscriptions\SubscriptionRepository');
 	}
 
 	/**
