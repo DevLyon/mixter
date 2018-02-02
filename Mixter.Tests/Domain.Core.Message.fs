@@ -72,3 +72,17 @@ module ``Message should`` =
             |> delete authorId
         
         test <@ result = [ MessageDeleted { MessageId = messageId; Deleter = authorId } ] @>
+            
+    [<Fact>] 
+    let ``not return MessageDeleted When delete by someone else than author`` () =
+        let messageId = MessageId.Generate()
+        let authorId = { Email = "author@mix-it.fr" }
+        let deleterId = { Email = "deleter@mix-it.fr" }
+
+        let result =
+            [ 
+                MessageQuacked { MessageId = messageId; AuthorId = authorId; Content = "hello world" }
+            ]   
+            |> delete deleterId
+        
+        test <@ result |> Seq.isEmpty @>
