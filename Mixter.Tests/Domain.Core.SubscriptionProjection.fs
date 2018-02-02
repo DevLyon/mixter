@@ -20,3 +20,17 @@ module ``SubscriptionProjection should`` =
         |> handle
 
         test <@ followerRepository.GetFollowers followee |> Seq.toList = [ follower ] @>
+
+    [<Fact>] 
+    let ``Remove follower When UserUnfollowed`` () =
+        let followerRepository = MemoryFollowersRepository()
+        let handle = handle followerRepository.Save followerRepository.Delete
+        let follower = { Email = "follower@mix-it.fr" } 
+        let followee = { Email = "followee@mix-it.fr" }
+        UserFollowed { SubscriptionId = { Follower = follower; Followee = followee }}
+        |> handle
+
+        UserUnfollowed { SubscriptionId = { Follower = follower; Followee = followee }}
+        |> handle
+
+        test <@ followerRepository.GetFollowers followee |> Seq.isEmpty @>
