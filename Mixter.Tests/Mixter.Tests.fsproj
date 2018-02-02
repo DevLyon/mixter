@@ -11,6 +11,7 @@
     <Compile Include="Domain.Identity.Session.fs" />
     <Compile Include="Domain.Identity.SessionDescription.fs" />
     <Compile Include="Domain.Core.Message.fs" />
+    <Compile Include="Domain.Core.Timeline.fs" />
     <Compile Include="Infrastructure.Identity.fs" />
     <Compile Include="Infrastructure.Core.fs" />
     <Compile Include="Infrastructure.EventsStore.fs" />
