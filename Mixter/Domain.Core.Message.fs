@@ -11,8 +11,10 @@ type MessageId = MessageId of string
 type Event =
     | MessageQuacked of MessageQuacked
     | MessageRequacked of MessageRequacked
+    | MessageDeleted of MessageDeleted
 and MessageQuacked = { MessageId: MessageId; AuthorId: UserId; Content: string}
 and MessageRequacked = { MessageId: MessageId; Requacker: UserId }
+and MessageDeleted = { MessageId: MessageId; Deleter: UserId }
 
 [<Projection>]
 type DecisionProjection = 
@@ -32,7 +34,7 @@ let applyOne decisionProjection = function
         match decisionProjection with
         | QuackedMessage p -> QuackedMessage { p with Requackers = e.Requacker :: p.Requackers }
         | _ -> decisionProjection
-
+        
 let apply events =
     Seq.fold applyOne NotQuackedMessage events
 
@@ -46,3 +48,9 @@ let requack requackerId history =
     | QuackedMessage p when p.AuthorId = requackerId -> []
     | QuackedMessage p when p.Requackers |> List.exists (fun r -> r = requackerId) -> []
     | QuackedMessage p -> [ MessageRequacked { MessageId = p.MessageId; Requacker = requackerId } ]
+
+[<Command>]
+let delete deleter history = 
+    match history |> apply with
+    | QuackedMessage p -> [ MessageDeleted { MessageId = p.MessageId; Deleter = deleter } ]
+    | _ -> []
