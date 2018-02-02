@@ -2,13 +2,13 @@
  
 git add -A
 git commit -m "Resolve test"
-git merge step3-test2
+git merge step3-test3
 
 printf '\033[0;32m'
 echo ""
 echo ""
 echo "========================"
-echo "===  STEP 3 - Test 2 ==="
+echo "===  STEP 3 - Test 3 ==="
 echo "========================"
 echo ""
 echo ""
