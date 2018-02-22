@@ -1,6 +1,5 @@
 package mixter.domain.core.message.events;
 
-import mixter.domain.AggregateId;
 import mixter.domain.Event;
 import mixter.domain.core.message.MessageId;
 

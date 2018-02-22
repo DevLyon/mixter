@@ -11,7 +11,7 @@ public interface TimelineMessageRepository {
 
     Iterator<TimelineMessageProjection> getMessageOfUser(UserId ownerId);
 
-    //this is done only for the exercise to avoid git conflitcts when
+    //this is done only for the exercise to avoid git conflicts when
     // moving from step to step, this should not be done in real code
     default void delete(MessageId messageId){
         throw new UnsupportedOperationException();
