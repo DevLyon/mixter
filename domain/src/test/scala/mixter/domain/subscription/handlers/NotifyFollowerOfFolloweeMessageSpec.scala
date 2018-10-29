@@ -31,8 +31,8 @@ class NotifyFollowerOfFolloweeMessageSpec extends WordSpec with Matchers with Su
     "notify followers when a followee requacks a message" in withFixtures {
       (subscriptionRepository, followerRepository, eventPublisher) =>
         // Given
-        subscriptionRepository.add(Subscription(UserFollowed(ASubscriptionId)))
-        followerRepository.saveFollower(AuthorId, AFollowerId)
+        subscriptionRepository.add(Subscription(UserFollowed(BSubscriptionId)))
+        followerRepository.saveFollower(RequackerId, AFollowerId)
         val handler = new NotifyFollowerOfFolloweeMessage(followerRepository, subscriptionRepository)(eventPublisher)
         val messageQuacked = MessageRequacked(AMessageId, RequackerId, AuthorId, Content)
 
@@ -40,7 +40,7 @@ class NotifyFollowerOfFolloweeMessageSpec extends WordSpec with Matchers with Su
         handler(messageQuacked)
 
         // Then
-        val followeeMessagePublished = FolloweeMessageQuacked(ASubscriptionId, AMessageId)
+        val followeeMessagePublished = FolloweeMessageQuacked(BSubscriptionId, AMessageId)
         eventPublisher.publishedEvents should contain only followeeMessagePublished
     }
 
@@ -52,6 +52,7 @@ class NotifyFollowerOfFolloweeMessageSpec extends WordSpec with Matchers with Su
   private val AFollowerId = new UserId("follower@example.localhost")
   private val AMessageId = MessageId.generate()
   private val ASubscriptionId = SubscriptionId(AFollowerId, AuthorId)
+  private val BSubscriptionId = SubscriptionId(AFollowerId, RequackerId)
 
   private def withFixtures(blk: (FakeSubscriptionRepository, FakeFollowerRepository, SpyEventPublisher) => Any) = {
     withSubscriptionRepository { _ =>
