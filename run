@@ -23,7 +23,7 @@ function switchRunnerIfWindows() {
 
 function askLanguage() {
   while true; do
-    read -p "Language (js, csharp, csharp-core, java, php, scala) ?  " response
+    read -p "Language (js, csharp, csharp-core, fsharp, java, php, scala) ?  " response
     case "$response" in
     "js")
       selectedLanguage=$response
@@ -38,6 +38,11 @@ function askLanguage() {
     "csharp-core")
       selectedLanguage=$response
       referenceBranch="origin/csharp-core/v2"
+      break
+      ;;
+    "fsharp")
+      selectedLanguage=$response
+      referenceBranch="origin/fsharp/v2"
       break
       ;;
     "java")
