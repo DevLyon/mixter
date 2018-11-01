@@ -8,7 +8,8 @@ open Mixter.Domain.Core.Message
 type TimelineMessage = { Owner: UserId; Author: UserId; Content: string; MessageId: MessageId }
 
 [<Handler>]
-let handle (save: TimelineMessage -> unit) (evt: Event) =
+let handle (save: TimelineMessage -> unit) (remove: MessageId -> unit) (evt: Event) =
     match evt with
     | MessageQuacked e -> save { Owner = e.AuthorId; Author = e.AuthorId; Content = e.Content; MessageId = e.MessageId }
+    | MessageDeleted e -> remove e.MessageId
     | _ -> ()
