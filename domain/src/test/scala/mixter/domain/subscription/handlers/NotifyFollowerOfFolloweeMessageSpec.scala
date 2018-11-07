@@ -54,10 +54,10 @@ class NotifyFollowerOfFolloweeMessageSpec extends WordSpec with Matchers with Su
   private val ASubscriptionId = SubscriptionId(AFollowerId, AuthorId)
 
   private def withFixtures(blk: (FakeSubscriptionRepository, FakeFollowerRepository, SpyEventPublisher) => Any) = {
-    withSubscriptionRepository { _ =>
-      withFollowerRepository { _ =>
-        withSpyEventPublisher { _ =>
-          blk(_, _, _)
+    withSubscriptionRepository { sr =>
+      withFollowerRepository { fr =>
+        withSpyEventPublisher { sep =>
+          blk(sr, fr, sep)
         }
       }
     }
