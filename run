@@ -42,7 +42,7 @@ function askLanguage() {
       ;;
     "fsharp")
       selectedLanguage=$response
-      referenceBranch="origin/fsharp/v2"
+      referenceBranch="origin/fsharp/v2.1"
       break
       ;;
     "java")
