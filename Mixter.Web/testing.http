@@ -1,0 +1,37 @@
+### Create quacker1
+POST http://localhost:5000/api/identity/userIdentities/register
+Content-Type: application/json
+
+{
+  "email": "quacker1@example.com"
+}
+
+> {%
+    client.global.set("quacker1Id", response.body['id']['email'])
+%}
+
+### Create quacker2
+POST http://localhost:5000/api/identity/userIdentities/register
+Content-Type: application/json
+
+{
+  "email": "quacker2@example.com"
+}
+
+> {%
+    client.global.set("quacker2Id", response.body['id']['email'])
+%}
+
+### Connect with user quacker1
+< {%
+    request.variables.set("userId", client.global.get("quacker1Id"))
+%}
+POST http://localhost:5000/api/identity/userIdentities/{{userId}}/logIn
+
+> {%
+    client.global.set("sessionId", response.body['id'])
+%}
+
+### Disconnect quacker1
+POST http://localhost:5000/api/identity/sessions/disconnect
+Authorization: {{sessionId}}
