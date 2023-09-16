@@ -1,0 +1,114 @@
+### Create quacker1
+POST http://localhost:8080/api/identity
+Content-Type: application/json
+
+{
+  "email": "quacker1@example.com"
+}
+
+### Create quacker2
+POST http://localhost:8080/api/identity
+Content-Type: application/json
+
+{
+  "email": "quacker2@example.com"
+}
+
+### Connect with user quacker1
+POST http://localhost:8080/api/sessions
+Content-Type: application/json
+
+{
+  "email": "quacker1@example.com"
+}
+
+> {%
+    client.global.set("sessionId", response.headers.valueOf('X-App-Session'))
+%}
+
+### quacker1 quack
+POST http://localhost:8080/api/quacker1@example.com/messages
+X-App-Session: {{sessionId}}
+Content-Type: application/json
+
+"Hello World"
+
+> {%
+    client.global.set("messageId1", response.headers.valueOf('Location'))
+%}
+
+### Show timeline of quacker1
+GET http://localhost:8080/api/quacker1@example.com/messages
+
+> {%
+    client.assert(response.body.length === 1, "Should have 1 message");
+%}
+
+### quacker1 quack message 2
+POST http://localhost:8080/api/quacker1@example.com/messages
+X-App-Session: {{sessionId}}
+Content-Type: application/json
+
+"Hello World 2"
+
+> {%
+    client.global.set("messageId2", response.headers.valueOf('Location'))
+%}
+
+### Show timeline of quacker 1 before deletion
+GET http://localhost:8080/api/quacker1@example.com/messages
+
+> {%
+    client.assert(response.body.length === 2, "Should have 2 messages");
+%}
+
+### quacker1 delete quack
+DELETE http://localhost:8080{{messageId2}}
+X-App-Session: {{sessionId}}
+
+### Show timeline of quacker 1 after deletion
+GET http://localhost:8080/api/quacker1@example.com/messages
+
+> {%
+    client.assert(response.body.length === 1, "Should have 1 message");
+%}
+
+### quacker1 quack message 3
+POST http://localhost:8080/api/quacker1@example.com/messages
+X-App-Session: {{sessionId}}
+Content-Type: application/json
+
+"Hello World 3"
+
+> {%
+    client.global.set("messageId3", response.headers.valueOf('Location'))
+%}
+
+### Disconnect quacker1
+DELETE http://localhost:8080/api/sessions/{{sessionId}}
+X-App-Session: {{sessionId}}
+
+
+### Connect with user quacker2
+POST http://localhost:8080/api/sessions
+Content-Type: application/json
+
+{
+  "email": "quacker2@example.com"
+}
+
+> {%
+    client.global.set("sessionId", response.headers.valueOf('X-App-Session'))
+%}
+
+### quacker2 delete quack message 3 and failed
+DELETE http://localhost:8080{{messageId3}}
+X-App-Session: {{sessionId}}
+
+
+### Show timeline of quacker 1 after deletion
+GET http://localhost:8080/api/quacker1@example.com/messages
+
+> {%
+    client.assert(response.body.length === 1, "Should have 2 messages");
+%}
