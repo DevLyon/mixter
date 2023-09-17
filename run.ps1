@@ -1,4 +1,4 @@
-$languages = @{ "js"="origin/js/v2"; "csharp"="origin/csharp/v2.3";"csharp-core"="origin/csharp-core/v2"; "java"="origin/java/v2.1"; "scala"="origin/scala/v2.1"; "php"="origin/php/v2.1"; "fsharp"="origin/fsharp/v2.1" }
+$languages = @{ "js"="origin/js/v2.1"; "csharp"="origin/csharp/v2.3";"csharp-core"="origin/csharp-core/v2.1"; "java"="origin/java/v2.2"; "scala"="origin/scala/v2.2"; "php"="origin/php/v2.1"; "fsharp"="origin/fsharp/v2.2" }
 $testsNbByStep = @{ 1=4; 2=1; 3=4; 4=4; 5=2 }
 
 $masterBranch = "origin/master"

@@ -27,7 +27,7 @@ function askLanguage() {
     case "$response" in
     "js")
       selectedLanguage=$response
-      referenceBranch="origin/js/v2"
+      referenceBranch="origin/js/v2.1"
       break
       ;;
     "csharp")
@@ -37,22 +37,22 @@ function askLanguage() {
       ;;
     "csharp-core")
       selectedLanguage=$response
-      referenceBranch="origin/csharp-core/v2"
+      referenceBranch="origin/csharp-core/v2.1"
       break
       ;;
     "fsharp")
       selectedLanguage=$response
-      referenceBranch="origin/fsharp/v2.1"
+      referenceBranch="origin/fsharp/v2.2"
       break
       ;;
     "java")
       selectedLanguage=$response
-      referenceBranch="origin/java/v2.1"
+      referenceBranch="origin/java/v2.2"
       break
       ;;
     "scala")
       selectedLanguage=$response
-      referenceBranch="origin/scala/v2.1"
+      referenceBranch="origin/scala/v2.2"
       break
       ;;
     "php")
