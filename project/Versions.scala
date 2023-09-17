@@ -1,3 +1,3 @@
 object Versions{
-  val ScalaTest="3.0.1"
+  val ScalaTest="3.2.17"
 }
