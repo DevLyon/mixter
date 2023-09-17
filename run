@@ -172,7 +172,7 @@ function addStepNavigationCommand(){
 git add -A
 git commit -m "Abort test"
 git checkout -b ${workshopBranch}-${tag} ${tag}
-git merge ${tag}-test1 > /dev/null
+git merge --no-edit ${tag}-test1 > /dev/null
 git checkout --ours .
 git add .
 git commit -m "Merge with test branch"
@@ -267,7 +267,7 @@ function addNavigationCommand(){
  
 git add -A
 git commit -m "Resolve test"
-git merge $tag
+git merge --no-edit $tag
 EOF
   
   if [ $testNum -eq 1 ]

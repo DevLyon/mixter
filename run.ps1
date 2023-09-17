@@ -15,14 +15,14 @@ PowerShell -ExecutionPolicy Bypass -File @@scriptname@@.ps1
 $nextCommandTemplate = @"
 git add -A 
 git commit -m "Resolve test"
-git merge @@nexttag@@
+git merge --no-edit @@nexttag@@
 "@
 
 $jumpToNextStepCommandTemplate = @"
 git add -A
 git commit -m "Abort test"
 git checkout -b $workshopBranch-@@nexttag@@ @@nexttag@@ 
-git merge @@nexttag@@-test1 *> `$null`
+git merge --no-edit @@nexttag@@-test1 *> `$null`
 git checkout --ours . 
 git add . 
 git commit -m "Merge with test branch" 
