@@ -32,6 +32,89 @@ POST http://localhost:5000/api/identity/userIdentities/{{userId}}/logIn
     client.global.set("sessionId", response.body['id'])
 %}
 
+### quacker1 quack 
+POST http://localhost:5000/api/core/messages/quack
+Authorization: {{sessionId}}
+Content-Type: application/json
+
+{
+  "content": "Hello World"
+}
+
+> {%
+    client.global.set("messageId1", response.body['id'])
+%}
+
+### Show timeline of quacker1
+GET http://localhost:5000/api/core/timelineMessages/{{quacker1Id}}
+
+> {%
+    client.assert(response.body.length === 1, "Should have 1 message");
+%}
+
+### quacker1 quack message 2
+POST http://localhost:5000/api/core/messages/quack
+Authorization: {{sessionId}}
+Content-Type: application/json
+
+{
+  "content": "Hello World 2"
+}
+
+> {%
+    client.global.set("messageId2", response.body['id'])
+%}
+
+### Show timeline of quacker 1 before deletion
+GET http://localhost:5000/api/core/timelineMessages/{{quacker1Id}}
+
+> {%
+    client.assert(response.body.length === 2, "Should have 2 messages");
+%}
+
+### quacker1 delete quack 
+DELETE http://localhost:5000/api/core/messages/{{messageId2}}
+Authorization: {{sessionId}}
+
+### Show timeline of quacker 1 after deletion
+GET http://localhost:5000/api/core/timelineMessages/{{quacker1Id}}
+
+> {%
+    client.assert(response.body.length === 1, "Should have 1 message");
+%}
+
+### quacker1 quack message 3
+POST http://localhost:5000/api/core/messages/quack
+Authorization: {{sessionId}}
+Content-Type: application/json
+
+{
+  "content": "Hello World 3"
+}
+
+> {%
+    client.global.set("messageId3", response.body['id'])
+%}
+
 ### Disconnect quacker1
 POST http://localhost:5000/api/identity/sessions/disconnect
 Authorization: {{sessionId}}
+
+### Connect with user quacker2
+POST http://localhost:5000/api/identity/userIdentities/{{quacker2Id}}/logIn
+
+> {%
+    client.global.set("sessionId", response.body['id'])
+%}
+
+### quacker2 delete quack message 3 and failed
+DELETE http://localhost:5000/api/core/messages/{{messageId3}}
+Authorization: {{sessionId}}
+
+### Show timeline of quacker 1 after deletion
+GET http://localhost:5000/api/core/timelineMessages/{{quacker1Id}}
+
+> {%
+    client.assert(response.body.length === 1, "Should have 2 messages");
+%}
+

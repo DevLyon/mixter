@@ -17,6 +17,7 @@ var eventPublisherWithStorage = new EventPublisherWithStorage(eventsStore, event
 
 builder.Services.AddSingleton<IEventPublisher>(eventPublisherWithStorage);
 
+Core.InitializeDependencies(builder.Services, eventsStore, eventPublisherWithStorage, eventPublisher);
 Identity.InitializeDependencies(builder.Services, eventsStore, eventPublisher);
 
 var app = builder.Build();
@@ -40,6 +41,7 @@ app.Use((context, next) =>
 
 app.MapGet("/", () => Task.FromResult("Hello World, it's Mixter on .NET Core"));
 
+app.MapGroup("/api/core").MapCoreRoutes();
 app.MapGroup("/api/identity").MapIdentityRoutes();
 
 app.Run();
