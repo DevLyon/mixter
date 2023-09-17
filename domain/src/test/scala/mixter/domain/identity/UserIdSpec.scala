@@ -1,8 +1,9 @@
 package mixter.domain.identity
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class UserIdSpec extends WordSpec with Matchers {
+class UserIdSpec extends AnyWordSpec with Matchers {
   val AN_EMAIL = "mail@mix-it.fr"
   "a new UserId" should {
     "be created with an email" in {

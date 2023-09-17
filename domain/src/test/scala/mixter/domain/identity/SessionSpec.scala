@@ -4,9 +4,10 @@ import java.time.LocalDateTime
 
 import mixter.domain.SpyEventPublisher
 import mixter.domain.identity.event.{UserConnected, UserDisconnected, UserRegistered}
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class SessionSpec extends WordSpec with Matchers {
+class SessionSpec extends AnyWordSpec with Matchers {
   val USER_ID = UserId("john@example.com")
   val SESSION_ID = SessionId()
 

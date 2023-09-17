@@ -2,9 +2,10 @@ package mixter.domain.identity
 
 import mixter.domain.SpyEventPublisher
 import mixter.domain.identity.event.UserRegistered
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class UserIdentitySpec extends WordSpec with Matchers {
+class UserIdentitySpec extends AnyWordSpec with Matchers {
 
   val AN_EMAIL: String = "john@example.com"
 

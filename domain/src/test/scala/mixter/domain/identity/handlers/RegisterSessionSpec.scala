@@ -1,12 +1,12 @@
 package mixter.domain.identity.handlers
 
 import java.time.LocalDateTime
-
 import mixter.domain.identity._
 import mixter.domain.identity.event.{UserConnected, UserDisconnected}
-import org.scalatest._
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class RegisterSessionSpec extends WordSpec with Matchers with WithSessionRepository{
+class RegisterSessionSpec extends AnyWordSpec with Matchers with WithSessionRepository{
 
   "A RegisterSession handler" should {
     "save a connected SessionProjection when it receives UserConnected event" in withSessionRepository { sessionRepository =>

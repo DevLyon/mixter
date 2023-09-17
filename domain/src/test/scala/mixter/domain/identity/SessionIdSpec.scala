@@ -1,8 +1,10 @@
 package mixter.domain.identity
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest._
+import org.scalatest.matchers.should.Matchers
+import wordspec._
 
-class SessionIdSpec extends WordSpec with Matchers {
+class SessionIdSpec extends AnyWordSpec with Matchers {
   "Creating 2 SessionIds from the same string" should {
     "make them equal" in {
       val string="id"

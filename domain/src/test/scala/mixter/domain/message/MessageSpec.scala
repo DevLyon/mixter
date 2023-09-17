@@ -4,9 +4,10 @@ package mixter.domain.message
 import mixter.domain.SpyEventPublisher
 import mixter.domain.identity.UserId
 import mixter.domain.message.event.{MessageEvent, MessageQuacked, MessageRequacked}
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.matchers.should.Matchers
 
-class MessageSpec extends WordSpec with Matchers {
+class MessageSpec extends AnyWordSpec with Matchers {
   "Message" should{
     "raise MessageQuacked when quacked" in {
       val message="a message"

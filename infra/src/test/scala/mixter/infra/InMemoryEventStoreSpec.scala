@@ -1,9 +1,10 @@
 package mixter.infra
 
 import mixter.domain.Event
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class InMemoryEventStoreSpec extends WordSpec with Matchers {
+class InMemoryEventStoreSpec extends AnyWordSpec with Matchers {
 
   val AGGREGATE_ID1 = AnAggregateId("1")
   val AGGREGATE_ID2 = AnAggregateId("2")
