@@ -46,6 +46,12 @@ Write-Host ""
 Write-Host ""
 "@
 
+$jumpToEndStepCommandTemplate = @"
+git add -A
+git commit -m "Abort test"
+git checkout -b $workshopBranch-end $solutionBranch
+"@
+
 $displayEndMessageTemplate = @"
 Write-Host ""
 Write-Host ""
@@ -136,6 +142,7 @@ function clean(){
 	git branch -D $testBranch *> $null
 	git branch -D $solutionBranch *> $null
 	git branch -D $workshopBranch *> $null
+	git branch -D ($workshopBranch + "-end") *> $null
 	generateTags | %{ git branch -D ($workshopBranch + "-" + $_) } *> $null
 	generateTags | %{ git tag -d $_ } *> $null
 }
@@ -159,7 +166,9 @@ function addStepNavigationCommand($nextStepTag, $nextStepNum){
 }
 
 function addEndStepNavigationCommand(){
-	$displayEndMessageTemplate | out-file 'jumpToNextStep.ps1' -enc ascii
+	$nextCommandContent = $jumpToEndStepCommandTemplate + "`r`n" + $displayEndMessageTemplate
+
+	$nextCommandContent | out-file 'jumpToNextStep.ps1' -enc ascii
 	git add jumpToNextStep.ps1 > $null
 
 	git commit -m "Add end step navigation commands" > $null
@@ -234,7 +243,8 @@ function addNavigationCommand($nextTestTag, $nextTestNum, $currentStepNum){
 }
 
 function addEndNavigationCommand(){
-	$displayEndMessageTemplate | out-file 'next.ps1' -enc ascii
+	$nextCommandContent = $nextCommandTemplate.Replace("@@nexttag@@", $testBranch) + "`r`n" + $displayEndMessageTemplate
+	$nextCommandContent | out-file 'next.ps1' -enc ascii
 	git add next.ps1 > $null
 
 	git commit -m "Add end test navigation commands" > $null

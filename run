@@ -73,6 +73,7 @@ function clean() {
   git branch -D $testBranch > /dev/null 2>&1 
   git branch -D $solutionBranch > /dev/null 2>&1
   git branch -D $workshopBranch > /dev/null 2>&1
+  git branch -D "${workshopBranch}-end" > /dev/null 2>&1
 
   git branch | grep -e '^\s*workshop-step[0-9]$' | xargs git branch -D > /dev/null 2>&1
   git tag --list | grep -e '^step[0-9]$' | xargs git tag -d > /dev/null 2>&1
@@ -198,6 +199,10 @@ function addEndStepNavigationCommand(){
 	cat << EOF > ./jumpToNextStep
 #!/bin/bash
 
+git add -A
+git commit -m "Abort test"
+git checkout -b ${workshopBranch}-end ${solutionBranch}
+
 printf '$MessageColor'
 echo ""
 echo ""
@@ -308,6 +313,10 @@ EOF
 function addEndNavigationCommand(){
 	cat << EOF > ./next
 #!/bin/bash
+
+git add -A
+git commit -m "Resolve test"
+git merge --no-edit $testBranch
 
 printf '$MessageColor'
 echo ""
